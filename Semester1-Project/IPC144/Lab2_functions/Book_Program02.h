@@ -1,0 +1,1 @@
+int sum3Digits(int threeDigitNumber);

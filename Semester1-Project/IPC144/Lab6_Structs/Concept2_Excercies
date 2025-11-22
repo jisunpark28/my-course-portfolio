@@ -1,0 +1,57 @@
+/******************************************
+
+
+
+Struct Definition vs. Instantiation
+    Struct Definition
+        : Defines a template or blueprint for what data a struct will contain. No memory is allocated; it only describes the structure.
+    Struct Instantiation
+        : Creates an actual variable of that struct type, which reserves memory for all data members.
+
+Data Member Access
+    : Given the following struct definition:
+        struct Book
+        {
+            char title[100];
+            char author[50];
+            int year;
+            float price;
+        };
+        ...
+        struct Book mybook;
+    : write a printf() statement that will print the information of the book in the following format (replacing <datamember> with the data member indicated:
+        <author> - <title> - <year>: $<price>
+        c printf("%s - %s - %d: $%.2f\n", mybook.author, mybook.title, mybook.year, mybook.price);
+
+Initialization Order
+    : Consider the following struct:
+        struct Point
+        {
+            int x;
+            int y;
+            char label;
+        };
+    a) If you initialize a Point variable with struct Point p1 = {5, 10, 'A'};
+    which value is assigned to which data member? Why is order important? 
+        5 is assigned to x (first data member)
+        10 is assigned to y (second data member)
+        'A' is assigned to label (third data member)
+        Order is important because values are assigned to data members in the order they are declared in the struct definition. 
+        If the order is wrong, data will be assigned to the wrong fields.
+    b) Draw a picture of p1
+
+Uninitialized Data Members
+    : What happens if you declare a struct variable without initializing all of its data members? Give an example and explain the potential consequences.
+        :If you declare a struct without initializing all data members, the uninitialized members contain undefined (garbage) values:
+          struct Point p1 = {5};  // Only x is initialized
+                                  // p1.y contains an undefined value
+        This can cause unpredictable behavior when you try to use the other data members p1
+
+Naming Conventions
+    : According to the style guide presented in the chapter, what naming convention should be used for struct names and data member names? Why is this convention useful?
+        Struct names: UpperCamelCase (e.g., Student, EmployeeRecord)
+        Data member names: lowerCamelCase (e.g., firstName, studentNumber, gpa)
+        This convention makes it easy to distinguish between struct type names and variable/data member names, improving code readability.
+
+
+******************************************/

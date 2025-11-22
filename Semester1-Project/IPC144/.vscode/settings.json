@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "lab5.h": "c",
+        "summary": "cpp",
+        "excercies": "c",
+        "type_traits": "c",
+        "utility": "c",
+        "typeinfo": "c",
+        "stdio.h": "c",
+        "lecture8_employee.h": "c"
+    }
+}

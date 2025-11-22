@@ -1,0 +1,22 @@
+/*
+pointers, structs, and the shortcomings of C functions regarding data passing and returns.
+
+[Pointer]
+1. Pointers are variables designed to store the address of another variable of the same type. 
+2. They function as an "agent" to represent that original variable. 
+3. Pointers are used to address two main limitations of functions:
+    1. The inability of a function to return more than one data type. By receiving the addresses of variables via pointers, a function can update the original data, effectively "returning" multiple values without using the explicit return statement.
+    2. The performance cost and memory redundancy associated with pass by value (creating copies of data when passing variables to a function). 
+    Pointers enable pass by address, where only the variable's address is sent.
+Working with pointers requires understanding three key notations:
+• &pointer_name gives the pointer variable's own memory address.
+• pointer_name (alone) gives the value stored in the pointer, which is the address of the variable it represents.
+• *pointer_name refers to the value of the variable that the pointer is representing. Using this notation allows accessing or modifying the original variable.
+
+
+Structs (strcts) are composite variables used to gather related information or attributes (like a student or a product) into a single entity, mapping their relationships. Structs are noted as being important building blocks for understanding object-oriented programming.
+
+--------------------------------------------------------------------------------
+We just touched upon how pointers facilitate returning multiple values and improve efficiency by allowing pass by address. 
+Would you like to explore how pointers interact with more complex data structures like structs and arrays, which were mentioned as the next topics for discussion?
+*/

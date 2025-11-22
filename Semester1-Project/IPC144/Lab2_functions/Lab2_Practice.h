@@ -1,0 +1,1 @@
+int numSeconds(int hours, int minutes, int seconds);

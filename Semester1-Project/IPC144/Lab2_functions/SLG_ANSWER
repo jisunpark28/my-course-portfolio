@@ -1,0 +1,80 @@
+Cinema.c
+
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include "cinema.h"
+
+
+int getAdultTickets(void)
+{
+	int numberTickets;
+	printf("Enter number of adult tickets: ");
+	scanf("%d", &numberTickets);
+	return numberTickets;
+}
+
+int getStudentTickets(void)
+{
+	int numberTickets;
+	printf("Enter number of student tickets: ");
+	scanf("%d", &numberTickets);
+	return numberTickets;
+}
+
+int getChildTickets(void)
+{
+	int numberTickets;
+	printf("Enter number of child tickets: ");
+	scanf("%d", &numberTickets);
+	return numberTickets;
+}
+
+int calculateCost(int adults, int students, int children)
+{
+	return adults * 12 + students * 9 + children * 6;
+}
+
+void printSummary(int adults, int students, int children, int total)
+{
+	printf("\n--- Ticket Summary ---\n");
+	printf("Adults: %d x $12\n", adults);
+	printf("Students: %d x $9\n", students);
+	printf("Children: %d x $6\n", children);
+	printf("Total: $%d\n", total);
+}
+
+Cinema.h
+
+// This is my header file
+
+int getAdultTickets(void);
+int getStudentTickets(void);
+int getChildTickets(void);
+int calculateCost(int adults, int students, int children);
+void printSummary(int adults, int students, int children, int total);
+
+Main.c
+
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include "cinema.h"
+
+
+int main(void) {
+
+	int adults;
+	int students;
+	int children;
+	int total;
+
+	adults = getAdultTickets();
+	students = getStudentTickets();
+	children = getChildTickets();
+
+	total = calculateCost(adults,students, children);
+	printSummary(adults, students, children, total);
+
+
+	return 0;
+}
+

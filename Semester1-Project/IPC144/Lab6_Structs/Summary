@@ -1,0 +1,38 @@
+/******************************************
+ 
+Struct Definition
+    Definition: A struct is a template that specifies what data members will be part of any variable of that struct type
+    Syntax:
+    struct NameOfStruct
+       {
+         datatype1 dataMember1;
+         datatype2 dataMember2;
+          ...
+       };
+
+    Important: Defining a struct does not create any variables or allocate memory; it only describes the structure
+    Naming Convention: Use UpperCamelCase for struct names and lowerCamelCase for data member names
+
+Struct Instantiation
+    Instantiation: Creating a variable of a struct type reserves memory for all data members
+    Syntax: struct NameOfStruct variableName;
+    Memory: Each instance is a separate entity with its own copy of all data members
+
+Struct Initialization
+    Initialization: Data members can be initialized using curly bracket notation during instantiation
+    Syntax: struct NameOfStruct variableName = {value1, value2, value3, ...};
+    Order: Values are assigned to data members in the order they are declared in the struct definition
+    Uninitialized Members: Data members not explicitly initialized contain undefined values
+
+Accessing Data Members
+    Dot Operator: Use the dot (.) operator to access individual data members
+    Syntax: instanceVariable.dataMember
+    Example: student1.firstName accesses the firstName data member of student1
+
+Structs vs. Arrays
+    Arrays: Store multiple elements of the same type with index-based access
+    Structs: Store multiple elements of different types with named access
+    Use Structs When: You need to group related data of different types (e.g., student information)
+    Use Arrays When: You need to store multiple values of the same type (e.g., test scores)
+
+    ******************************************/

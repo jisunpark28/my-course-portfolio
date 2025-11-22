@@ -1,0 +1,26 @@
+/******************************************
+!! Define structs: using proper C syntax and understand that struct definitions create a template without allocating memory
+Instantiate struct variables: and explain how struct instances reserve memory for all data members
+Initialize structs: using curly bracket notation to initialize data members based on the order the data members are defined.
+Access struct data members: using dot operator and explain how the dot operator provides access to individual fields
+Organize related data: by grouping variables of different types into a single struct to improve code clarity and maintainability
+
+[Defining a struct] ! it does not create any variables
+the syntax is as follows:
+struct NameOfStruct
+{
+	datatype1 dataMember1;
+	datatype2 dataMember2;
+	...
+};
+
+[instances] ! it is not a variable and no memory is created at that point.
+the syntax is as follows:
+struct NameOfStruct variableName;
+
+[Initializing a Struct] ! Each value will be assigned to the data members in the order that the data members are declared.
+struct Student student1 ={ "Amy", "Lee", 123456789, "CPA", 3.7};
+
+[Accessing data members] ! use the dot operator (.)
+... instanceVariable.datamember ...
+******************************************/

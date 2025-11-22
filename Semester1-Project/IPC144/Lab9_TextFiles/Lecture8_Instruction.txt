@@ -1,0 +1,80 @@
+Skip to main content
+Courses
+All Terms
+filter-all-courses
+Skip to main content
+Introduction to Programming Using C
+Open
+Course status Open
+Course Faculty
+Gayan Gamage
+Instructor
+
+Details & Actions
+Course Content
+
+Welcome to your course! This module contains helpful course information and resources
+Weekly Content
+Course Repository
+If you can't access this link make sure a) you are logged into your github account or create an account on github.com b) Go to this link: https://classroom.github.com/a/Bk1WD7fo and hit the "join" button.
+Activity
+Quizzes
+×
+Activity
+data.txt
+
+11,Peter Thomas,45000,709-888-4567
+
+12,Heba Peters,55000.67,709-888-4566
+
+13,Lin Manual,67006.67,709-888-4533
+
+14,Alan Roper,67565.78
+
+15,Dann Duall,45555,709-888-2345
+
+
+
+Create a file data.txt and store the above records in them
+
+
+
+Create a header file called employee.h
+
+
+
+1. create a struct called employee with id, name, salary and phone number
+
+2. create two function prototypes
+
+2.1 loadData(char [], struct employee[], int)
+
+2.2 display(struct employee*)
+
+3.Create a c file employee.c and implement the two functions
+
+loadData is receiving a file name, employee array and the max size of the array
+
+This function should read all data and store in to array. Some records don't contain the phone number
+
+store null terminator for phone number for such employees
+
+
+
+4. display function receives an address to an employee. display all information. if phone number not available 
+
+dont display that
+
+
+
+5. Create a file called tester.c
+
+-create a main function with the following
+
+-Create an employee array to store 10 employees (through a macro directive set to 10)
+
+-Using load data, populate the employee array. (remember to pass the file name as data.txt)
+
+-Using an iterator call display function too display one employee at a time for all employees   
+
+×

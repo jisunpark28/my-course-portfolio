@@ -1,0 +1,103 @@
+/******************************************
+Struct with Arrrays
+
+1. Create two files .h and .c
+
+2. in .h file create a struct called Car with the following attributes
+
+brand
+
+model
+
+color
+
+price
+
+tirePressure (an array containing LF, Rf, LR,RR tire pressure )
+
+gas Amounts (An array containing the last 4 gas purchase amounts for the car)
+
+
+
+3. Create the following function prototypes in .h file
+
+-mainDisplay fn that receives an address to a car struct and sizes of gasAmount and 
+
+pressure array sizes
+
+-displayPresssures - that receives a double array and it's size
+
+-displayGasAmount - receives an address to a double
+
+-addGas - Receives gas amount array and it's size
+
+-changeProperties - that receives an address to a car
+
+
+
+4.
+
+Main
+
+====
+
+Initialize a car with the following values
+
+brand = Toyota
+
+model = Tacoma
+
+color = green
+
+price = 12000.50
+
+tirePressure{30, 31, 29 34} psi
+
+gas Amount {40, -1, -1, -1} litres (-1 refers to there are no valid gas amounts)
+
+
+
+- Display all car information
+
+- Obtain new values for brand, model, color and price 
+
+- Update the gas amounts for the last 4 times (67, 45, 67, 34,56,78) - The array is rotational array meaning
+
+if the latest gas amounts is the 5th element - > place that to the first elements and so forth '
+
+- display car information again for new values
+
+
+
+mainDisplay
+
+===========
+
+-Display brannd, model color and price and use displyPressures to display all tire pressures. Use displayGasAmount to displat valid last gas 
+
+amounts pumped to the car
+
+
+
+-displayPressures
+
+Display all tire pressures for LF, LR.... sides
+
+
+
+-displayGasAmount
+
+-Display gas amount 
+
+
+
+-addGas
+
+Obtain user input for the new gas amount and update/overwrite the earliest (if array is full) or the first invalid gas value (Consider keeping some variable to point to the  
+
+that position in array)
+
+
+
+- Obtain user input for brand, model, price and color and update via pointer
+

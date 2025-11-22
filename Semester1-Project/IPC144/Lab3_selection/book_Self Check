@@ -1,0 +1,18 @@
+1. What is the boolean expression that is true when 'number' is between a and b inclusive?
+    (a >= number && b <= number)
+2. What is the boolean expression that is true when a 'number' if positive?
+    (number > 0)
+3. What is the boolean expression that is true if 'letter' is either an exclamation mark (!) or question mark (?) ?
+    (letter == '!' || letter == '?')
+4. What is the boolean expression that is true when the last digit of the 'number' is a 5?
+    (number % 10 == 5)
+5. int a = 5;
+   int b = 12;
+        (falsey) a == 12 || b == 5
+        (truthy) a == 5 && b == 12
+        (truthy) a == 5 || b == 12
+        (falsey) a - 5
+        (truthy) b
+        (truthy) !(a==12) && !(b==5)
+        (falsey) ((a==5) || (b==12)) && !(a==5 && b==12)
+

@@ -1,0 +1,10 @@
+int power(int, int);
+int readIntInRange(int, int);
+int fibonacci(int);
+int sum(int, int);
+int fizzBuzzScore(int);
+int sumDigits(int);
+int isLower(char);
+char toUpper(char);
+int biggest(int, int, int);
+double ticketPrice(int, int, int);
