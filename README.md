@@ -9,17 +9,17 @@ Welcome to my academic portfolio for CEP146!
 - GitHub: [@jisunpark-ca](https://github.com/jisunpark-ca)
 
 ## Tech Stack
-- Languages: C, C++ (Planned)
+- Languages: C
 - Tools: Git, GitHub, Visual Studio, VS Code
 - OS: Windows, Linux
 
 ### Semester 1 (Fall 2025)
-* **IPC144:** Introduction to Programming Using C
+* **IPC144:** C Programming
     * *Focus:* Structured Programming, Arrays, Pointers, Memory Management
 * **OPS102:** Operating Systems for Programmers (Unix & Windows)
     * *Focus:* Command Line Interface (CLI), Shell Scripting, File Systems
 * **MTH140:** Mathematics for Programmers
-    * *Focus:* Linear Systems, Functions, Trigonometry, Complex Numbers
+    * *Focus:* Functions, Permutations, Combinations, Probability
 * **APS145:** Applied Problem Solving
     * *Focus:* Computational Thinking, Flowcharts, Pseudo Code
 * **CEP146:** Tools & AI
