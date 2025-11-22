@@ -1,0 +1,28 @@
+#!/usr/bin/bash
+
+echo ==============================
+echo         Hangman Game
+echo ==============================
+
+MAXTRIES=8
+CONT="Y"
+GAMES=0
+WON=0
+
+INSTRUCTIONS=$(tput setaf 9)
+INPUT=$(tput setaf 11)
+GOOD=$(tput setaf 2)
+BAD=$(tput setaf 9)
+RESULT=$(tput setaf 6)
+NORMAL=$(tput sgr0)
+
+clear
+
+echo ==============================
+echo         Hangman Game
+echo ==============================
+echo
+echo
+while [[ "$CONT" == "Y" || "$CONT" == "y" || "$CONT" == "yes" || "$CONT" == "Yes" || "$CONT" == "YES" ]]   
+do
+	read -p "Enter a letter: " GUESS
