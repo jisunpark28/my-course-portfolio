@@ -76,5 +76,6 @@ printf("Press Enter to continue the program....");
 clearBuffer();
 
 printf("NUM=%d  CHAR=%c\n", num, ch);
+
     return 0;
 }
