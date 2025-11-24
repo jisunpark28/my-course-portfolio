@@ -47,5 +47,10 @@ int main(void)
 
     saveCombinedData(femaleData,maleData, femaleDataCount, maleDataCount);
 
+    switch (userChoice) {
+
+
+        
+    }
     return 0;
 }
