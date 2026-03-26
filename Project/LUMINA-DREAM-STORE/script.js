@@ -1,75 +1,112 @@
 ﻿const shineButtons = document.querySelectorAll('.shine-btn');
 
 shineButtons.forEach((button) => {
-  button.addEventListener('click', function () {
-    const card = this.closest('.dream-card');
-    const lumElement = card.querySelector('.stardust-value');
-    const neededElement = card.querySelector('.luminescence-needed');
-    const targetValue = parseInt(neededElement.textContent.replace(/[^0-9]/g, ''));
+    button.addEventListener('click', function () {
+        const card = this.closest('.dream-card');
+        const lumElement = card.querySelector('.stardust-value');
+        const neededElement = card.querySelector('.luminescence-needed');
+        const targetValue = parseInt(neededElement.textContent.replace(/[^0-9]/g, ''));
 
-    let currentValue = parseInt(lumElement.textContent);
-    let newValue = currentValue + 10;
+        let currentValue = parseInt(lumElement.textContent);
+        let newValue = currentValue + 10;
 
-    lumElement.innerHTML = newValue + ' <span class="shine-icon">✦</span>';
+        lumElement.innerHTML = newValue + ' <span class="shine-icon">✦</span>';
 
-    if (newValue >= targetValue) {
-      card.style.backgroundColor = '#fff9db';
-      card.style.borderColor = '#ffd43b';
-      card.style.transition = 'background-color 0.8s ease';
-      this.textContent = 'Dream Fulfilled!';
-      this.disabled = true;
-      this.style.backgroundColor = '#fab005';
-    }
+        if (newValue >= targetValue) {
+            card.style.backgroundColor = '#fff9db';
+            card.style.borderColor = '#ffd43b';
+            card.style.transition = 'background-color 0.8s ease';
+            this.textContent = 'Dream Fulfilled!';
+            this.disabled = true;
+            this.style.backgroundColor = '#fab005';
+        }
 
-    console.log('Luminescence increased to: ' + newValue);
-  });
+        console.log('Luminescence increased to: ' + newValue);
+    });
 });
 
 function validateForm() {
-  const errorPanel = document.getElementById('error-output');
-  const idValue = document.getElementById('id').value;
-  const nicknameValue = document.getElementById('nickname').value.trim();
-  const descValue = document.getElementById('description').value.trim();
+    const form = document.signup;
+    const idElem = form.id;
+    const nicknameElem = form.nickname;
+    const emailElem = form.email;
+    const titleElem = form.title;
+    const lumElem = form.luminescence;
+    const descElem = form.description;
+    const statusElem = form.status;
 
-  errorPanel.innerHTML = '';
-  let errors = [];
-
-  if (!/^\d{8}$/.test(idValue)) {
-    errors.push('Dream ID must be exactly 8 digits.');
-  }
-
-  if (nicknameValue.length < 4) {
-    errors.push('Nickname must be at least 4 characters long.');
-  } else {
-    const firstChar = nicknameValue.charAt(0);
-    const isAlpha =
-      (firstChar >= 'a' && firstChar <= 'z') || (firstChar >= 'A' && firstChar <= 'Z');
-    if (!isAlpha) {
-      errors.push('Nickname must start with an alphabet letter.');
+    if (!/^\d{8}$/.test(idElem.value.trim())) {
+        alert('Dream ID must be exactly 8 digits.');
+        idElem.focus();
+        return false;
     }
-  }
 
-  if (descValue.length < 20) {
-    errors.push('Description must be at least 20 characters.');
-  }
+    const nicknameValue = nicknameElem.value.trim();
+    if (nicknameValue.length < 4) {
+        alert('Nickname must be at least 4 characters long.');
+        nicknameElem.focus();
+        return false;
+    } else {
+        const firstChar = nicknameValue.charAt(0).toUpperCase();
+        if (firstChar < 'A' || firstChar > 'Z') {
+            alert('Nickname must start with an alphabet letter.');
+            nicknameElem.focus();
+            return false;
+        }
+    }
 
-  if (errors.length > 0) {
-    errorPanel.style.color = 'red';
-    errorPanel.innerHTML = '<ul><li>' + errors.join('</li><li>') + '</li></ul>';
-    return false;
-  }
+    if (emailElem.value.trim().length === 0) {
+        alert('Please enter your email address.');
+        emailElem.focus();
+        return false;
+    }
 
-  const checkedStatus = document.querySelectorAll('input[name="status"]:checked');
-  if (checkedStatus.length === 0) {
-    errors.push('Please select at least one Dream Status.');
-  }
+    const titleValue = titleElem.value.trim();
+    if (titleValue.length < 4) {
+        alert('Dream Title must be at least 4 characters long.');
+        titleElem.focus();
+        return false;
+    } else {
+        const firstTitleChar = titleValue.charAt(0).toUpperCase();
+        if (firstTitleChar < 'A' || firstTitleChar > 'Z') {
+            alert('Dream Title must start with an alphabet letter.');
+            titleElem.focus();
+            return false;
+        }
+    }
 
-  if (errors.length > 0) {
-    errorPanel.style.color = 'red';
-    errorPanel.innerHTML = '<ul><li>' + errors.join('</li><li>') + '</li></ul>';
-    return false;
-  }
+    const lumValue = Number(lumElem.value);
+    if (!Number.isInteger(lumValue) || lumValue <= 0 || lumValue >= 1000) {
+        alert('Luminescence must be a whole number greater than 0 and less than 1000.');
+        lumElem.focus();
+        return false;
+    }
 
-  alert('Success! Your dream has been registered');
-  return true;
+    if (descElem.value.trim().length < 20) {
+        alert('Description must be at least 20 characters.');
+        descElem.focus();
+        return false;
+    }
+
+    let checkedCount = 0;
+    for (let i = 0; i < statusElem.length; i++) {
+        if (statusElem[i].checked === true) {
+            checkedCount++;
+        }
+    }
+
+    if (checkedCount === 0) {
+        alert('Please select at least one Dream Status.');
+        if (statusElem.length > 0) {
+            statusElem[0].focus();
+        }
+        return false;
+    }
+
+    alert('Success! Your dream has been registered');
+    return true;
 }
+
+
+
+

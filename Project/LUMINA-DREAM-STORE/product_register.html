@@ -2,98 +2,68 @@
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <title>Register - Jisun Park</title>
     <link rel="stylesheet" href="https://unpkg.com/mvp.css" />
     <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
+</head>
+<body>
     <header>
-      <nav>
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="product_register.html">Donate a Dream</a></li>
-          <li><a href="about.html">About Author</a></li>
-          <li><a href="honesty.html">Honesty</a></li>
-        </ul>
-      </nav>
-      <h1>Welcome to Lumina Dream Store</h1>
-      <p><i>Donate your own story to our Lumina Dream Store.</i></p>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="product_register.html">Donate a Dream</a></li>
+                <li><a href="about.html">About Author</a></li>
+                <li><a href="honesty.html">Honesty</a></li>
+            </ul>
+        </nav>
+        <h1>Welcome to Lumina Dream Store</h1>
+        <p><i>Donate your own story to our Lumina Dream Store.</i></p>
     </header>
     <main>
-      <h2 style="text-align: center">Register Your Dream</h2>
+        <h2 style="text-align: center">Register Your Dream</h2>
+        <form name="signup" method="post" action="https://httpbin.org/post" onsubmit="return validateForm();">
+            <input type="hidden" name="FullName" id="FullName" value="Jisun Park" />
+            <input type="hidden" name="studentId" id="studentId" value="114182256" />
 
-      <form
-        name="signup"
-        method="post"
-        action="https://httpbin.org/post"
-        onsubmit="return validateForm();"
-      >
-        <input type="hidden" name="FullName" id="FullName" value="Jisun Park" />
-        <input type="hidden" name="studentId" id="studentId" value="114182256" />
+            <fieldset>
+                <legend>Dreamer Information</legend>
+                <label for="id">Dream ID (8 Digits):</label>
+                <input type="text" id="id" name="id" placeholder="ex, 12345678" pattern="^\d{8}$" title="Dream ID must be exactly 8 digits">
 
-        <fieldset>
-          <legend>Dreamer Information</legend>
+                <label for="nickname">Nickname:</label>
+                <input type="text" id="nickname" name="nickname" placeholder="Starts with alpha, min 4 chars">
 
-          <label for="id">Dream ID (8 Digits):</label>
-          <input
-            type="text"
-            id="id"
-            name="id"
-            placeholder="ex, 12345678"
-            minlength="8"
-            maxlength="8"
-            required
-          />
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email">
+            </fieldset>
 
-          <label for="nickname">Nickname:</label>
-          <input
-            type="text"
-            id="nickname"
-            name="nickname"
-            placeholder="Starts with alpha, min 4 chars"
-            required
-          />
+            <fieldset>
+                <legend>Dream Details</legend>
+                <label for="title">Dream Title:</label>
+                <input type="text" id="title" name="title">
 
-          <label for="email">Email:</label>
-          <input type="email" id="email" name="email" required />
-        </fieldset>
+                <label for="luminescence">Luminescence Needed:</label>
+                <input type="number" id="luminescence" name="luminescence" min="1" max="999" step="1" placeholder="Amount of light needed (<1000)">
 
-        <fieldset>
-          <legend>Dream Details</legend>
-          <label for="title">Dream Title:</label>
-          <input type="text" id="title" name="title" required />
+                <label for="description">Description (Min 20 chars):</label>
+                <textarea id="description" name="description" rows="4" minlength="20"></textarea>
 
-          <label for="luminescence">Luminescence Needed:</label>
-          <input
-            type="number"
-            id="luminescence"
-            name="luminescence"
-            min="1"
-            max="999"
-            step="1"
-            placeholder="Amount of light needed (<1000)"
-            required
-          />
+                <label for="status">Dream Status (Select at least one):</label>
+                <label><input type="checkbox" name="status" value="New Supplier"> Growth</label>
+                <label><input type="checkbox" name="status" value="Contract Signed"> Joy</label>
+                <label><input type="checkbox" name="status" value="Quality Tested"> Adventure</label>
+            </fieldset>
 
-          <label for="description">Description (Min 20 chars):</label>
-          <textarea id="description" name="description" rows="4" minlength="20" required></textarea>
+            <div style="display: flex; gap: 1rem">
+                <button type="submit">Donate Dream</button>
+                <button type="reset">Clear</button>
+            </div>
+        </form>
 
-          <label>Dream Status (Select at least one):</label>
-          <label><input type="checkbox" name="status" value="Growth" /> Growth</label>
-          <label><input type="checkbox" name="status" value="Joy" /> Joy</label>
-          <label><input type="checkbox" name="status" value="Adventure" /> Adventure</label>
-        </fieldset>
-
-        <div style="display: flex; gap: 1rem">
-          <button type="submit">Donate Dream</button>
-          <button type="reset">Clear</button>
-        </div>
-      </form>
-
-      <aside id="error-output" style="color: red; margin-top: 15px"></aside>
+        <aside id="error-output" style="color: red; margin-top: 15px"></aside>
     </main>
     <script src="script.js"></script>
-  </body>
+</body>
 </html>
