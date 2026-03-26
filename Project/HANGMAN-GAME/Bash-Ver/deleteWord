@@ -1,0 +1,45 @@
+#!/usr/bin/bash
+
+echo
+CONT="Y"
+while [[ "$CONT" == "Y" || "$CONT" == "y" || "$CONT" == "Yes" || "$CONT" == "yes" ]]
+do
+        LINES=$(wc -l < wordBank.txt)
+        echo 
+        echo "            WORD BANK"
+        echo
+        for (( i=1; i<=$((LINES)); i++ ))
+        do
+                tmpWord=$(cat wordBank.txt |cut -d " " -f 2 | head -n $i | tail -n 1)"        "
+                echo -n "${tmpWord:0:10}" 
+                if (( $((i % 4)) == 0 ))
+                then
+                        echo 
+                fi
+        done
+
+        echo
+        echo
+        read -p "Enter the word to delete: " DELETETARGET
+        rm -rf tmp
+
+        for (( i=1; i<=$((LINES)); i++ ))
+        do
+		SERCHING="$(cat wordBank.txt | cut -d " " -f 2 | head -n $i | tail -n 1)"
+
+                if [[ "$DELETETARGET" == "$SERCHING" ]]
+                then 
+                        grep -v "$DELETETARGET" wordBank.txt > tmp
+                fi
+        done
+	
+        mv tmp wordBank.txt
+
+	if [[ "echo $?" == "5" ]]
+	then
+		rm -rf tmp
+	fi
+
+        echo
+        read -p "Do you want to delete more?(y/n): " CONT
+done

@@ -1,0 +1,14 @@
+Animals fox
+Animals deer
+Animals whale
+Places park
+Places forest
+Places ocean
+Sports jump
+Sports kick
+Sports throw
+Sports runner
+Sports coach
+Sports medal
+Cooking candy
+Cooking oven

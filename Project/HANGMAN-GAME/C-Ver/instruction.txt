@@ -1,0 +1,25 @@
+=================================================================
+            H A N G M A N   I N S T R U C T I O N S
+=================================================================
+
+1. [STEP 1: Pick a Topic]
+   Enter ANY topic you like (e.g., "Harry Potter", "Cooking", "BTS").
+   The AI will generate a secret word based on your topic.
+
+2. [STEP 2: Use the Hint]
+   The AI also provides a helpful HINT describing the word.
+   Read the hint carefully to guess the right word!
+
+3. [STEP 3: Guess Letters]
+   Guess the word letter by letter (A-Z).
+   If you guess wrong, the man gets closer to being hanged.
+
+4. [Rules]
+   - You have 6 Chances (Head, Body, Arms, Legs).
+   - If the drawing is complete, you lose.
+
+5. [Replay]
+   After the game ends, you can choose to play again with the
+   SAME topic to get a new word instantly!
+
+=================================================================

@@ -1,0 +1,16 @@
+*.exe
+*.o
+*.obj
+bin/
+build/
+
+.vscode/
+node_modules/
+
+.DS_Store
+Thumbs.db
+
+.env
+gemini_chat
+json_maker
+node_modules/

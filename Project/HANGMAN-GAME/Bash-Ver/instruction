@@ -1,0 +1,23 @@
+#!/usr/bin/bash
+
+INSTRUCTIONS=$(tput setaf 6)
+INPUT=$(tput setaf 11)
+NORMAL=$(tput sgr0)
+
+CONT=0
+
+while [[ $CONT == 0 ]]
+do
+
+	clear
+	echo "${INSTRUCTIONS}===================================================="
+	echo "                 HOW TO PLAY HANGMAN"
+	echo "====================================================${NORMAL}"
+	echo " ${INPUT}1. GOAL :${NORMAL} Guess the hidden word using the 'Subject'"
+	echo " ${INPUT}2. INPUT:${NORMAL} Enter one letter (A-Z) at a time"
+	echo " ${INPUT}3. RULE :${NORMAL} 6 wrong guesses will kill the hangman"
+	echo "${INSTRUCTIONS}====================================================${NORMAL}"
+	echo
+	read -p "            Press any key to go back..." CONT
+	echo
+done

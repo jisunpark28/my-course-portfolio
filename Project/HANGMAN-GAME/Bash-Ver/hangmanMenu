@@ -1,0 +1,59 @@
+#!/usr/bin/bash
+
+INSTRUCTIONS=$(tput setaf 6)
+INPUT=$(tput setaf 11)
+GOOD=$(tput setaf 2)
+BAD=$(tput setaf 9)
+RESULT=$(tput setaf 6)
+NORMAL=$(tput sgr0)
+
+# Game loop -------------------------------------------------------------------
+
+MENUCHOICE=0
+
+until [[ "$MENUCHOICE" == "5" ]]
+do
+    if [[ "$MENUCHOICE" == "0" ]]
+    then
+        clear
+        echo "${INSTRUCTIONS}====================================="
+	echo
+        echo "        Hangman Game Menu            "
+        echo
+        echo "          1. Start Game"
+        echo "          2. Instructions"
+        echo "          3. Add Words"
+        echo "          4. Delete Words"
+        echo "          5. Exit"
+        echo
+        echo "=====================================${NORMAL}"
+	echo
+        read -p "${INPUT}       Press Enter to numer 1-5: ${NORMAL}" MENUCHOICE
+	echo
+    elif [[ "$MENUCHOICE" == "1" ]]
+    then
+            ./hangman
+            MENUCHOICE=0
+    elif [[ "$MENUCHOICE" == "2" ]]
+    then
+            ./instruction
+	    MENUCHOICE=0
+    elif [[ "$MENUCHOICE" == "3" ]]
+    then
+	    ./addWord
+	    MENUCHOICE=0
+    elif [[ "$MENUCHOICE" == "4" ]]
+    then
+	    ./deleteWord
+            MENUCHOICE=0
+    elif [[ "$MENUCHOICE" != "[[1-5]]" ]]
+    then
+            echo "${BAD}Invalid choice. Please select a valid option.${NORMAL}"
+	    read -p "${INPUT}       Press Enter to numer 1-5: ${NORMAL}" MENUCHOICE
+    fi
+done
+
+clear
+echo
+echo "Exiting Hangman Game. Goodbye!"
+echo

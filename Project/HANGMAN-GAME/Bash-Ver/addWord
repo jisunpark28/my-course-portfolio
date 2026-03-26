@@ -1,0 +1,24 @@
+#!/usr/bin/bash
+
+echo
+CONT="Y"
+while [[ "$CONT" == "Y" || "$CONT" == "y" || "$CONT" == "Yes" || "$CONT" == "yes" ]]
+do
+        echo
+        read -p "Enter a new word: " WORD
+        echo
+        read -p "Enter a Subject for guessing the word, \"$WORD\": " SUBJECT
+        echo
+        echo ""$SUBJECT" "$WORD"" >> wordBank.txt
+        if [[ %%errorlevel%% == 0 ]]
+        then
+                echo "Failed to save the word."
+                echo
+                CONT = Y
+        else
+                echo "Word saved successfully."
+                echo
+        fi
+
+        read -p "Do you want to add more?(y/n): " CONT
+done

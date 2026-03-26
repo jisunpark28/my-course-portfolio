@@ -1,0 +1,158 @@
+#!/usr/bin/bash
+
+INSTRUCTIONS=$(tput setaf 6)
+INPUT=$(tput setaf 11)
+GOOD=$(tput setaf 2)
+BAD=$(tput setaf 9)
+RESULT=$(tput setaf 6)
+NORMAL=$(tput sgr0)
+
+# Game loop -------------------------------------------------------------------
+
+CONT="Y"
+
+while [[ "$CONT" == "Y" ]]
+do
+        # Variables Declare ---------------------------------------------------
+        CORRECT=0
+        WRONG=0
+        MATCHED=0
+	GUESSWORD=""
+	WRONGWORD=""
+	
+	LINES=$(wc -l < wordBank.txt)
+        POINT=$((RANDOM%$LINES+1))
+        SUBJECT=$(cat wordBank.txt | head -n $POINT | tail -n 1 | cut -d " " -f 1)
+        WORD=$(cat wordBank.txt | head -n $POINT | tail -n 1 | cut -d " " -f 2-)
+        WORDCOUNT=$(echo -n $WORD | tr -dc "A-Za-z" | wc -c)
+
+        for (( i=0; i<WORDCOUNT; i++ )) do
+                if [[ "${WORD:i:1}" == " " ]]
+                then
+                        GUESSWORD="${GUESSWORD}  "
+                else
+                        GUESSWORD="${GUESSWORD}_ "
+                fi
+        done
+
+        until [[ "$WRONG" -eq 6 || $MATCHED -eq $WORDCOUNT ]]
+        do
+
+                # Get user input, display picture -------------------------------------
+
+                clear
+                        echo "${INSTRUCTIONS}====================================="
+                        echo "            Hangman Game             "
+                        echo "=====================================${NORMAL}"
+                        echo
+                        cat picture.txt | head -n $((WRONG*8+7)) |tail -n 7
+                        echo
+                        echo
+                        echo "    Word Subject: $SUBJECT"
+                        echo "    Guess the word: $GUESSWORD"
+
+# echo "TESTING....MATCHED: $MATCHED"
+# echo "TESTING....WORDCOUNT: $WORDCOUNT"
+
+                        if [[ "$WRONG" -gt 0 && "$WRONG" -lt 6 ]]
+                        then
+				echo "    You tried: ${BAD}$WRONGWORD${NORMAL}"
+                        fi
+			
+			GUESSLETTER=""
+
+                        until [[ "$GUESSLETTER" =~ ^[a-zA-Z]$ ]]
+                        do
+				echo
+                                read -p "${INPUT}    Enter a letter(a-z): ${NORMAL}" GUESSLETTER
+                        done
+
+                # Compare each letter (Correct) --------------------------------------
+
+                CORRECT=0
+
+                for (( i=0; i<WORDCOUNT; i++ )) do
+
+                        LETTER="${WORD:i:1}"
+
+                        if [[ "$LETTER" == "$GUESSLETTER" && "${GUESSWORD:((2*i)):1}" == "_" ]]
+                        then
+                                (( CORRECT++ ))
+                                FRONT=${GUESSWORD:0:((i*2))}
+                                BACK=${GUESSWORD:((i*2+1))}
+                                GUESSWORD="${FRONT}${GUESSLETTER}${BACK}"
+                        fi
+                done
+
+                # Compare each letter (Wrong) ---------------------------------------
+
+                if [[ $CORRECT -eq 0 ]]
+                then
+                        (( WRONG++ ))
+                        WRONGWORD="${WRONGWORD}$GUESSLETTER  "
+                else
+                        MATCHED=$(( MATCHED + CORRECT ))
+                fi
+
+        done
+
+        # Display Game Result ------------------------------------------------------
+
+        if [[ "$WRONG" -eq 6 ]]
+        then
+		clear
+                echo "${INSTRUCTIONS}====================================="
+                echo "            Hangman Game             "
+                echo "=====================================${NORMAL}"
+                echo
+                cat picture.txt | head -n 55 |tail -n 7
+                echo ${BAD}
+                echo "             Game Over!${NORMAL}"
+		echo
+                echo "         The word was: ${BAD}$WORD"
+                echo ${NORMAL}
+        fi
+
+
+        if [[ "$MATCHED" -eq "$WORDCOUNT" ]]
+        then
+                for (( i=0; i<6; i++ )) do
+                        clear
+                        echo "${INSTRUCTIONS}====================================="
+                        echo "            Hangman Game             "
+                        echo "=====================================${NORMAL}"
+                        echo
+                        if (( i%2 == 1 ))
+                        then
+                                cat picture.txt | head -n 63 |tail -n 7
+                                echo ${GOOD}
+                                echo "              GOT IT!"
+				echo
+                                echo "       You saved the hangman!"
+                                echo ${NORMAL}
+                                sleep 0.3
+                        fi
+                        if (( i%2 == 0 ))
+                        then
+                                cat picture.txt | head -n 71 |tail -n 7
+                                echo ${GOOD}
+                                echo "              GOT IT!"
+				echo
+                                echo "       You saved the hangman!"
+                                echo ${NORMAL}
+                                sleep 0.3
+                        fi
+                done
+        fi
+
+
+                read -p "${INPUT}         Play again?(y/n) ${NORMAL}" AGAIN
+                if [[ "$AGAIN" == "Y" || "$AGAIN" == "y" ]]
+                then
+                        CONT="Y"
+                else
+                        CONT="N"
+                fi
+
+done
+#------------------------------------------------------------------------------------
