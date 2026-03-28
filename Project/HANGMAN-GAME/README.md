@@ -21,7 +21,7 @@
 * **File Stream**: Optimized word extraction using `grep`, `cut`, and `shuf`.
 * **Environment**: Leverages native Linux tools for lightweight execution.
 
-### ⚙C Version: Advanced Engineering
+### C Version: Advanced Engineering
 * **Connectivity**: Integrated **Google Gemini API** via `libcurl` for dynamic hint generation.
 * **Memory Management**: Implemented safe dynamic allocation and robust JSON parsing.
 
