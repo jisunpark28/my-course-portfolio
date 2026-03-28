@@ -11,8 +11,8 @@
 | :--- | :--- | :--- | :---: | :---: |
 | **Bash Ver** | `Shell` `Linux CLI` | File I/O stream, Linux native command optimization | `Completed` ✅ | [**View Code**](./Bash-Ver) |
 | **C Ver** | `C` `libcurl` `API` | **Gemini API** integration, Network communication, JSON parsing | `Completed` ✅ | [**View Code**](./C-Ver) |
-| **JS Ver** | `JavaScript` `DOM` | Interactive Web UI and real-time state management | `In Progress` 🏗️ | [**View Code**](./javascript) |
-
+| **JS Ver** | `JavaScript` `DOM` | Interactive Web UI and real-time state management | `In Progress` 🏗️ | [**View Code**](./JS-Ver) |
+| **C++ Ver** | `C++` | Encapsulation, Inheritance, polymorphism | `In Progress` 🏗️ | [**View Code**](./C++-Ver) |
 ---
 
 ## 🔍 Implementation Highlights
