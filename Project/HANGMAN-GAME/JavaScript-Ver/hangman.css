@@ -1,0 +1,113 @@
+﻿/* Container styling to center the game board */
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Visual container for the flower and petals */
+#hangman-visual {
+    position: relative;
+    width: 300px;
+    height: 250px;
+    margin: 0 auto 30px auto;
+    transform: scale(1.7); /* Scale up the entire flower visual */
+}
+
+#flower-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Individual petal styling with radial distribution */
+.petal {
+    position: absolute;
+    width: 80px;
+    height: auto;
+    top: 30%;
+    left: 48%;
+    transform-origin: 8% 50%; /* Pivot point near the center of the flower */
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+
+/* Rotation for 6 petals (60 degrees each) */
+.petal-1 {transform: rotate(0deg);}
+.petal-2 {transform: rotate(60deg);}
+.petal-3 {transform: rotate(120deg);}
+.petal-4 {transform: rotate(180deg);}
+.petal-5 {transform: rotate(240deg);}
+.petal-6 {transform: rotate(300deg);}
+
+/* Class to hide petals when a guess is wrong */
+.petal-hidden {
+    visibility: hidden;
+    opacity: 0;
+}
+
+/* Word display styling */
+#word-display {
+    font-size: 2.5rem;
+    font-weight: bold;
+    letter-spacing: 0.8rem;
+    margin: 30px 0;
+}
+
+/* Modern unified input and button layout */
+#input-section {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 0; /* Remove gap to create a single 'capsule' look */
+    margin: 20px 0;
+}
+
+#letter-input {
+    width: 80px;
+    height: 50px;
+    margin: 0 !important; /* Override MVP.css margin */
+    border-radius: 8px 0 0 8px; /* Round only left corners */
+    text-align: center;
+    font-size: 1.5rem;
+    border: 2px solid #118bee;
+}
+
+#guess-btn {
+    height: 65px;
+    margin: 0 !important; /* Override MVP.css margin */
+    border-radius: 0 8px 8px 0; /* Round only right corners */
+    padding: 0 30px;
+    background-color: #118bee;
+    color: white;
+    border: 2px solid #118bee;
+    cursor: pointer;
+}
+
+#reset-btn {
+    display: inline-block;
+    margin-top: 20px;
+    background-color: transparent;
+    color: #118bee;
+    border: 1px solid #118bee;
+    /* Add these for the 'runaway' effect */
+    position: relative; /* Logic will switch this to absolute when moving */
+    transition: all 0.2s ease;
+    z-index: 100;
+}
+
+/* Left-aligned signature styling for the footer */
+footer.signiture {
+    display: block !important;
+    text-align: left !important;
+    margin-top: 50px;
+    border-top: 1px solid #eaeaea;
+    padding-top: 10px;
+}
+
+    footer.signiture p {
+        text-align: left !important;
+        margin: 0;
+        font-size: 0.9rem;
+    }

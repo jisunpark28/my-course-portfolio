@@ -11,23 +11,24 @@
 | :--- | :--- | :--- | :---: | :---: |
 | **Bash Ver** | `Shell` `Linux CLI` | File I/O stream, Linux native command optimization | `Completed` ✅ | [**View Code**](./Bash-Ver) |
 | **C Ver** | `C` `libcurl` `API` | **Gemini API** integration, Network communication, JSON parsing | `Completed` ✅ | [**View Code**](./C-Ver) |
-| **JS Ver** | `JavaScript` `DOM` | Interactive Web UI and real-time state management | `In Progress` 🏗️ | [**View Code**](./JS-Ver) |
+| **JS Ver** | `JavaScript` `DOM` | Interactive Flower Visuals, Closure-based logic, MVP.css UI | `Completed` ✅ | [**View Code**](./JavaScript-Ver) |
 | **C++ Ver** | `C++` | Encapsulation, Inheritance, polymorphism | `In Progress` 🏗️ | [**View Code**](./C++-Ver) |
 ---
 
-## 🔍 Implementation Highlights
+## Implementation Highlights
 
-### 🐚 Bash Version: System Efficiency
+### Bash Version: System Efficiency
 * **File Stream**: Optimized word extraction using `grep`, `cut`, and `shuf`.
 * **Environment**: Leverages native Linux tools for lightweight execution.
 
-### ⚙️ C Version: Advanced Engineering
+### ⚙C Version: Advanced Engineering
 * **Connectivity**: Integrated **Google Gemini API** via `libcurl` for dynamic hint generation.
 * **Memory Management**: Implemented safe dynamic allocation and robust JSON parsing.
 
-### 🌐 JavaScript Version: Web Integration
-* **UI/UX**: Transitioning core logic to a browser-based interactive interface.
-* **State Management**: Handling game transitions and user input through DOM events.
+### JavaScript Version: Web Integration & UX
+* **Visual Storytelling**: Replaced traditional text-art with a **dynamic flower animation** where petals fall off on incorrect guesses.
+* **Architecture**: Leveraged **Closures** for clean state management and data encapsulation, abstracting complex logic from the UI.
+* **Modern UI**: Integrated **MVP.css** and custom Flexbox layouts for a clean, responsive, and minimalist user experience.
 
 ---
 

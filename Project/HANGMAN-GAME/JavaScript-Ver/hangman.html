@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hangman Game - Jisun Park</title>
+    <link rel="stylesheet" href="https://unpkg.com/mvp.css">
+    <link rel="stylesheet" href="hangman.css">
+</head>
+<body>
+    <main class="container">
+        <header>
+            <h1>Hangman: Flower Edition</h1>
+        </header>
+
+        <section id="hangman-visual">
+            <img src="img/background.png" alt="Flower Background" id="flower-bg">
+            <div id="petals-container">
+                <img src="img/petal.png" alt="Petal" class="petal petal-1">
+                <img src="img/petal.png" alt="Petal" class="petal petal-2">
+                <img src="img/petal.png" alt="Petal" class="petal petal-3">
+                <img src="img/petal.png" alt="Petal" class="petal petal-4">
+                <img src="img/petal.png" alt="Petal" class="petal petal-5">
+                <img src="img/petal.png" alt="Petal" class="petal petal-6">
+            </div>
+        </section>
+
+        <div id="word-display">_ _ _ _ _</div>
+
+        <section class="info">
+            <p>Attempts Left: <span id="attempts">6</span></p>
+            <p>Guessed: <span id="guessed-letters">-</span></p>
+        </section>
+
+        <section id="input-section">
+            <input type="text" id="letter-input" maxlength="1" placeholder="A" autofocus>
+            <button id="guess-btn">Guess</button>
+        </section>
+
+        <button id="reset-btn">New Game</button>
+
+        <footer class="signiture">
+            <p><b>Name:</b> Jisun Park</p>
+            <p><b>Dated:</b> April 03, 2026</p>
+        </footer>
+    </main>
+
+    <script src="hangman.js"></script>
+</body>
+</html>
