@@ -1,0 +1,4 @@
+﻿1. Add execution methods and sequences for each folder.
+2. Comparative analysis of each version (Memory Footprint/Startup Latency/Abstraction Cost).
+3. Add and connect a word bank object in the JS version.
+4. Set up the C++ architecture.
