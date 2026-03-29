@@ -1,4 +1,10 @@
 ﻿1. Add execution methods and sequences for each folder.
 2. Comparative analysis of each version (Memory Footprint/Startup Latency/Abstraction Cost).
-3. Add and connect a word bank object in the JS version.
+[done] 3. Add and connect a word bank object in the JS version.
 4. Set up the C++ architecture.
+
+
+JS Version
+	[done] 1. Input data Validation
+	[done] 2. Add Word Data Array 
+	[done] 3. Clean the package.json file (delete node.js environ..)

@@ -75,7 +75,7 @@
 }
 
 #guess-btn {
-    height: 65px;
+    height: 67px;
     margin: 0 !important; /* Override MVP.css margin */
     border-radius: 0 8px 8px 0; /* Round only right corners */
     padding: 0 30px;

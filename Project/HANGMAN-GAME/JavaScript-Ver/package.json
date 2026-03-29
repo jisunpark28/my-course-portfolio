@@ -2,18 +2,17 @@
   "name": "javascript",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "hangman.js",
   "scripts": {
+    "start": "live-server --entry-file=hangman.html",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
-  "dependencies": {
-    "prompt-sync": "^4.2.0"
-  },
   "devDependencies": {
-    "eslint": "^9.39.2"
+    "eslint": "^9.39.2",
+    "live-server": "^1.2.2"
   }
 }
