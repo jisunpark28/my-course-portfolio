@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiny Priest - Welcome to Our Church</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="main-container">
+        <h1 class="main-title">Praise be to Jesus! Welcome to Tiny Church.</h1>
+
+        <div class="church-scene">
+            <div class="church-building">
+                <img src="assets/church.png" alt="Tiny Church Building">
+            </div>
+
+            <div class="asset statue-mary">
+                <img src="assets/mary.png" alt="Statue of Virgin Mary">
+            </div>
+
+            <div class="character-group">
+                <div class="asset character-priest" onclick="handleInteract('priest')">
+                    <img src="assets/priest_front.png" alt="Father Priest">
+                </div>
+                <div class="asset character-nun" onclick="handleInteract('nun')">
+                    <img src="assets/nun_front.png" alt="Sister Nun">
+                </div>
+            </div>
+        </div>
+
+        <div id="dialogue-box" class="dialogue-box">
+            Click the characters to say hello!
+        </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

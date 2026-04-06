@@ -1,0 +1,94 @@
+import React from 'react';
+
+/**
+ * Tiny Priest - 신부님 캐릭터 (Styled for React)
+ * 부모 요소의 color 속성에 따라 제의 색상이 변경됩니다.
+ */
+const PriestIcon = ({ size = "200", className = "" }) => {
+  return (
+    <svg
+      width={size}
+      viewBox="0 0 300 500"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      style={{ filter: 'drop-shadow(1px 1px 1px rgba(0,0,0,0.05))' }}
+    >
+      {/* 1. 피부 및 얼굴 베이스 */}
+      <g id="body-base">
+        <path
+          id="face"
+          d="M150 80 C100 80 70 120 70 180 C70 240 100 280 150 280 C200 280 230 240 230 180 C230 120 200 80 150 80Z"
+          fill="#FFE0D0"
+          stroke="#000"
+          strokeWidth="4"
+        />
+        <circle cx="65" cy="180" r="15" fill="#FFE0D0" stroke="#000" strokeWidth="3" />
+        <circle cx="235" cy="180" r="15" fill="#FFE0D0" stroke="#000" strokeWidth="3" />
+      </g>
+
+      {/* 2. 헤어 스타일 */}
+      <path
+        id="hair"
+        d="M70 150 C65 100 100 60 150 60 C200 60 235 100 230 150 C220 140 180 130 150 140 C120 130 80 140 70 150Z"
+        fill="#4A3428"
+        stroke="#000"
+        strokeWidth="3"
+      />
+
+      {/* 3. 제의 영역 (가변 색상 적용 구간) */}
+      <g id="vestment" fill="currentColor">
+        {/* 몸통 제의 */}
+        <path
+          d="M100 280 L80 450 L220 450 L200 280 Z"
+          stroke="#000"
+          strokeWidth="4"
+          strokeLinejoin="round"
+        />
+        {/* 팔 부분 */}
+        <path
+          d="M100 280 L75 350 L95 365 L110 310"
+          stroke="#000"
+          strokeWidth="4"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M200 280 L225 350 L205 365 L190 310"
+          stroke="#000"
+          strokeWidth="4"
+          strokeLinejoin="round"
+        />
+      </g>
+
+      {/* 4. 고정 요소: 로만 칼라 및 이목구비 */}
+      <g id="fixed-details">
+        {/* 로만 칼라 - 제의 색상과 상관없이 항상 흰색 */}
+        <rect x="135" y="280" width="30" height="18" fill="white" stroke="#000" strokeWidth="2" />
+        <path d="M110 280 L190 280" stroke="#000" strokeWidth="5" strokeLinecap="round" />
+        
+        {/* 안경 및 눈 */}
+        <g id="glasses">
+          <circle cx="120" cy="185" r="25" stroke="#000" strokeWidth="2" fill="white" fillOpacity="0.1" />
+          <circle cx="180" cy="185" r="25" stroke="#000" strokeWidth="2" fill="white" fillOpacity="0.1" />
+          <circle cx="120" cy="185" r="3" fill="#000" />
+          <circle cx="180" cy="185" r="3" fill="#000" />
+        </g>
+      </g>
+
+      {/* 5. 손과 발 */}
+      <path
+        id="hands"
+        d="M135 320 Q150 290 165 320 L165 360 Q150 375 135 360 Z"
+        fill="#FFE0D0"
+        stroke="#000"
+        strokeWidth="3"
+      />
+      <g id="shoes">
+        <path d="M110 450 Q125 475 145 460" stroke="#000" strokeWidth="4" fill="#222" />
+        <path d="M190 450 Q175 475 155 460" stroke="#000" strokeWidth="4" fill="#222" />
+      </g>
+    </svg>
+  );
+};
+
+export default PriestIcon;

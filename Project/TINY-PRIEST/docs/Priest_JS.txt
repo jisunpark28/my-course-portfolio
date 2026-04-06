@@ -1,0 +1,7 @@
+// 사순 시기 (자색)
+<PriestIcon color="purple" size="300" />
+
+// 성령 강림 대축일 (홍색)
+<div style={{ color: '#FF0000' }}>
+  <PriestIcon />
+</div>
