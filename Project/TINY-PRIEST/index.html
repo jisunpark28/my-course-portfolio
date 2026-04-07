@@ -5,14 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tiny Priest - Welcome to Our Church</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
-    <div id="entry-screen" class="main-container">
-        <h1 class="main-title">Praise be to Jesus! Welcome to Tiny Church.</h1>
+    <div id="three-container"></div>
 
-        <div id="church-scene" class="church-scene">
-            <div class="church-building" aria-hidden="true">
-                <img src="assets/church.png" alt="">
+    <div class="main-container">
+        <h1 class="main-title">Welcome to Tiny Church.</h1>
+
+        <div class="church-scene">
+            <div class="church-building">
+                <img src="assets/church.png" alt="Tiny Church Building">
             </div>
 
             <div class="asset statue-mary">
@@ -20,20 +23,10 @@
             </div>
 
             <div class="character-group">
-                <div
-                    id="character-priest"
-                    class="asset character character-priest"
-                    data-character="priest"
-                    onclick="handleInteract('priest')"
-                >
+                <div class="asset character-priest" onclick="handleInteract('priest')">
                     <img src="assets/priest_front.png" alt="Father Priest">
                 </div>
-                <div
-                    id="character-nun"
-                    class="asset character character-nun"
-                    data-character="nun"
-                    onclick="handleInteract('nun')"
-                >
+                <div class="asset character-nun" onclick="handleInteract('nun')">
                     <img src="assets/nun_front.png" alt="Sister Nun">
                 </div>
             </div>
@@ -42,11 +35,6 @@
         <div id="dialogue-box" class="dialogue-box">
             Click the characters to say hello!
         </div>
-    </div>
-
-    <div id="three-container" class="three-container" aria-hidden="true"></div>
-
-    <script src="https://unpkg.com/three@0.165.0/build/three.min.js"></script>
-    <script src="script.js"></script>
+    </div> <script src="script.js"></script>
 </body>
 </html>
