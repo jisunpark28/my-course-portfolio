@@ -40,8 +40,8 @@ body {
 .church-scene {
     --door-x: 50%;
     --door-y: 73%;
-    --character-size: clamp(116px, 18vw, 240px);
-    --mary-size: clamp(150px, 25vw, 360px);
+    --character-size: clamp(72px, 11vw, 130px);
+    --mary-size: clamp(110px, 18vw, 250px);
     position: relative;
     width: min(95vw, 1120px);
     aspect-ratio: 16 / 10;
@@ -65,7 +65,7 @@ body {
 
 .statue-mary {
     position: absolute;
-    left: 7.5%;
+    left: 6%;
     bottom: 10%;
     z-index: 4;
     width: var(--mary-size);
@@ -86,14 +86,14 @@ body {
 
 .character-group {
     position: absolute;
-    left: var(--door-x);
-    bottom: calc(100% - var(--door-y));
+    left: 50%;
+    bottom: 10%;
     transform: translateX(-50%);
     z-index: 7;
     display: flex;
     align-items: flex-end;
     justify-content: center;
-    gap: clamp(10px, 2vw, 24px);
+    gap: clamp(8px, 1.6vw, 16px);
 }
 
 .character {
@@ -107,11 +107,11 @@ body {
 }
 
 .character-priest {
-    --x-shift: -17%;
+    --x-shift: -30%;
 }
 
 .character-nun {
-    --x-shift: 17%;
+    --x-shift: 0%;
 }
 
 .character:hover {
@@ -213,12 +213,16 @@ body {
 @media (max-width: 640px) {
     .church-scene {
         --door-y: 75%;
-        --character-size: clamp(90px, 23vw, 160px);
-        --mary-size: clamp(120px, 27vw, 220px);
+        --character-size: clamp(62px, 16vw, 96px);
+        --mary-size: clamp(90px, 22vw, 160px);
     }
 
     .statue-mary {
-        left: 3%;
-        bottom: 12%;
+        left: 2%;
+        bottom: 10%;
+    }
+
+    .character-group {
+        bottom: 2.5%;
     }
 }
