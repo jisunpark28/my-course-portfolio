@@ -17,6 +17,7 @@ const APP_STATE = {
     threeWorld: null,
     threeLoadPromise: null,
     hudBound: false,
+    massNavBound: false,
 };
 
 const THREE_CDN_FALLBACKS = [
@@ -37,41 +38,206 @@ const GESTURE_NARRATION = {
 
 const MASS_FLOW_STEPS = [
     {
+        part: "Entrance",
+        partEn: "Introductory Rites",
+        gesture: "idle",
+        title: "Entrance Hymn and Procession",
+        text: "🎶 The assembly gathers and the entrance procession begins.",
+    },
+    {
+        part: "Entrance",
+        partEn: "Introductory Rites",
         gesture: "signCross",
-        title: "Entrance Rites",
+        title: "Sign of the Cross and Greeting",
         text: "✝️ The Mass begins with the Sign of the Cross and liturgical greeting.",
     },
     {
+        part: "Entrance",
+        partEn: "Introductory Rites",
         gesture: "pray",
         title: "Penitential Act",
         text: "🙏 The assembly asks for mercy and prepares hearts for worship.",
     },
     {
+        part: "Entrance",
+        partEn: "Introductory Rites",
+        gesture: "pray",
+        title: "Collect (Opening Prayer)",
+        text: "🕯️ The opening prayer gathers the intentions of the faithful.",
+    },
+    {
+        part: "Offertory",
+        partEn: "Preparation of Gifts",
+        gesture: "hold",
+        title: "Preparation of the Gifts",
+        text: "🍞 Bread and wine are brought forward to the altar.",
+    },
+    {
+        part: "Offertory",
+        partEn: "Preparation of Gifts",
+        gesture: "lift",
+        title: "Presentation of the Gifts",
+        text: "🙌 The gifts are lifted in thanksgiving and offering to God.",
+    },
+    {
+        part: "Offertory",
+        partEn: "Preparation of Gifts",
+        gesture: "pray",
+        title: "Prayer over the Offerings",
+        text: "🙏 The celebrant invites all to pray over the gifts.",
+    },
+    {
+        part: "Liturgy",
+        partEn: "Word and Eucharist",
         gesture: "point",
         title: "Liturgy of the Word",
         text: "📖 The Scriptures are proclaimed, and the Gospel is explained in the homily.",
     },
     {
+        part: "Liturgy",
+        partEn: "Word and Eucharist",
+        gesture: "point",
+        title: "Homily and Profession of Faith",
+        text: "🕊️ The homily deepens faith and the Creed is professed together.",
+    },
+    {
+        part: "Liturgy",
+        partEn: "Word and Eucharist",
+        gesture: "ourFather",
+        title: "Universal Prayer",
+        text: "🫶 The community prays for the Church and the world.",
+    },
+    {
+        part: "Liturgy",
+        partEn: "Word and Eucharist",
         gesture: "hold",
-        title: "Preparation of the Gifts",
-        text: "🍞🍷 Bread and wine are presented and prepared at the altar.",
-    },
-    {
-        gesture: "lift",
         title: "Eucharistic Prayer",
-        text: "✨ The gifts are offered as the Church gives thanks and praise to God.",
+        text: "✨ The Church gives thanks and praise through the Eucharistic Prayer.",
     },
     {
+        part: "Liturgy",
+        partEn: "Word and Eucharist",
         gesture: "ourFather",
         title: "Communion Rite",
         text: "👐 The faithful pray the Lord's Prayer and prepare for Communion.",
     },
     {
+        part: "Dismissal",
+        partEn: "Concluding Rites",
         gesture: "pray",
-        title: "Concluding Rite",
+        title: "Final Blessing",
+        text: "🔔 The celebrant blesses the people before sending forth.",
+    },
+    {
+        part: "Dismissal",
+        partEn: "Concluding Rites",
+        gesture: "point",
+        title: "Dismissal",
         text: "🔔 The people are blessed and sent forth to live the Gospel.",
     },
 ];
+
+function buildMassFlowNavigation() {
+    const groupsContainer = document.getElementById("mass-nav-groups");
+    if (!groupsContainer || groupsContainer.dataset.built === "true") {
+        return;
+    }
+
+    const groups = new Map();
+    MASS_FLOW_STEPS.forEach((step, index) => {
+        const key = `${step.part}|${step.partEn}`;
+        if (!groups.has(key)) {
+            groups.set(key, {
+                part: step.part,
+                partEn: step.partEn,
+                indices: [],
+            });
+        }
+        groups.get(key).indices.push(index);
+    });
+
+    groupsContainer.innerHTML = "";
+    groups.forEach((group) => {
+        const section = document.createElement("section");
+        section.className = "mass-nav-group";
+
+        const firstIndex = group.indices[0];
+        const headerButton = document.createElement("button");
+        headerButton.type = "button";
+        headerButton.className = "mass-nav-part-btn";
+        headerButton.dataset.stepIndex = String(firstIndex);
+        headerButton.innerHTML = `<span>${group.part}</span><small>${group.partEn}</small>`;
+        section.appendChild(headerButton);
+
+        const list = document.createElement("div");
+        list.className = "mass-nav-step-list";
+        group.indices.forEach((stepIndex) => {
+            const step = MASS_FLOW_STEPS[stepIndex];
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "mass-nav-step-btn";
+            button.dataset.stepIndex = String(stepIndex);
+            button.innerHTML = `<span class="mass-nav-step-order">${stepIndex + 1}</span><span class="mass-nav-step-title">${step.title}</span>`;
+            list.appendChild(button);
+        });
+        section.appendChild(list);
+        groupsContainer.appendChild(section);
+    });
+
+    groupsContainer.dataset.built = "true";
+}
+
+function setMassFlowStatus(text) {
+    const status = document.getElementById("mass-nav-status");
+    if (status) {
+        status.textContent = text;
+    }
+}
+
+function setMassFlowStepState(activeStepIndex, massActive) {
+    const buttons = document.querySelectorAll(".mass-nav-step-btn[data-step-index], .mass-nav-part-btn[data-step-index]");
+    buttons.forEach((button) => {
+        const stepIndex = Number(button.dataset.stepIndex);
+        if (!Number.isFinite(stepIndex)) {
+            return;
+        }
+        button.classList.toggle("is-active", stepIndex === activeStepIndex);
+        button.classList.toggle("is-complete", massActive && activeStepIndex >= 0 && stepIndex < activeStepIndex);
+    });
+}
+
+function setMassNavigatorVisible(isVisible) {
+    const nav = document.getElementById("mass-navigator");
+    if (!nav) {
+        return;
+    }
+    nav.classList.toggle("is-active", isVisible);
+    nav.setAttribute("aria-hidden", isVisible ? "false" : "true");
+}
+
+function bindMassNavigator() {
+    if (APP_STATE.massNavBound) {
+        return;
+    }
+    const nav = document.getElementById("mass-navigator");
+    if (!nav) {
+        return;
+    }
+
+    nav.addEventListener("click", (event) => {
+        const button = event.target.closest(".mass-nav-step-btn[data-step-index], .mass-nav-part-btn[data-step-index]");
+        if (!button || !APP_STATE.threeWorld) {
+            return;
+        }
+        const stepIndex = Number(button.dataset.stepIndex);
+        if (!Number.isFinite(stepIndex) || typeof APP_STATE.threeWorld.jumpToMassStep !== "function") {
+            return;
+        }
+        APP_STATE.threeWorld.jumpToMassStep(stepIndex);
+    });
+
+    APP_STATE.massNavBound = true;
+}
 
 function loadThreeFromUrl(url) {
     return new Promise((resolve, reject) => {
@@ -184,16 +350,16 @@ function bindHudControls() {
         else if (command === "mass-toggle") world.toggleMassSequence();
         else if (command === "move-left") {
             world.nudgeMove(-1, 0);
-            setLiturgySubtitle("⬅️ Stepped left.");
+            setLiturgySubtitle("↩️ Turned left.");
         } else if (command === "move-right") {
             world.nudgeMove(1, 0);
-            setLiturgySubtitle("➡️ Stepped right.");
+            setLiturgySubtitle("↪️ Turned right.");
         } else if (command === "move-forward") {
             world.nudgeMove(0, -1);
-            setLiturgySubtitle("⬆️ Moved toward the altar.");
+            setLiturgySubtitle("⬆️ Moved forward.");
         } else if (command === "move-back") {
             world.nudgeMove(0, 1);
-            setLiturgySubtitle("⬇️ Moved toward the nave.");
+            setLiturgySubtitle("⬇️ Moved backward.");
         } else if (command === "jump") {
             world.triggerJump();
             setLiturgySubtitle("⤴️ Small jump.");
@@ -577,6 +743,23 @@ function createVoxelChurch(container) {
     addWindowSet(16.0, 5.1, -2.2, 0);
     addWindowSet(16.0, 5.1, 5.4, 0);
 
+    const collisionObstacles = [];
+    const playerCollisionRadius = 0.56;
+    const worldBounds = { minX: -13.8, maxX: 13.8, minZ: -14.6, maxZ: 14.8 };
+    function addCollisionRect(centerX, centerZ, width, depth, extra = playerCollisionRadius) {
+        const halfW = width * 0.5 + extra;
+        const halfD = depth * 0.5 + extra;
+        collisionObstacles.push({
+            minX: centerX - halfW,
+            maxX: centerX + halfW,
+            minZ: centerZ - halfD,
+            maxZ: centerZ + halfD,
+        });
+    }
+
+    // Keep distance from the altar table.
+    addCollisionRect(altarGroup.position.x, altarGroup.position.z, 7.2, 4.0, playerCollisionRadius + 0.08);
+
     for (let row = 0; row < 4; row += 1) {
         for (let side = -1; side <= 1; side += 2) {
             const pew = new THREE.Mesh(new THREE.BoxGeometry(5.8, 1.0, 1.45), materials.wood);
@@ -584,10 +767,12 @@ function createVoxelChurch(container) {
             pew.castShadow = true;
             pew.receiveShadow = true;
             root.add(pew);
+            addCollisionRect(pew.position.x, pew.position.z, 5.8, 1.45);
 
             const back = new THREE.Mesh(new THREE.BoxGeometry(5.8, 1.2, 0.35), materials.darkWood);
             back.position.set(side * 7.2, 1.25, row * 3.3 - 3.1);
             root.add(back);
+            addCollisionRect(back.position.x, back.position.z, 5.8, 0.35);
         }
     }
 
@@ -614,21 +799,28 @@ function createVoxelChurch(container) {
     collar.position.set(0, 2.06, 0.02);
     playerRig.add(collar);
 
-    const playerTexture = new THREE.TextureLoader().load(selected.frontImage);
-    if ("colorSpace" in playerTexture) {
-        playerTexture.colorSpace = THREE.SRGBColorSpace;
-    }
-    playerTexture.magFilter = THREE.NearestFilter;
+    const textureLoader = new THREE.TextureLoader();
+    const playerTextures = {
+        front: textureLoader.load(selected.frontImage),
+        back: textureLoader.load(selected.backImage || selected.frontImage),
+    };
+    Object.values(playerTextures).forEach((texture) => {
+        if ("colorSpace" in texture) {
+            texture.colorSpace = THREE.SRGBColorSpace;
+        }
+        texture.magFilter = THREE.NearestFilter;
+        texture.minFilter = THREE.NearestFilter;
+    });
 
-    const playerSprite = new THREE.Sprite(
-        new THREE.SpriteMaterial({
-            map: playerTexture,
-            transparent: true,
-            alphaTest: 0.18,
-        }),
-    );
-    playerSprite.scale.set(2.5, 3.0, 1);
-    playerSprite.position.set(0, 1.55, 0.05);
+    const playerSpriteMaterial = new THREE.SpriteMaterial({
+        map: playerTextures.front,
+        transparent: true,
+        alphaTest: 0.18,
+    });
+    const playerSprite = new THREE.Sprite(playerSpriteMaterial);
+    const playerSpriteBaseScale = { x: 2.85, y: 3.35 };
+    playerSprite.scale.set(playerSpriteBaseScale.x, playerSpriteBaseScale.y, 1);
+    playerSprite.position.set(0, 1.62, 0.08);
     playerRig.add(playerSprite);
 
     const itemMaterial = new THREE.MeshLambertMaterial({ color: 0xc6a278 });
@@ -636,32 +828,154 @@ function createVoxelChurch(container) {
     liturgyItem.visible = false;
     playerRig.add(liturgyItem);
 
+    // Palette values were sampled from the actual PNG sprites to keep visual consistency.
+    const spritePalette = isPriest
+        ? {
+            robePrimary: 0x3f3d37,
+            robeSecondary: 0x2f2d29,
+            trim: 0xefe1d0,
+            skin: 0xd8ad90,
+        }
+        : {
+            robePrimary: 0x272722,
+            robeSecondary: 0x1d1d18,
+            trim: 0xf6f2eb,
+            skin: 0xe8c4a7,
+        };
+
+    const armStyle = isPriest
+        ? {
+            shoulderX: 0.74,
+            shoulderY: 2.02,
+            shoulderZ: 0.22,
+            upperWidth: 0.28,
+            upperLength: 0.78,
+            lowerWidth: 0.24,
+            lowerLength: 0.72,
+            elbowDrop: 0.73,
+            handRadius: 0.1,
+            cuffWidth: 0.22,
+            cuffLength: 0.1,
+            chestCoverRadius: 0.28,
+            chestCoverY: 1.95,
+        }
+        : {
+            shoulderX: 0.7,
+            shoulderY: 2.0,
+            shoulderZ: 0.22,
+            upperWidth: 0.26,
+            upperLength: 0.74,
+            lowerWidth: 0.22,
+            lowerLength: 0.68,
+            elbowDrop: 0.7,
+            handRadius: 0.095,
+            cuffWidth: 0.2,
+            cuffLength: 0.09,
+            chestCoverRadius: 0.3,
+            chestCoverY: 1.9,
+        };
+
+    const sleeveMaterial = new THREE.MeshLambertMaterial({
+        color: spritePalette.robePrimary,
+        transparent: true,
+        opacity: 0.97,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+    });
+    const sleeveShadeMaterial = new THREE.MeshLambertMaterial({
+        color: spritePalette.robeSecondary,
+        transparent: true,
+        opacity: 0.58,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+    });
+    const cuffMaterial = new THREE.MeshLambertMaterial({
+        color: spritePalette.trim,
+        transparent: true,
+        opacity: 0.96,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+    });
+    const handOverlayMaterial = new THREE.MeshLambertMaterial({
+        color: spritePalette.skin,
+        transparent: true,
+        opacity: 0.98,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+    });
+
     function createArm(side) {
         const shoulder = new THREE.Object3D();
-        shoulder.position.set(side * 0.82, 2.16, -0.05);
+        shoulder.position.set(side * armStyle.shoulderX, armStyle.shoulderY, armStyle.shoulderZ);
 
-        const upper = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.92, 0.24), robeMaterial);
-        upper.position.y = -0.46;
+        const upper = new THREE.Mesh(new THREE.PlaneGeometry(armStyle.upperWidth, armStyle.upperLength), sleeveMaterial);
+        upper.position.set(0, -armStyle.upperLength * 0.5, 0);
         shoulder.add(upper);
+        const upperShade = new THREE.Mesh(
+            new THREE.PlaneGeometry(armStyle.upperWidth * 0.65, armStyle.upperLength * 0.9),
+            sleeveShadeMaterial,
+        );
+        upperShade.position.set(side * 0.015, -armStyle.upperLength * 0.52, 0.006);
+        shoulder.add(upperShade);
+        const upperCap = new THREE.Mesh(new THREE.CircleGeometry(armStyle.upperWidth * 0.44, 14), sleeveMaterial);
+        upperCap.position.set(0, -armStyle.upperLength * 0.03, 0.005);
+        shoulder.add(upperCap);
 
         const elbow = new THREE.Object3D();
-        elbow.position.y = -0.92;
+        elbow.position.y = -armStyle.elbowDrop;
         shoulder.add(elbow);
+        const elbowCap = new THREE.Mesh(new THREE.CircleGeometry(armStyle.lowerWidth * 0.5, 14), sleeveMaterial);
+        elbowCap.position.set(0, -0.03, 0.005);
+        elbow.add(elbowCap);
 
-        const lower = new THREE.Mesh(new THREE.BoxGeometry(0.21, 0.84, 0.21), robeMaterial);
-        lower.position.y = -0.42;
+        const lower = new THREE.Mesh(new THREE.PlaneGeometry(armStyle.lowerWidth, armStyle.lowerLength), sleeveMaterial);
+        lower.position.set(0, -armStyle.lowerLength * 0.48, 0);
         elbow.add(lower);
+        const lowerShade = new THREE.Mesh(
+            new THREE.PlaneGeometry(armStyle.lowerWidth * 0.62, armStyle.lowerLength * 0.9),
+            sleeveShadeMaterial,
+        );
+        lowerShade.position.set(side * 0.012, -armStyle.lowerLength * 0.5, 0.006);
+        elbow.add(lowerShade);
 
-        const hand = new THREE.Mesh(new THREE.BoxGeometry(0.19, 0.19, 0.19), skinMaterial);
-        hand.position.y = -0.86;
+        const cuff = new THREE.Mesh(new THREE.PlaneGeometry(armStyle.cuffWidth, armStyle.cuffLength), cuffMaterial);
+        cuff.position.set(0, -armStyle.lowerLength * 0.92, 0.006);
+        elbow.add(cuff);
+
+        const hand = new THREE.Mesh(new THREE.CircleGeometry(armStyle.handRadius, 16), handOverlayMaterial);
+        hand.position.set(0, -armStyle.lowerLength * 1.08, 0.01);
         elbow.add(hand);
 
+        [upper, upperShade, upperCap, elbowCap, lower, lowerShade, cuff, hand].forEach((mesh) => {
+            mesh.renderOrder = 2;
+            mesh.castShadow = false;
+            mesh.receiveShadow = false;
+        });
+
         playerRig.add(shoulder);
-        return { shoulder, elbow };
+        return { shoulder, elbow, upper, lower, hand };
     }
 
     const leftArm = createArm(-1);
     const rightArm = createArm(1);
+    const chestCover = new THREE.Mesh(
+        new THREE.CircleGeometry(armStyle.chestCoverRadius, 20),
+        new THREE.MeshLambertMaterial({
+            color: spritePalette.robePrimary,
+            transparent: true,
+            opacity: 0.96,
+            side: THREE.DoubleSide,
+            depthWrite: false,
+        }),
+    );
+    chestCover.position.set(0, armStyle.chestCoverY, armStyle.shoulderZ + 0.01);
+    chestCover.renderOrder = 2.2;
+    playerRig.add(chestCover);
+
+    // Keep the cute 2D character in 3D and hide the temporary voxel body parts.
+    torso.visible = false;
+    head.visible = false;
+    collar.visible = false;
 
     const armPoseCurrent = {
         left: { ux: 0, uy: 0, uz: 0, lx: 0, ly: 0, lz: 0 },
@@ -677,44 +991,101 @@ function createVoxelChurch(container) {
         Object.assign(armPoseTarget.right, right);
     }
 
-    function setGesturePose(gesture) {
-        switch (gesture) {
-            case "point":
-                setArmTargets(
-                    { ux: -0.4, uy: 0.15, uz: 0.2, lx: -0.28, ly: 0, lz: 0 },
-                    { ux: -1.35, uy: -0.2, uz: -0.32, lx: -0.18, ly: 0, lz: 0 },
-                );
-                break;
-            case "hold":
-                setArmTargets(
-                    { ux: -1.0, uy: 0.18, uz: 0.44, lx: -0.52, ly: 0, lz: 0 },
-                    { ux: -1.0, uy: -0.18, uz: -0.44, lx: -0.52, ly: 0, lz: 0 },
-                );
-                break;
-            case "lift":
-                setArmTargets(
-                    { ux: -2.35, uy: 0.1, uz: 0.16, lx: -0.2, ly: 0, lz: 0 },
-                    { ux: -2.35, uy: -0.1, uz: -0.16, lx: -0.2, ly: 0, lz: 0 },
-                );
-                break;
-            case "pray":
-                setArmTargets(
-                    { ux: -1.25, uy: 0.1, uz: 0.58, lx: -0.5, ly: 0, lz: 0 },
-                    { ux: -1.25, uy: -0.1, uz: -0.58, lx: -0.5, ly: 0, lz: 0 },
-                );
-                break;
-            case "ourFather":
-                setArmTargets(
-                    { ux: -0.75, uy: 0.2, uz: 1.02, lx: -0.82, ly: 0, lz: 0 },
-                    { ux: -0.75, uy: -0.2, uz: -1.02, lx: -0.82, ly: 0, lz: 0 },
-                );
-                break;
-            default:
-                setArmTargets(
-                    { ux: -0.2, uy: 0.08, uz: 0.18, lx: -0.08, ly: 0, lz: 0 },
-                    { ux: -0.2, uy: -0.08, uz: -0.18, lx: -0.08, ly: 0, lz: 0 },
-                );
+    const gesturePoses = isPriest
+        ? {
+            idle: {
+                left: { ux: -0.42, uy: 0.24, uz: 0.46, lx: -0.3, ly: 0, lz: 0 },
+                right: { ux: -0.42, uy: -0.24, uz: -0.46, lx: -0.3, ly: 0, lz: 0 },
+            },
+            point: {
+                left: { ux: -0.68, uy: 0.22, uz: 0.58, lx: -0.4, ly: 0, lz: 0 },
+                right: { ux: -1.08, uy: -0.3, uz: -0.74, lx: -0.16, ly: 0, lz: 0 },
+            },
+            hold: {
+                left: { ux: -1.12, uy: 0.08, uz: 0.62, lx: -0.82, ly: 0, lz: 0 },
+                right: { ux: -1.12, uy: -0.08, uz: -0.62, lx: -0.82, ly: 0, lz: 0 },
+            },
+            lift: {
+                left: { ux: -1.9, uy: 0.14, uz: 0.34, lx: -0.08, ly: 0, lz: 0 },
+                right: { ux: -1.9, uy: -0.14, uz: -0.34, lx: -0.08, ly: 0, lz: 0 },
+            },
+            pray: {
+                left: { ux: -1.04, uy: 0.04, uz: 0.84, lx: -0.78, ly: 0, lz: 0 },
+                right: { ux: -1.04, uy: -0.04, uz: -0.84, lx: -0.78, ly: 0, lz: 0 },
+            },
+            ourFather: {
+                left: { ux: -0.82, uy: 0.28, uz: 1.22, lx: -0.64, ly: 0, lz: 0 },
+                right: { ux: -0.82, uy: -0.28, uz: -1.22, lx: -0.64, ly: 0, lz: 0 },
+            },
         }
+        : {
+            idle: {
+                left: { ux: -0.48, uy: 0.24, uz: 0.48, lx: -0.3, ly: 0, lz: 0 },
+                right: { ux: -0.48, uy: -0.24, uz: -0.48, lx: -0.3, ly: 0, lz: 0 },
+            },
+            point: {
+                left: { ux: -0.76, uy: 0.24, uz: 0.62, lx: -0.42, ly: 0, lz: 0 },
+                right: { ux: -1.16, uy: -0.28, uz: -0.8, lx: -0.12, ly: 0, lz: 0 },
+            },
+            hold: {
+                left: { ux: -1.16, uy: 0.1, uz: 0.7, lx: -0.84, ly: 0, lz: 0 },
+                right: { ux: -1.16, uy: -0.1, uz: -0.7, lx: -0.84, ly: 0, lz: 0 },
+            },
+            lift: {
+                left: { ux: -1.84, uy: 0.17, uz: 0.3, lx: -0.06, ly: 0, lz: 0 },
+                right: { ux: -1.84, uy: -0.17, uz: -0.3, lx: -0.06, ly: 0, lz: 0 },
+            },
+            pray: {
+                left: { ux: -1.0, uy: 0.06, uz: 0.9, lx: -0.78, ly: 0, lz: 0 },
+                right: { ux: -1.0, uy: -0.06, uz: -0.9, lx: -0.78, ly: 0, lz: 0 },
+            },
+            ourFather: {
+                left: { ux: -0.76, uy: 0.3, uz: 1.28, lx: -0.62, ly: 0, lz: 0 },
+                right: { ux: -0.76, uy: -0.3, uz: -1.28, lx: -0.62, ly: 0, lz: 0 },
+            },
+        };
+
+    const signCrossPoses = isPriest
+        ? [
+            {
+                left: { ux: -0.92, uy: 0.08, uz: 0.66, lx: -0.56, ly: 0, lz: 0 },
+                right: { ux: -1.78, uy: -0.14, uz: -0.08, lx: -0.52, ly: 0, lz: 0 },
+            },
+            {
+                left: { ux: -0.92, uy: 0.08, uz: 0.66, lx: -0.56, ly: 0, lz: 0 },
+                right: { ux: -1.16, uy: 0.04, uz: 0.2, lx: -0.18, ly: 0, lz: 0 },
+            },
+            {
+                left: { ux: -0.92, uy: 0.08, uz: 0.66, lx: -0.56, ly: 0, lz: 0 },
+                right: { ux: -0.94, uy: 0.6, uz: 0.38, lx: -0.06, ly: 0, lz: 0 },
+            },
+            {
+                left: { ux: -0.92, uy: 0.08, uz: 0.66, lx: -0.56, ly: 0, lz: 0 },
+                right: { ux: -0.94, uy: -0.6, uz: -0.38, lx: -0.06, ly: 0, lz: 0 },
+            },
+        ]
+        : [
+            {
+                left: { ux: -0.9, uy: 0.1, uz: 0.72, lx: -0.58, ly: 0, lz: 0 },
+                right: { ux: -1.72, uy: -0.15, uz: -0.08, lx: -0.46, ly: 0, lz: 0 },
+            },
+            {
+                left: { ux: -0.9, uy: 0.1, uz: 0.72, lx: -0.58, ly: 0, lz: 0 },
+                right: { ux: -1.08, uy: 0.06, uz: 0.24, lx: -0.16, ly: 0, lz: 0 },
+            },
+            {
+                left: { ux: -0.9, uy: 0.1, uz: 0.72, lx: -0.58, ly: 0, lz: 0 },
+                right: { ux: -0.9, uy: 0.64, uz: 0.42, lx: -0.04, ly: 0, lz: 0 },
+            },
+            {
+                left: { ux: -0.9, uy: 0.1, uz: 0.72, lx: -0.58, ly: 0, lz: 0 },
+                right: { ux: -0.9, uy: -0.64, uz: -0.42, lx: -0.04, ly: 0, lz: 0 },
+            },
+        ];
+
+    function setGesturePose(gesture) {
+        const pose = gesturePoses[gesture] || gesturePoses.idle;
+        setArmTargets(pose.left, pose.right);
     }
 
     const actionState = {
@@ -723,10 +1094,10 @@ function createVoxelChurch(container) {
         signCrossTime: 0,
         massActive: false,
         massIndex: 0,
+        currentMassStepIndex: -1,
         massTimer: 0,
         massStepDuration: 2.8,
     };
-    const massSequence = MASS_FLOW_STEPS.map((step) => step.gesture);
 
     function narrateGesture(name, prefix = "") {
         const message = GESTURE_NARRATION[name] || GESTURE_NARRATION.idle;
@@ -735,19 +1106,26 @@ function createVoxelChurch(container) {
         setHudButtonsState(name, actionState.massActive);
     }
 
-    function triggerGesture(name, prefix = "") {
+    function triggerGesture(name, prefix = "", massStepIndex = -1) {
         actionState.currentGesture = name;
         actionState.massTimer = actionState.massStepDuration;
+        if (Number.isInteger(massStepIndex)) {
+            actionState.currentMassStepIndex = massStepIndex;
+        } else if (!actionState.massActive) {
+            actionState.currentMassStepIndex = -1;
+        }
         if (name === "signCross") {
             actionState.signCrossActive = true;
             actionState.signCrossTime = 0;
             setGesturePose("pray");
             narrateGesture("signCross", prefix);
+            setMassFlowStepState(actionState.currentMassStepIndex, actionState.massActive);
             return;
         }
         actionState.signCrossActive = false;
         setGesturePose(name);
         narrateGesture(name, prefix);
+        setMassFlowStepState(actionState.currentMassStepIndex, actionState.massActive);
     }
 
     function advanceMassStep() {
@@ -755,9 +1133,24 @@ function createVoxelChurch(container) {
         const step = MASS_FLOW_STEPS[stepIndex];
         const next = step.gesture;
         const stepNumber = stepIndex + 1;
-        const prefix = `🎼 ${step.title} (${stepNumber}/${MASS_FLOW_STEPS.length})`;
+        const prefix = `🎼 ${step.part} · ${step.title} (${stepNumber}/${MASS_FLOW_STEPS.length})`;
         actionState.massIndex += 1;
-        triggerGesture(next, `${prefix} ${step.text}`);
+        triggerGesture(next, `${prefix} ${step.text}`, stepIndex);
+        setMassFlowStatus(`▶️ Auto: ${step.part} (${step.partEn}) > ${step.title}`);
+    }
+
+    function jumpToMassStep(stepIndex) {
+        if (!Number.isInteger(stepIndex) || stepIndex < 0 || stepIndex >= MASS_FLOW_STEPS.length) {
+            return;
+        }
+        if (actionState.massActive) {
+            actionState.massActive = false;
+        }
+        const step = MASS_FLOW_STEPS[stepIndex];
+        actionState.massIndex = stepIndex;
+        triggerGesture(step.gesture, `📍 ${step.part} · ${step.title} — ${step.text}`, stepIndex);
+        setDialogue(`Jumped to ${step.part} (${step.partEn}) - ${step.title}.`);
+        setMassFlowStatus(`📌 Current: ${step.part} (${step.partEn}) > ${step.title}`);
     }
 
     function setMassMode(isActive) {
@@ -766,17 +1159,21 @@ function createVoxelChurch(container) {
         }
         actionState.massActive = isActive;
         if (actionState.massActive) {
-            actionState.massIndex = 0;
+            actionState.massIndex = actionState.currentMassStepIndex >= 0 ? actionState.currentMassStepIndex : 0;
             advanceMassStep();
             setDialogue("Mass sequence started. Press M again to stop.");
+            setMassFlowStatus("▶️ Auto Mass progression running...");
             return;
         }
-        triggerGesture("idle");
+        triggerGesture("idle", "", -1);
         setLiturgySubtitle("⏸️ Mass sequence paused. Select any gesture manually.");
         setDialogue("Mass sequence paused.");
+        setMassFlowStatus("⏸️ Paused. Click a step to jump there.");
     }
 
-    triggerGesture("idle");
+    triggerGesture("idle", "", -1);
+    setMassFlowStepState(-1, false);
+    setMassFlowStatus("🧭 Choose a part and click a detailed step.");
 
     const playerShadow = new THREE.Mesh(
         new THREE.CircleGeometry(0.82, 16),
@@ -794,14 +1191,19 @@ function createVoxelChurch(container) {
 
     const keyState = new Set();
     const playerVelocity = { y: 0 };
+    let forwardSpeed = 0;
+    const playerVelocityXZ = new THREE.Vector2(0, 0);
     const playerMotion = {
         speed: 7.1,
+        acceleration: 10.5,
+        deceleration: 8.8,
         gravity: 18,
         jump: 8,
         onGround: true,
         jumpLatch: false,
         groundY: 0,
     };
+    const turnRate = 2.6;
 
     function attemptJump() {
         if (playerMotion.onGround && !playerMotion.jumpLatch) {
@@ -811,15 +1213,66 @@ function createVoxelChurch(container) {
         }
     }
 
+    function normalizeAngle(angle) {
+        let wrapped = angle;
+        while (wrapped <= -Math.PI) wrapped += Math.PI * 2;
+        while (wrapped > Math.PI) wrapped -= Math.PI * 2;
+        return wrapped;
+    }
+
+    function updateDirectionFromYaw() {
+        moveDirection.set(Math.sin(facingState.yaw), 0, -Math.cos(facingState.yaw));
+        cameraBehindDirection.set(-moveDirection.x, 0, -moveDirection.z);
+    }
+
+    function collidesAt(x, z) {
+        return collisionObstacles.some((obstacle) =>
+            x > obstacle.minX &&
+            x < obstacle.maxX &&
+            z > obstacle.minZ &&
+            z < obstacle.maxZ
+        );
+    }
+
+    function attemptMoveTo(nextX, nextZ) {
+        const currentX = playerRig.position.x;
+        const currentZ = playerRig.position.z;
+        let resolvedX = THREE.MathUtils.clamp(nextX, worldBounds.minX, worldBounds.maxX);
+        let resolvedZ = THREE.MathUtils.clamp(nextZ, worldBounds.minZ, worldBounds.maxZ);
+        let blocked = false;
+
+        if (collidesAt(resolvedX, currentZ)) {
+            resolvedX = currentX;
+            blocked = true;
+        }
+        if (collidesAt(resolvedX, resolvedZ)) {
+            resolvedZ = currentZ;
+            blocked = true;
+        }
+        if (collidesAt(resolvedX, resolvedZ)) {
+            resolvedX = currentX;
+            resolvedZ = currentZ;
+            blocked = true;
+        }
+
+        playerRig.position.x = resolvedX;
+        playerRig.position.z = resolvedZ;
+        return blocked;
+    }
+
     function nudgeMove(dx, dz) {
-        const length = Math.hypot(dx, dz);
-        if (length === 0) {
+        if (dx !== 0) {
+            facingState.yaw = normalizeAngle(facingState.yaw + dx * 0.3);
+            updateDirectionFromYaw();
             return;
         }
-        const nx = dx / length;
-        const nz = dz / length;
-        playerRig.position.x = THREE.MathUtils.clamp(playerRig.position.x + nx * 1.15, -13.8, 13.8);
-        playerRig.position.z = THREE.MathUtils.clamp(playerRig.position.z + nz * 1.15, -14.6, 14.8);
+        if (dz !== 0) {
+            const directionSign = dz < 0 ? 1 : -1;
+            const stepDistance = 1.12 * directionSign;
+            const targetX = playerRig.position.x + moveDirection.x * stepDistance;
+            const targetZ = playerRig.position.z + moveDirection.z * stepDistance;
+            attemptMoveTo(targetX, targetZ);
+        }
     }
 
     function onKeyDown(event) {
@@ -893,27 +1346,12 @@ function createVoxelChurch(container) {
         const normalized = Math.min(actionState.signCrossTime / 2.2, 1);
         const phase = normalized * 4;
 
-        if (phase < 1) {
-            setArmTargets(
-                { ux: -0.95, uy: 0.08, uz: 0.42, lx: -0.42, ly: 0, lz: 0 },
-                { ux: -2.05, uy: -0.12, uz: -0.06, lx: -0.6, ly: 0, lz: 0 },
-            );
-        } else if (phase < 2) {
-            setArmTargets(
-                { ux: -0.95, uy: 0.08, uz: 0.42, lx: -0.42, ly: 0, lz: 0 },
-                { ux: -1.2, uy: 0, uz: 0.08, lx: -0.2, ly: 0, lz: 0 },
-            );
-        } else if (phase < 3) {
-            setArmTargets(
-                { ux: -0.95, uy: 0.08, uz: 0.42, lx: -0.42, ly: 0, lz: 0 },
-                { ux: -1.0, uy: 0.55, uz: 0.26, lx: -0.12, ly: 0, lz: 0 },
-            );
-        } else {
-            setArmTargets(
-                { ux: -0.95, uy: 0.08, uz: 0.42, lx: -0.42, ly: 0, lz: 0 },
-                { ux: -1.0, uy: -0.55, uz: -0.26, lx: -0.12, ly: 0, lz: 0 },
-            );
-        }
+        const signPose =
+            phase < 1 ? signCrossPoses[0]
+            : phase < 2 ? signCrossPoses[1]
+            : phase < 3 ? signCrossPoses[2]
+            : signCrossPoses[3];
+        setArmTargets(signPose.left, signPose.right);
 
         if (normalized >= 1) {
             actionState.signCrossActive = false;
@@ -1018,15 +1456,84 @@ function createVoxelChurch(container) {
     const cameraLookOffset = new THREE.Vector3(0, 1.4, -4.1);
     const cameraTarget = new THREE.Vector3();
     const cameraLookTarget = new THREE.Vector3();
+    const moveDirection = new THREE.Vector3(0, 0, -1);
+    const cameraBehindDirection = new THREE.Vector3(0, 0, 1);
+    const facingState = {
+        yaw: 0,
+    };
     const clock = new THREE.Clock();
+    const spriteFacingState = {
+        xDir: 1,
+        walkPhase: 0,
+        facingBack: false,
+        motionBlend: 0,
+    };
+
+    updateDirectionFromYaw();
+
+    function updatePlayerSpriteMotion(velocityX, velocityZ, turnInput, dt) {
+        const speed = Math.hypot(velocityX, velocityZ);
+        const signedForwardSpeed = velocityX * moveDirection.x + velocityZ * moveDirection.z;
+        const moving = speed > 0.18;
+
+        if (moving) {
+            const shouldFaceBack = signedForwardSpeed >= -0.02;
+            if (spriteFacingState.facingBack !== shouldFaceBack) {
+                spriteFacingState.facingBack = shouldFaceBack;
+                playerSpriteMaterial.map = shouldFaceBack ? playerTextures.back : playerTextures.front;
+                playerSpriteMaterial.needsUpdate = true;
+            }
+            if (Math.abs(velocityX) > 0.08) {
+                spriteFacingState.xDir = velocityX < 0 ? -1 : 1;
+            } else if (Math.abs(turnInput) > 0.05) {
+                spriteFacingState.xDir = turnInput < 0 ? -1 : 1;
+            }
+        } else if (spriteFacingState.facingBack) {
+            spriteFacingState.facingBack = false;
+            playerSpriteMaterial.map = playerTextures.front;
+            playerSpriteMaterial.needsUpdate = true;
+        } else if (Math.abs(turnInput) > 0.05) {
+            spriteFacingState.xDir = turnInput < 0 ? -1 : 1;
+        }
+
+        const blendTarget = moving && playerMotion.onGround ? 1 : 0;
+        spriteFacingState.motionBlend += (blendTarget - spriteFacingState.motionBlend) * Math.min(dt * 8, 1);
+        spriteFacingState.walkPhase += dt * (4 + speed * 1.6);
+
+        const walkBob = spriteFacingState.motionBlend > 0.02
+            ? Math.sin(spriteFacingState.walkPhase) * (0.04 + spriteFacingState.motionBlend * 0.08)
+            : Math.sin(performance.now() * 0.0035) * 0.03;
+        const squash = 1 - spriteFacingState.motionBlend * 0.02 + Math.cos(spriteFacingState.walkPhase) * spriteFacingState.motionBlend * 0.025;
+        const stretchX = 1 + spriteFacingState.motionBlend * 0.03;
+        const tiltTarget = THREE.MathUtils.clamp((-velocityX * 0.012) + turnInput * -0.06, -0.16, 0.16);
+
+        playerSprite.scale.x = playerSpriteBaseScale.x * spriteFacingState.xDir * stretchX;
+        playerSprite.scale.y = playerSpriteBaseScale.y * squash;
+        playerSprite.position.y = 1.62 + walkBob + Math.max(playerRig.position.y, 0) * 0.06;
+        playerSpriteMaterial.rotation = THREE.MathUtils.lerp(
+            playerSpriteMaterial.rotation,
+            tiltTarget,
+            Math.min(dt * 8, 1),
+        );
+    }
+
+    function applyArmSecondaryMotion(speed) {
+        if (speed < 0.1 || !playerMotion.onGround) {
+            return;
+        }
+        const energy = Math.min(speed / playerMotion.speed, 1);
+        const sway = Math.sin(spriteFacingState.walkPhase * 1.1) * 0.08 * energy;
+        leftArm.shoulder.rotation.z += sway * 0.55;
+        rightArm.shoulder.rotation.z -= sway * 0.55;
+        leftArm.elbow.rotation.x += Math.abs(sway) * 0.18;
+        rightArm.elbow.rotation.x += Math.abs(sway) * 0.18;
+    }
 
     function animate() {
         const dt = Math.min(clock.getDelta(), 0.05);
 
         updateMassSequence(dt);
         updateSignOfCross(dt);
-        updateArmPoseSmoothing(dt);
-        updateLiturgyItem();
 
         const left = keyState.has("ArrowLeft") || keyState.has("KeyA");
         const right = keyState.has("ArrowRight") || keyState.has("KeyD");
@@ -1034,18 +1541,28 @@ function createVoxelChurch(container) {
         const down = keyState.has("ArrowDown") || keyState.has("KeyS");
         const jump = keyState.has("Space");
 
-        let moveX = (right ? 1 : 0) - (left ? 1 : 0);
-        let moveZ = (down ? 1 : 0) - (up ? 1 : 0);
-        const moveLength = Math.hypot(moveX, moveZ);
-        if (moveLength > 0) {
-            moveX /= moveLength;
-            moveZ /= moveLength;
+        const turnInput = (right ? 1 : 0) - (left ? 1 : 0);
+        const throttleInput = (up ? 1 : 0) - (down ? 1 : 0);
+        facingState.yaw = normalizeAngle(facingState.yaw + turnInput * turnRate * dt);
+        updateDirectionFromYaw();
+
+        const targetForwardSpeed = throttleInput * playerMotion.speed;
+        const acceleration = throttleInput !== 0 ? playerMotion.acceleration : playerMotion.deceleration;
+        const blend = Math.min(dt * acceleration, 1);
+        forwardSpeed += (targetForwardSpeed - forwardSpeed) * blend;
+        playerVelocityXZ.set(moveDirection.x * forwardSpeed, moveDirection.z * forwardSpeed);
+
+        const blocked = attemptMoveTo(
+            playerRig.position.x + playerVelocityXZ.x * dt,
+            playerRig.position.z + playerVelocityXZ.y * dt,
+        );
+        if (blocked) {
+            forwardSpeed *= 0.15;
+            playerVelocityXZ.set(0, 0);
         }
 
-        playerRig.position.x += moveX * playerMotion.speed * dt;
-        playerRig.position.z += moveZ * playerMotion.speed * dt;
-        playerRig.position.x = THREE.MathUtils.clamp(playerRig.position.x, -13.8, 13.8);
-        playerRig.position.z = THREE.MathUtils.clamp(playerRig.position.z, -14.6, 14.8);
+        const horizontalSpeed = playerVelocityXZ.length();
+        playerRig.rotation.y = facingState.yaw;
 
         if (jump) {
             attemptJump();
@@ -1063,6 +1580,11 @@ function createVoxelChurch(container) {
                 playerMotion.onGround = true;
             }
         }
+
+        updateArmPoseSmoothing(dt);
+        applyArmSecondaryMotion(horizontalSpeed);
+        updateLiturgyItem();
+        updatePlayerSpriteMotion(playerVelocityXZ.x, playerVelocityXZ.y, turnInput, dt);
 
         playerShadow.position.x = playerRig.position.x;
         playerShadow.position.z = playerRig.position.z;
@@ -1099,9 +1621,16 @@ function createVoxelChurch(container) {
         flameL.scale.y = 0.85 + Math.sin(performance.now() * 0.013) * 0.08;
         flameR.scale.y = 0.85 + Math.sin(performance.now() * 0.012 + 0.8) * 0.08;
 
-        cameraTarget.copy(playerRig.position).add(cameraOffset);
-        camera.position.lerp(cameraTarget, 0.1);
-        cameraLookTarget.copy(playerRig.position).add(cameraLookOffset);
+        cameraTarget.copy(playerRig.position);
+        cameraTarget.x += cameraBehindDirection.x * cameraOffset.z;
+        cameraTarget.y += cameraOffset.y;
+        cameraTarget.z += cameraBehindDirection.z * cameraOffset.z;
+        camera.position.lerp(cameraTarget, 0.11);
+
+        cameraLookTarget.copy(playerRig.position);
+        cameraLookTarget.x += moveDirection.x * 2.4;
+        cameraLookTarget.y += cameraLookOffset.y;
+        cameraLookTarget.z += moveDirection.z * 2.4;
         camera.lookAt(cameraLookTarget);
 
         renderer.render(scene, camera);
@@ -1137,6 +1666,7 @@ function createVoxelChurch(container) {
         },
         getCurrentGesture: () => actionState.currentGesture,
         isMassActive: () => actionState.massActive,
+        jumpToMassStep,
     };
 }
 
@@ -1177,6 +1707,7 @@ function resetEntryAfterFailure(message) {
     threeContainer.classList.remove("is-active");
     threeContainer.setAttribute("aria-hidden", "true");
     setLiturgyHudVisible(false);
+    setMassNavigatorVisible(false);
     entryScreen.classList.remove("is-hidden", "is-entering-zoom");
     entryScreen.style.display = "flex";
     APP_STATE.isTransitioning = false;
@@ -1203,7 +1734,10 @@ async function activateThreeScene(role) {
     threeContainer.classList.add("is-active");
     threeContainer.setAttribute("aria-hidden", "false");
     bindHudControls();
+    buildMassFlowNavigation();
+    bindMassNavigator();
     setLiturgyHudVisible(true);
+    setMassNavigatorVisible(true);
 
     try {
         if (!APP_STATE.threeWorld) {
