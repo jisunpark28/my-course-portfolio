@@ -614,21 +614,28 @@ function createVoxelChurch(container) {
     collar.position.set(0, 2.06, 0.02);
     playerRig.add(collar);
 
-    const playerTexture = new THREE.TextureLoader().load(selected.frontImage);
-    if ("colorSpace" in playerTexture) {
-        playerTexture.colorSpace = THREE.SRGBColorSpace;
-    }
-    playerTexture.magFilter = THREE.NearestFilter;
+    const textureLoader = new THREE.TextureLoader();
+    const playerTextures = {
+        front: textureLoader.load(selected.frontImage),
+        back: textureLoader.load(selected.backImage || selected.frontImage),
+    };
+    Object.values(playerTextures).forEach((texture) => {
+        if ("colorSpace" in texture) {
+            texture.colorSpace = THREE.SRGBColorSpace;
+        }
+        texture.magFilter = THREE.NearestFilter;
+        texture.minFilter = THREE.NearestFilter;
+    });
 
-    const playerSprite = new THREE.Sprite(
-        new THREE.SpriteMaterial({
-            map: playerTexture,
-            transparent: true,
-            alphaTest: 0.18,
-        }),
-    );
-    playerSprite.scale.set(2.5, 3.0, 1);
-    playerSprite.position.set(0, 1.55, 0.05);
+    const playerSpriteMaterial = new THREE.SpriteMaterial({
+        map: playerTextures.front,
+        transparent: true,
+        alphaTest: 0.18,
+    });
+    const playerSprite = new THREE.Sprite(playerSpriteMaterial);
+    const playerSpriteBaseScale = { x: 2.85, y: 3.35 };
+    playerSprite.scale.set(playerSpriteBaseScale.x, playerSpriteBaseScale.y, 1);
+    playerSprite.position.set(0, 1.62, 0.08);
     playerRig.add(playerSprite);
 
     const itemMaterial = new THREE.MeshLambertMaterial({ color: 0xc6a278 });
@@ -662,6 +669,13 @@ function createVoxelChurch(container) {
 
     const leftArm = createArm(-1);
     const rightArm = createArm(1);
+
+    // Keep the cute 2D character in 3D and hide the temporary voxel body parts.
+    torso.visible = false;
+    head.visible = false;
+    collar.visible = false;
+    leftArm.shoulder.visible = false;
+    rightArm.shoulder.visible = false;
 
     const armPoseCurrent = {
         left: { ux: 0, uy: 0, uz: 0, lx: 0, ly: 0, lz: 0 },
@@ -1019,6 +1033,50 @@ function createVoxelChurch(container) {
     const cameraTarget = new THREE.Vector3();
     const cameraLookTarget = new THREE.Vector3();
     const clock = new THREE.Clock();
+    const spriteFacingState = {
+        xDir: 1,
+        walkPhase: 0,
+        facingBack: false,
+    };
+
+    function updatePlayerSpriteMotion(moveX, moveZ, dt) {
+        const moveStrength = Math.hypot(moveX, moveZ);
+
+        if (moveStrength > 0.04) {
+            if (Math.abs(moveZ) >= Math.abs(moveX) * 0.65) {
+                const shouldFaceBack = moveZ < 0;
+                if (shouldFaceBack !== spriteFacingState.facingBack) {
+                    spriteFacingState.facingBack = shouldFaceBack;
+                    playerSpriteMaterial.map = shouldFaceBack ? playerTextures.back : playerTextures.front;
+                    playerSpriteMaterial.needsUpdate = true;
+                }
+            }
+            if (Math.abs(moveX) > 0.08) {
+                spriteFacingState.xDir = moveX < 0 ? -1 : 1;
+            }
+        }
+
+        if (moveStrength > 0.04 && playerMotion.onGround) {
+            spriteFacingState.walkPhase += dt * 11;
+        }
+
+        const moving = moveStrength > 0.04;
+        const walkBob = moving && playerMotion.onGround
+            ? Math.sin(spriteFacingState.walkPhase) * 0.1
+            : Math.sin(performance.now() * 0.0035) * 0.03;
+        const squash = moving ? (0.98 + Math.cos(spriteFacingState.walkPhase) * 0.02) : 1;
+        const stretchX = moving ? 1.03 : 1;
+        const tiltTarget = -moveX * 0.06;
+
+        playerSprite.scale.x = playerSpriteBaseScale.x * spriteFacingState.xDir * stretchX;
+        playerSprite.scale.y = playerSpriteBaseScale.y * squash;
+        playerSprite.position.y = 1.62 + walkBob + Math.max(playerRig.position.y, 0) * 0.06;
+        playerSpriteMaterial.rotation = THREE.MathUtils.lerp(
+            playerSpriteMaterial.rotation,
+            tiltTarget,
+            Math.min(dt * 8, 1),
+        );
+    }
 
     function animate() {
         const dt = Math.min(clock.getDelta(), 0.05);
@@ -1063,6 +1121,8 @@ function createVoxelChurch(container) {
                 playerMotion.onGround = true;
             }
         }
+
+        updatePlayerSpriteMotion(moveX, moveZ, dt);
 
         playerShadow.position.x = playerRig.position.x;
         playerShadow.position.z = playerRig.position.z;
