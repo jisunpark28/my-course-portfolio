@@ -418,6 +418,63 @@ function createVoxelChurch(container) {
         }
     }
 
+    const selected = CHARACTER_CONFIG[APP_STATE.selectedCharacter] || CHARACTER_CONFIG.nun;
+    const playerTexture = new THREE.TextureLoader().load(selected.frontImage);
+    if ("colorSpace" in playerTexture) {
+        playerTexture.colorSpace = THREE.SRGBColorSpace;
+    }
+    playerTexture.magFilter = THREE.NearestFilter;
+
+    const playerSprite = new THREE.Sprite(
+        new THREE.SpriteMaterial({
+            map: playerTexture,
+            transparent: true,
+            alphaTest: 0.18,
+        }),
+    );
+    playerSprite.scale.set(2.6, 3.1, 1);
+    playerSprite.position.set(0, 1.55, 10.8);
+    root.add(playerSprite);
+
+    const playerShadow = new THREE.Mesh(
+        new THREE.CircleGeometry(0.82, 16),
+        new THREE.MeshBasicMaterial({
+            color: 0x000000,
+            transparent: true,
+            opacity: 0.18,
+        }),
+    );
+    playerShadow.rotation.x = -Math.PI / 2;
+    playerShadow.position.set(playerSprite.position.x, 0.02, playerSprite.position.z);
+    root.add(playerShadow);
+
+    applyRoleCamera(APP_STATE.selectedCharacter, camera, playerSprite);
+
+    const keyState = new Set();
+    const playerVelocity = { y: 0 };
+    const playerMotion = {
+        speed: 7.1,
+        gravity: 18,
+        jump: 8,
+        onGround: true,
+        jumpLatch: false,
+        groundY: 1.55,
+    };
+
+    function onKeyDown(event) {
+        if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"].includes(event.code)) {
+            event.preventDefault();
+        }
+        keyState.add(event.code);
+    }
+
+    function onKeyUp(event) {
+        keyState.delete(event.code);
+    }
+
+    window.addEventListener("keydown", onKeyDown, { passive: false });
+    window.addEventListener("keyup", onKeyUp);
+
     const raycaster = new THREE.Raycaster();
     const pointer = new THREE.Vector2();
     const interactiveMeshes = [altarBase, altarCloth, crossStand, crossBeam, candleL, candleR];
@@ -471,10 +528,56 @@ function createVoxelChurch(container) {
         spawnSparkles(hit.point, hit.object === altarCloth ? altarCloth.material.color.getHex() : 0xffe596);
     });
 
+    const cameraOffset = new THREE.Vector3(0, 4.6, 9.2);
+    const cameraLookOffset = new THREE.Vector3(0, 1.4, -4.1);
+    const cameraTarget = new THREE.Vector3();
+    const cameraLookTarget = new THREE.Vector3();
     const clock = new THREE.Clock();
 
     function animate() {
         const dt = Math.min(clock.getDelta(), 0.05);
+
+        const left = keyState.has("ArrowLeft") || keyState.has("KeyA");
+        const right = keyState.has("ArrowRight") || keyState.has("KeyD");
+        const up = keyState.has("ArrowUp") || keyState.has("KeyW");
+        const down = keyState.has("ArrowDown") || keyState.has("KeyS");
+        const jump = keyState.has("Space");
+
+        let moveX = (right ? 1 : 0) - (left ? 1 : 0);
+        let moveZ = (down ? 1 : 0) - (up ? 1 : 0);
+        const moveLength = Math.hypot(moveX, moveZ);
+        if (moveLength > 0) {
+            moveX /= moveLength;
+            moveZ /= moveLength;
+        }
+
+        playerSprite.position.x += moveX * playerMotion.speed * dt;
+        playerSprite.position.z += moveZ * playerMotion.speed * dt;
+        playerSprite.position.x = THREE.MathUtils.clamp(playerSprite.position.x, -13.8, 13.8);
+        playerSprite.position.z = THREE.MathUtils.clamp(playerSprite.position.z, -14.6, 14.8);
+
+        if (jump && playerMotion.onGround && !playerMotion.jumpLatch) {
+            playerVelocity.y = playerMotion.jump;
+            playerMotion.onGround = false;
+            playerMotion.jumpLatch = true;
+        }
+        if (!jump) {
+            playerMotion.jumpLatch = false;
+        }
+
+        if (!playerMotion.onGround) {
+            playerVelocity.y -= playerMotion.gravity * dt;
+            playerSprite.position.y += playerVelocity.y * dt;
+            if (playerSprite.position.y <= playerMotion.groundY) {
+                playerSprite.position.y = playerMotion.groundY;
+                playerVelocity.y = 0;
+                playerMotion.onGround = true;
+            }
+        }
+
+        playerShadow.position.x = playerSprite.position.x;
+        playerShadow.position.z = playerSprite.position.z;
+        playerShadow.material.opacity = 0.2 - Math.min((playerSprite.position.y - playerMotion.groundY) * 0.05, 0.1);
 
         for (let i = jumpTweens.length - 1; i >= 0; i -= 1) {
             const tween = jumpTweens[i];
@@ -507,6 +610,11 @@ function createVoxelChurch(container) {
         flameL.scale.y = 0.85 + Math.sin(performance.now() * 0.013) * 0.08;
         flameR.scale.y = 0.85 + Math.sin(performance.now() * 0.012 + 0.8) * 0.08;
 
+        cameraTarget.copy(playerSprite.position).add(cameraOffset);
+        camera.position.lerp(cameraTarget, 0.1);
+        cameraLookTarget.copy(playerSprite.position).add(cameraLookOffset);
+        camera.lookAt(cameraLookTarget);
+
         renderer.render(scene, camera);
         requestAnimationFrame(animate);
     }
@@ -526,18 +634,16 @@ function createVoxelChurch(container) {
         camera,
         renderer,
         altarCloth,
+        playerSprite,
     };
 }
 
-function applyRoleCamera(role, camera) {
-    if (role === "priest") {
-        camera.position.set(0, 3.7, -14.8);
-        camera.lookAt(0, 2.7, 7.8);
-        return;
-    }
-
-    camera.position.set(0, 3.9, 15.6);
-    camera.lookAt(0, 2.9, -12.3);
+function applyRoleCamera(role, camera, playerSprite = null) {
+    const anchorX = playerSprite ? playerSprite.position.x : 0;
+    const anchorY = playerSprite ? playerSprite.position.y : 1.55;
+    const anchorZ = playerSprite ? playerSprite.position.z : 10.8;
+    camera.position.set(anchorX, anchorY + 4.6, anchorZ + 9.2);
+    camera.lookAt(anchorX, anchorY + 1.4, anchorZ - 4.1);
 }
 
 function resetEntryAfterFailure(message) {
@@ -601,8 +707,8 @@ async function activateThreeScene(role) {
         APP_STATE.threeWorld.altarCloth.material.color.setHex(liturgical.colorHex);
         APP_STATE.threeWorld.altarCloth.material.needsUpdate = true;
 
-        applyRoleCamera(role, APP_STATE.threeWorld.camera);
-        setDialogue(`Today is ${liturgical.season}. Altar cloth color: ${liturgical.colorName}.`);
+        applyRoleCamera(role, APP_STATE.threeWorld.camera, APP_STATE.threeWorld.playerSprite);
+        setDialogue(`Today is ${liturgical.season}. Altar cloth color: ${liturgical.colorName}. Use arrow keys to move and Space to jump.`);
     } catch (error) {
         console.error("Failed to initialize 3D church scene:", error);
         resetEntryAfterFailure("The church interior could not load. Please refresh and try again.");
