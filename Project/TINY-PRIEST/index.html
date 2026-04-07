@@ -47,6 +47,29 @@
 
     <div id="entry-flash" class="entry-flash" aria-hidden="true"></div>
     <div id="three-container" class="three-container" aria-hidden="true"></div>
+    <section id="liturgy-hud" class="liturgy-hud" aria-hidden="true">
+        <div id="liturgy-subtitle" class="liturgy-subtitle">
+            🎵 The Mass guide subtitle will appear here.
+        </div>
+        <div class="liturgy-controls">
+            <button type="button" class="control-btn" data-command="gesture-idle" data-gesture="idle"><span>🙂</span><span class="control-label">Idle</span></button>
+            <button type="button" class="control-btn" data-command="gesture-point" data-gesture="point"><span>👉</span><span class="control-label">Point</span></button>
+            <button type="button" class="control-btn" data-command="gesture-hold" data-gesture="hold"><span>📖</span><span class="control-label">Hold Gift</span></button>
+            <button type="button" class="control-btn" data-command="gesture-lift" data-gesture="lift"><span>🙌</span><span class="control-label">Lift Gift</span></button>
+            <button type="button" class="control-btn" data-command="gesture-pray" data-gesture="pray"><span>🙏</span><span class="control-label">Pray</span></button>
+            <button type="button" class="control-btn" data-command="gesture-ourfather" data-gesture="ourFather"><span>👐</span><span class="control-label">Our Father</span></button>
+            <button type="button" class="control-btn" data-command="gesture-signcross" data-gesture="signCross"><span>✝️</span><span class="control-label">Sign of Cross</span></button>
+            <button type="button" class="control-btn" data-command="mass-toggle"><span>🎬</span><span class="control-label">Start Mass</span></button>
+            <button type="button" class="control-btn" data-command="move-left"><span>⬅️</span><span class="control-label">Left</span></button>
+            <button type="button" class="control-btn" data-command="move-forward"><span>⬆️</span><span class="control-label">Forward</span></button>
+            <button type="button" class="control-btn" data-command="move-back"><span>⬇️</span><span class="control-label">Back</span></button>
+            <button type="button" class="control-btn" data-command="move-right"><span>➡️</span><span class="control-label">Right</span></button>
+            <button type="button" class="control-btn" data-command="jump"><span>⤴️</span><span class="control-label">Jump</span></button>
+        </div>
+        <p class="liturgy-help">
+            ⌨️ Keyboard: Arrows/WASD move · Space jump · 1~7 gestures · M Mass sequence
+        </p>
+    </section>
 
     <script src="vendor/three.min.js"></script>
     <script src="script.js"></script>
