@@ -21,7 +21,7 @@ body {
 .main-title {
     color: #5D4037; /* Dark Wood Brown */
     font-size: 2.2rem;
-    margin-bottom: 30px;
+    margin-bottom: 150px;
     z-index: 10;
     position: relative;
 }
@@ -41,15 +41,15 @@ body {
     position: absolute;
     bottom: 0;
     left: 51.5%;
-    transform: translateX(-50%);
+    transform: translateX(-47%);
     width: 100%;
-    height: 100%;
+    height: 200%;
     z-index: 1;
 }
 
 .church-building img {
     width: 100%;
-    height: 100%;
+    height: 120%;
     object-fit: contain; /* Keeps aspect ratio */
     opacity: 0.8; /* Make it slightly transparent for depth */
 }
@@ -58,7 +58,7 @@ body {
 .statue-mary {
     position: absolute;
     bottom: 0;
-    left: 10%; /* Position to the left */
+    left: 3%; /* Position to the left */
     z-index: 5;
     transition: transform 0.3s ease;
 }
@@ -79,12 +79,12 @@ body {
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    gap: 5px;
-    margin-bottom: 20px; /* Space from the ground */
+    gap: 0px;
+    margin-bottom: 50px; /* Space from the ground */
 }
 
 .asset img {
-    height: 250px; /* Slightly smaller uniform height for characters */
+    height: 200px; /* Slightly smaller uniform height for characters */
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     cursor: pointer;
 }
@@ -108,3 +108,11 @@ body {
     position: relative;
 }
 
+.walking-into-church {
+    /* 캐릭터가 현재 위치에서 성당 문(중앙)으로 모이며 작아지도록 설정 */
+    transform: scale(0.1) translateY(-500px) translateX(-50%); 
+    opacity: 0;
+    filter: blur(2px); /* 멀어질 때 살짝 흐려지면 더 입체적이에요 */
+    transition: all 1.5s ease-in;
+    pointer-events: none;
+}
