@@ -204,6 +204,9 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
     gap: 6px;
+    max-height: 150px;
+    overflow-y: auto;
+    padding-right: 2px;
 }
 
 .control-btn {
@@ -321,5 +324,6 @@ body {
 
     .liturgy-controls {
         grid-template-columns: repeat(4, minmax(68px, 1fr));
+        max-height: 118px;
     }
 }
