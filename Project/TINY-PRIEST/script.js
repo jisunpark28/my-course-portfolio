@@ -15,7 +15,54 @@ const APP_STATE = {
     isTransitioning: false,
     selectedCharacter: null,
     threeWorld: null,
+    threeLoadPromise: null,
 };
+
+const THREE_CDN_FALLBACKS = [
+    "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.min.js",
+    "https://cdnjs.cloudflare.com/ajax/libs/three.js/r165/three.min.js",
+];
+
+function loadThreeFromUrl(url) {
+    return new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = url;
+        script.async = true;
+        script.crossOrigin = "anonymous";
+        script.dataset.threeFallback = url;
+        script.onload = () => resolve(Boolean(window.THREE));
+        script.onerror = () => reject(new Error(`Failed loading ${url}`));
+        document.head.appendChild(script);
+    });
+}
+
+async function ensureThreeLoaded() {
+    if (window.THREE) {
+        return true;
+    }
+
+    if (!APP_STATE.threeLoadPromise) {
+        APP_STATE.threeLoadPromise = (async () => {
+            for (const url of THREE_CDN_FALLBACKS) {
+                try {
+                    const loaded = await loadThreeFromUrl(url);
+                    if (loaded && window.THREE) {
+                        return true;
+                    }
+                } catch (error) {
+                    console.warn("Three.js fallback failed:", error);
+                }
+            }
+            return false;
+        })();
+    }
+
+    const loaded = await APP_STATE.threeLoadPromise;
+    if (!loaded) {
+        APP_STATE.threeLoadPromise = null;
+    }
+    return loaded;
+}
 
 function setDialogue(text) {
     const dialogueBox = document.getElementById("dialogue-box");
@@ -492,10 +539,50 @@ function applyRoleCamera(role, camera) {
     camera.lookAt(0, 2.9, -12.3);
 }
 
-function activateThreeScene(role) {
+function resetEntryAfterFailure(message) {
+    const entryScreen = document.getElementById("entry-screen");
+    const flash = document.getElementById("entry-flash");
+    const threeContainer = document.getElementById("three-container");
+    const selectedEl = getCharacterElement(APP_STATE.selectedCharacter);
+    const selectedConfig = CHARACTER_CONFIG[APP_STATE.selectedCharacter];
+
+    if (selectedEl && selectedConfig) {
+        selectedEl.style.opacity = "1";
+        selectedEl.classList.remove("is-entering");
+        const image = selectedEl.querySelector("img");
+        if (image) {
+            image.src = selectedConfig.frontImage;
+        }
+    }
+
+    document.querySelectorAll(".character").forEach((el) => {
+        el.style.pointerEvents = "";
+        el.classList.remove("is-entering");
+        if (el.style.opacity === "0") {
+            el.style.opacity = "1";
+        }
+    });
+
+    flash.classList.remove("is-active");
+    flash.removeAttribute("style");
+    threeContainer.classList.remove("is-active");
+    threeContainer.setAttribute("aria-hidden", "true");
+    entryScreen.classList.remove("is-hidden", "is-entering-zoom");
+    entryScreen.style.display = "flex";
+    APP_STATE.isTransitioning = false;
+    setDialogue(message);
+}
+
+async function activateThreeScene(role) {
     const entryScreen = document.getElementById("entry-screen");
     const threeContainer = document.getElementById("three-container");
     const liturgical = getLiturgicalSeason(new Date());
+    const isThreeReady = await ensureThreeLoaded();
+
+    if (!isThreeReady || !window.THREE) {
+        resetEntryAfterFailure("3D engine failed to load. Please check internet and try again.");
+        return;
+    }
 
     entryScreen.classList.add("is-hidden");
     setTimeout(() => {
@@ -517,11 +604,7 @@ function activateThreeScene(role) {
         setDialogue(`Today is ${liturgical.season}. Altar cloth color: ${liturgical.colorName}.`);
     } catch (error) {
         console.error("Failed to initialize 3D church scene:", error);
-        entryScreen.classList.remove("is-hidden", "is-entering-zoom");
-        entryScreen.style.display = "flex";
-        threeContainer.classList.remove("is-active");
-        setDialogue("The church interior could not load. Please refresh and try again.");
-        APP_STATE.isTransitioning = false;
+        resetEntryAfterFailure("The church interior could not load. Please refresh and try again.");
     }
 }
 
@@ -549,7 +632,7 @@ async function handleInteract(character) {
 
     await animateCharacterEntry(characterEl);
     await animateDoorZoomTransition();
-    activateThreeScene(character);
+    await activateThreeScene(character);
 }
 
 window.handleInteract = handleInteract;
