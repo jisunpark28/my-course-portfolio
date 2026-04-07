@@ -47,19 +47,19 @@ Hi! I'm a passionate developer focused on Software Programming and Database Mana
       <td align="center">In Progress 🏗️</td>
     </tr>
     <tr>
-      <td><a href="./Project/HANGMAN-GAME/HANGMAN-JS"><b>JS Ver</b></a></td>
+      <td><a href="./Project/HANGMAN-GAME/JavaScript-Ver"><b>JS Ver</b></a></td>
       <td><code>JavaScript</code></td>
       <td>Interactive Flower Visuals, Closure-based logic, MVP.css</td>
       <td align="center">Completed ✅</td>
     </tr>
     <tr>
-      <td><a href="./Project/HANGMAN-GAME/HANGMAN-C"><b>C Ver</b></a></td>
+      <td><a href="./Project/HANGMAN-GAME/C-Ver"><b>C Ver</b></a></td>
       <td><code>C</code> <code>libcurl</code></td>
       <td><b>Gemini API</b> integration, JSON parsing, API communication</td>
       <td align="center">Completed ✅</td>
     </tr>
     <tr>
-      <td><a href="./Project/HANGMAN-GAME/HANGMAN-BASH"><b>Bash Ver</b></a></td>
+      <td><a href="./Project/HANGMAN-GAME/Bash-Ver"><b>Bash Ver</b></a></td>
       <td><code>Shell</code></td>
       <td>File I/O stream, Linux native command optimization</td>
       <td align="center">Completed ✅</td>
