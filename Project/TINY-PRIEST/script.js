@@ -43,6 +43,38 @@ function getDoorAnchor() {
     };
 }
 
+function setZoomOriginFromDoor() {
+    const entryScreen = document.getElementById("entry-screen");
+    const door = getDoorAnchor();
+    const xPercent = (door.x / window.innerWidth) * 100;
+    const yPercent = (door.y / window.innerHeight) * 100;
+    entryScreen.style.setProperty("--zoom-x", `${xPercent}%`);
+    entryScreen.style.setProperty("--zoom-y", `${yPercent}%`);
+    return { xPercent, yPercent };
+}
+
+function animateDoorZoomTransition() {
+    return new Promise((resolve) => {
+        const entryScreen = document.getElementById("entry-screen");
+        const flash = document.getElementById("entry-flash");
+        const { xPercent, yPercent } = setZoomOriginFromDoor();
+
+        flash.style.setProperty("--zoom-x", `${xPercent}%`);
+        flash.style.setProperty("--zoom-y", `${yPercent}%`);
+        entryScreen.classList.add("is-entering-zoom");
+
+        requestAnimationFrame(() => {
+            flash.classList.add("is-active");
+        });
+
+        setTimeout(() => {
+            flash.classList.remove("is-active");
+            flash.removeAttribute("style");
+            resolve();
+        }, 620);
+    });
+}
+
 function getCharacterElement(character) {
     return document.getElementById(`character-${character}`);
 }
@@ -431,6 +463,7 @@ async function handleInteract(character) {
     setDialogue(CHARACTER_CONFIG[character].welcomeText);
 
     await animateCharacterEntry(characterEl);
+    await animateDoorZoomTransition();
     activateThreeScene(character);
 }
 
