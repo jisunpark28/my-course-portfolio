@@ -19,6 +19,7 @@ const APP_STATE = {
 };
 
 const THREE_CDN_FALLBACKS = [
+    "vendor/three.min.js",
     "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.min.js",
     "https://cdnjs.cloudflare.com/ajax/libs/three.js/r165/three.min.js",
 ];
