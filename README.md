@@ -26,7 +26,7 @@ Hi! I'm a passionate developer focused on Software Programming and Database Mana
   </thead>
   <tbody>
     <tr>
-      <td><a href="./Project/TINY-PRIEST"><b>Tiny Church</b></a></td>
+      <td><a href="./Project/TINY-PRIEST"><b>Tine-Priest</b></a></td>
       <td><b>AI-Native Web</b></td>
       <td><code>Cursor</code> <code>HTML/CSS/JS</code></td>
       <td><b>AI-Assisted Development</b>: Interactive 3D church scene with GSAP animations</td>
