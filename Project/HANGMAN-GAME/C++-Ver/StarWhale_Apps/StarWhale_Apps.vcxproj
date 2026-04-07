@@ -21,9 +21,10 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{820fc9e9-10be-4670-bc0f-7b39d2c58b94}</ProjectGuid>
-    <RootNamespace>CVer</RootNamespace>
+    <ProjectGuid>{b910963a-7ca0-4d15-856a-08a179e1c05f}</ProjectGuid>
+    <RootNamespace>StarWhaleApps</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>StarWhale_App</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -102,6 +103,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)StarWhale_Core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -116,6 +118,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)StarWhale_Core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -123,18 +126,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Display.h" />
-    <ClInclude Include="HangmanGame.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="WordLoader.h" />
-    <ClInclude Include="WordManager.h" />
+    <ClCompile Include="..\StarWhale_Core\StarWhale_Core\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Display.cpp" />
-    <ClCompile Include="HangmanGame.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="WordManager.cpp" />
+    <ProjectReference Include="..\StarWhale_Core\StarWhale_Core\StarWhale_Core.vcxproj">
+      <Project>{6d31d36c-0aec-4686-9590-acadf9c23546}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

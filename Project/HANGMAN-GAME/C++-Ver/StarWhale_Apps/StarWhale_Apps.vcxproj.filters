@@ -15,13 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="test_Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="test_WordManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="test_HangmanGame.cpp">
+    <ClCompile Include="..\StarWhale_Core\StarWhale_Core\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

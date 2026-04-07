@@ -1,0 +1,12 @@
+/* Citation and Sources...
+Hangman C++ Version: Star Whale
+Module: Word Providers
+Purpose: Implements the file reading logic to provide words to the game engine.
+Filename: FileWordProvider.cpp
+Version 0.1
+Author: Jisun Park, Email: jisunpark28@gmail.com
+Revision History
+-----------------------------------------------------------
+Date        Reason
+2026/04/07  Initial File
+-----------------------------------------------------------*/

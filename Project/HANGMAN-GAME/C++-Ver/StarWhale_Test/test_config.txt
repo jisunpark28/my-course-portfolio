@@ -1,0 +1,3 @@
+STAR|Star|The star shines brightly in the dark.
+WHALE|Whale|The star whale swims across the universe.
+GALAXY|Galaxy|There are billions of stars in the galaxy.
