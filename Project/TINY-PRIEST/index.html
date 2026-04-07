@@ -47,6 +47,29 @@
 
     <div id="entry-flash" class="entry-flash" aria-hidden="true"></div>
     <div id="three-container" class="three-container" aria-hidden="true"></div>
+    <section id="liturgy-hud" class="liturgy-hud" aria-hidden="true">
+        <div id="liturgy-subtitle" class="liturgy-subtitle">
+            🎵 미사 안내 자막이 이곳에 표시됩니다.
+        </div>
+        <div class="liturgy-controls">
+            <button type="button" class="control-btn" data-command="gesture-idle" data-gesture="idle"><span>🙂</span><span class="control-label">기본</span></button>
+            <button type="button" class="control-btn" data-command="gesture-point" data-gesture="point"><span>👉</span><span class="control-label">가리키기</span></button>
+            <button type="button" class="control-btn" data-command="gesture-hold" data-gesture="hold"><span>📖</span><span class="control-label">잡기</span></button>
+            <button type="button" class="control-btn" data-command="gesture-lift" data-gesture="lift"><span>🙌</span><span class="control-label">들어올리기</span></button>
+            <button type="button" class="control-btn" data-command="gesture-pray" data-gesture="pray"><span>🙏</span><span class="control-label">기도</span></button>
+            <button type="button" class="control-btn" data-command="gesture-ourfather" data-gesture="ourFather"><span>👐</span><span class="control-label">주님의 기도</span></button>
+            <button type="button" class="control-btn" data-command="gesture-signcross" data-gesture="signCross"><span>✝️</span><span class="control-label">성호경</span></button>
+            <button type="button" class="control-btn" data-command="mass-toggle"><span>🎬</span><span class="control-label">미사 진행 시작</span></button>
+            <button type="button" class="control-btn" data-command="move-left"><span>⬅️</span><span class="control-label">왼쪽</span></button>
+            <button type="button" class="control-btn" data-command="move-forward"><span>⬆️</span><span class="control-label">앞으로</span></button>
+            <button type="button" class="control-btn" data-command="move-back"><span>⬇️</span><span class="control-label">뒤로</span></button>
+            <button type="button" class="control-btn" data-command="move-right"><span>➡️</span><span class="control-label">오른쪽</span></button>
+            <button type="button" class="control-btn" data-command="jump"><span>⤴️</span><span class="control-label">점프</span></button>
+        </div>
+        <p class="liturgy-help">
+            ⌨️ 키보드: 화살표/WASD 이동 · Space 점프 · 1~7 동작 · M 미사 시퀀스
+        </p>
+    </section>
 
     <script src="vendor/three.min.js"></script>
     <script src="script.js"></script>

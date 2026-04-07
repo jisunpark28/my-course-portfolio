@@ -163,6 +163,99 @@ body {
     display: block;
 }
 
+.liturgy-hud {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 140;
+    padding: 10px 12px 12px;
+    background: linear-gradient(180deg, rgba(246, 240, 221, 0.25) 0%, rgba(246, 240, 221, 0.93) 45%, rgba(246, 240, 221, 0.97) 100%);
+    border-top: 2px solid rgba(165, 129, 95, 0.25);
+    backdrop-filter: blur(4px);
+    transform: translateY(100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.35s ease, opacity 0.35s ease;
+}
+
+.liturgy-hud.is-active {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.liturgy-subtitle {
+    margin: 0 auto 8px;
+    width: min(1100px, 96vw);
+    padding: 9px 12px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.82);
+    border: 2px solid rgba(210, 180, 140, 0.65);
+    font-weight: 600;
+    font-size: clamp(0.85rem, 1.35vw, 1rem);
+    text-align: center;
+    color: #5d4037;
+}
+
+.liturgy-controls {
+    margin: 0 auto;
+    width: min(1100px, 96vw);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    gap: 6px;
+}
+
+.control-btn {
+    border: 1.5px solid rgba(156, 116, 76, 0.25);
+    background: rgba(255, 255, 255, 0.84);
+    border-radius: 10px;
+    min-height: 52px;
+    padding: 5px 4px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    transition: transform 0.14s ease, border-color 0.14s ease, background-color 0.14s ease;
+    color: #5d4037;
+}
+
+.control-btn:hover {
+    transform: translateY(-1px);
+    border-color: rgba(156, 116, 76, 0.52);
+}
+
+.control-btn:active {
+    transform: scale(0.97);
+}
+
+.control-btn.is-active {
+    border-color: rgba(115, 157, 116, 0.8);
+    background: rgba(233, 248, 223, 0.96);
+}
+
+.control-btn > span:first-child {
+    font-size: 1.12rem;
+    line-height: 1;
+}
+
+.control-label {
+    font-size: 0.69rem;
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+.liturgy-help {
+    width: min(1100px, 96vw);
+    margin: 8px auto 0;
+    font-size: clamp(0.7rem, 1.1vw, 0.82rem);
+    text-align: center;
+    color: rgba(93, 64, 55, 0.88);
+}
+
 .entry-flash {
     position: fixed;
     inset: 0;
@@ -224,5 +317,9 @@ body {
 
     .character-group {
         bottom: 2.5%;
+    }
+
+    .liturgy-controls {
+        grid-template-columns: repeat(4, minmax(68px, 1fr));
     }
 }

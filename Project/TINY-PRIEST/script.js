@@ -16,6 +16,7 @@ const APP_STATE = {
     selectedCharacter: null,
     threeWorld: null,
     threeLoadPromise: null,
+    hudBound: false,
 };
 
 const THREE_CDN_FALLBACKS = [
@@ -23,6 +24,16 @@ const THREE_CDN_FALLBACKS = [
     "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.min.js",
     "https://cdnjs.cloudflare.com/ajax/libs/three.js/r165/three.min.js",
 ];
+
+const GESTURE_NARRATION = {
+    idle: "🙂 준비 자세를 유지하며 다음 예식을 기다립니다.",
+    point: "👉 말씀 전례에서 복음의 핵심을 가리키며 설명합니다.",
+    hold: "📖 예물을 두 손으로 공손히 잡아 봉헌을 준비합니다.",
+    lift: "🙌 예물을 높이 들어 하느님께 봉헌합니다.",
+    pray: "🙏 양손을 모아 마음을 모으고 기도합니다.",
+    ourFather: "👐 주님의 기도를 바치며 양팔을 부드럽게 펼칩니다.",
+    signCross: "✝️ 성부와 성자와 성령의 이름으로, 성호를 긋습니다.",
+};
 
 function loadThreeFromUrl(url) {
     return new Promise((resolve, reject) => {
@@ -70,6 +81,88 @@ function setDialogue(text) {
     if (dialogueBox) {
         dialogueBox.textContent = text;
     }
+}
+
+function setLiturgySubtitle(text) {
+    const subtitle = document.getElementById("liturgy-subtitle");
+    if (subtitle) {
+        subtitle.textContent = text;
+    }
+}
+
+function setLiturgyHudVisible(isVisible) {
+    const hud = document.getElementById("liturgy-hud");
+    if (!hud) {
+        return;
+    }
+    hud.classList.toggle("is-active", isVisible);
+    hud.setAttribute("aria-hidden", isVisible ? "false" : "true");
+}
+
+function setHudButtonsState(currentGesture, massActive) {
+    const hud = document.getElementById("liturgy-hud");
+    if (!hud) {
+        return;
+    }
+
+    hud.querySelectorAll(".control-btn[data-gesture]").forEach((button) => {
+        button.classList.toggle("is-active", button.dataset.gesture === currentGesture);
+    });
+
+    const massButton = hud.querySelector(".control-btn[data-command='mass-toggle']");
+    if (massButton) {
+        massButton.classList.toggle("is-active", Boolean(massActive));
+        const label = massButton.querySelector(".control-label");
+        if (label) {
+            label.textContent = massActive ? "미사 진행 중지" : "미사 진행 시작";
+        }
+    }
+}
+
+function bindHudControls() {
+    if (APP_STATE.hudBound) {
+        return;
+    }
+    const hud = document.getElementById("liturgy-hud");
+    if (!hud) {
+        return;
+    }
+
+    hud.addEventListener("click", (event) => {
+        const button = event.target.closest(".control-btn[data-command]");
+        if (!button || !APP_STATE.threeWorld) {
+            return;
+        }
+        const command = button.dataset.command;
+        const world = APP_STATE.threeWorld;
+
+        if (command === "gesture-idle") world.triggerGesture("idle");
+        else if (command === "gesture-point") world.triggerGesture("point");
+        else if (command === "gesture-hold") world.triggerGesture("hold");
+        else if (command === "gesture-lift") world.triggerGesture("lift");
+        else if (command === "gesture-pray") world.triggerGesture("pray");
+        else if (command === "gesture-ourfather") world.triggerGesture("ourFather");
+        else if (command === "gesture-signcross") world.triggerGesture("signCross");
+        else if (command === "mass-toggle") world.toggleMassSequence();
+        else if (command === "move-left") {
+            world.nudgeMove(-1, 0);
+            setLiturgySubtitle("⬅️ 왼쪽으로 한 걸음 이동했습니다.");
+        } else if (command === "move-right") {
+            world.nudgeMove(1, 0);
+            setLiturgySubtitle("➡️ 오른쪽으로 한 걸음 이동했습니다.");
+        } else if (command === "move-forward") {
+            world.nudgeMove(0, -1);
+            setLiturgySubtitle("⬆️ 제대 쪽으로 이동했습니다.");
+        } else if (command === "move-back") {
+            world.nudgeMove(0, 1);
+            setLiturgySubtitle("⬇️ 뒤쪽으로 이동했습니다.");
+        } else if (command === "jump") {
+            world.triggerJump();
+            setLiturgySubtitle("⤴️ 가볍게 점프했습니다.");
+        }
+    });
+
+    APP_STATE.hudBound = true;
 }
 
 function parsePercent(value, fallback) {
@@ -555,23 +648,50 @@ function createVoxelChurch(container) {
     };
     const massSequence = ["signCross", "pray", "point", "hold", "lift", "ourFather", "pray"];
 
-    function triggerGesture(name) {
+    function narrateGesture(name, prefix = "") {
+        const message = GESTURE_NARRATION[name] || GESTURE_NARRATION.idle;
+        const merged = prefix ? `${prefix} ${message}` : message;
+        setLiturgySubtitle(merged);
+        setHudButtonsState(name, actionState.massActive);
+    }
+
+    function triggerGesture(name, prefix = "") {
         actionState.currentGesture = name;
         actionState.massTimer = actionState.massStepDuration;
         if (name === "signCross") {
             actionState.signCrossActive = true;
             actionState.signCrossTime = 0;
             setGesturePose("pray");
+            narrateGesture("signCross", prefix);
             return;
         }
         actionState.signCrossActive = false;
         setGesturePose(name);
+        narrateGesture(name, prefix);
     }
 
     function advanceMassStep() {
         const next = massSequence[actionState.massIndex % massSequence.length];
+        const stepNumber = (actionState.massIndex % massSequence.length) + 1;
+        const prefix = `🎼 미사 동작 ${stepNumber}/${massSequence.length}`;
         actionState.massIndex += 1;
-        triggerGesture(next);
+        triggerGesture(next, prefix);
+    }
+
+    function setMassMode(isActive) {
+        if (isActive === actionState.massActive) {
+            return;
+        }
+        actionState.massActive = isActive;
+        if (actionState.massActive) {
+            actionState.massIndex = 0;
+            advanceMassStep();
+            setDialogue("Mass sequence started. Press M again to stop.");
+            return;
+        }
+        triggerGesture("idle");
+        setLiturgySubtitle("⏸️ 미사 동작 시퀀스를 멈췄습니다. 원하는 동작을 직접 선택해보세요.");
+        setDialogue("Mass sequence paused.");
     }
 
     triggerGesture("idle");
@@ -601,6 +721,25 @@ function createVoxelChurch(container) {
         groundY: 0,
     };
 
+    function attemptJump() {
+        if (playerMotion.onGround && !playerMotion.jumpLatch) {
+            playerVelocity.y = playerMotion.jump;
+            playerMotion.onGround = false;
+            playerMotion.jumpLatch = true;
+        }
+    }
+
+    function nudgeMove(dx, dz) {
+        const length = Math.hypot(dx, dz);
+        if (length === 0) {
+            return;
+        }
+        const nx = dx / length;
+        const nz = dz / length;
+        playerRig.position.x = THREE.MathUtils.clamp(playerRig.position.x + nx * 1.15, -13.8, 13.8);
+        playerRig.position.z = THREE.MathUtils.clamp(playerRig.position.z + nz * 1.15, -14.6, 14.8);
+    }
+
     function onKeyDown(event) {
         if ([
             "ArrowUp",
@@ -626,36 +765,28 @@ function createVoxelChurch(container) {
         }
 
         if (event.code === "Digit1") {
-            actionState.massActive = false;
+            if (actionState.massActive) setMassMode(false);
             triggerGesture("idle");
         } else if (event.code === "Digit2") {
-            actionState.massActive = false;
+            if (actionState.massActive) setMassMode(false);
             triggerGesture("point");
         } else if (event.code === "Digit3") {
-            actionState.massActive = false;
+            if (actionState.massActive) setMassMode(false);
             triggerGesture("hold");
         } else if (event.code === "Digit4") {
-            actionState.massActive = false;
+            if (actionState.massActive) setMassMode(false);
             triggerGesture("lift");
         } else if (event.code === "Digit5") {
-            actionState.massActive = false;
+            if (actionState.massActive) setMassMode(false);
             triggerGesture("pray");
         } else if (event.code === "Digit6") {
-            actionState.massActive = false;
+            if (actionState.massActive) setMassMode(false);
             triggerGesture("ourFather");
         } else if (event.code === "Digit7") {
-            actionState.massActive = false;
+            if (actionState.massActive) setMassMode(false);
             triggerGesture("signCross");
         } else if (event.code === "KeyM") {
-            actionState.massActive = !actionState.massActive;
-            if (actionState.massActive) {
-                actionState.massIndex = 0;
-                advanceMassStep();
-                setDialogue("Mass sequence started. Press M again to stop.");
-            } else {
-                triggerGesture("idle");
-                setDialogue("Mass sequence paused.");
-            }
+            setMassMode(!actionState.massActive);
         }
     }
 
@@ -707,6 +838,7 @@ function createVoxelChurch(container) {
             if (actionState.currentGesture === "signCross") {
                 actionState.currentGesture = "pray";
                 setGesturePose("pray");
+                narrateGesture("pray", "✝️ 성호를 마치고");
             }
         }
     }
@@ -833,10 +965,8 @@ function createVoxelChurch(container) {
         playerRig.position.x = THREE.MathUtils.clamp(playerRig.position.x, -13.8, 13.8);
         playerRig.position.z = THREE.MathUtils.clamp(playerRig.position.z, -14.6, 14.8);
 
-        if (jump && playerMotion.onGround && !playerMotion.jumpLatch) {
-            playerVelocity.y = playerMotion.jump;
-            playerMotion.onGround = false;
-            playerMotion.jumpLatch = true;
+        if (jump) {
+            attemptJump();
         }
         if (!jump) {
             playerMotion.jumpLatch = false;
@@ -912,6 +1042,18 @@ function createVoxelChurch(container) {
         renderer,
         altarCloth,
         playerRig,
+        triggerGesture: (name) => {
+            if (actionState.massActive) setMassMode(false);
+            triggerGesture(name);
+        },
+        toggleMassSequence: () => setMassMode(!actionState.massActive),
+        nudgeMove,
+        triggerJump: () => {
+            playerMotion.jumpLatch = false;
+            attemptJump();
+        },
+        getCurrentGesture: () => actionState.currentGesture,
+        isMassActive: () => actionState.massActive,
     };
 }
 
@@ -951,10 +1093,12 @@ function resetEntryAfterFailure(message) {
     flash.removeAttribute("style");
     threeContainer.classList.remove("is-active");
     threeContainer.setAttribute("aria-hidden", "true");
+    setLiturgyHudVisible(false);
     entryScreen.classList.remove("is-hidden", "is-entering-zoom");
     entryScreen.style.display = "flex";
     APP_STATE.isTransitioning = false;
     setDialogue(message);
+    setLiturgySubtitle("🎵 미사 안내 자막이 이곳에 표시됩니다.");
 }
 
 async function activateThreeScene(role) {
@@ -975,6 +1119,8 @@ async function activateThreeScene(role) {
 
     threeContainer.classList.add("is-active");
     threeContainer.setAttribute("aria-hidden", "false");
+    bindHudControls();
+    setLiturgyHudVisible(true);
 
     try {
         if (!APP_STATE.threeWorld) {
@@ -985,6 +1131,7 @@ async function activateThreeScene(role) {
         APP_STATE.threeWorld.altarCloth.material.needsUpdate = true;
 
         applyRoleCamera(role, APP_STATE.threeWorld.camera, APP_STATE.threeWorld.playerRig);
+        setHudButtonsState(APP_STATE.threeWorld.getCurrentGesture(), APP_STATE.threeWorld.isMassActive());
         setDialogue(`Today is ${liturgical.season}. Move: arrows/WASD, jump: Space, gestures: 1-7, Mass sequence: M.`);
     } catch (error) {
         console.error("Failed to initialize 3D church scene:", error);
