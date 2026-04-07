@@ -184,16 +184,16 @@ function bindHudControls() {
         else if (command === "mass-toggle") world.toggleMassSequence();
         else if (command === "move-left") {
             world.nudgeMove(-1, 0);
-            setLiturgySubtitle("⬅️ Stepped left.");
+            setLiturgySubtitle("↩️ Turned left.");
         } else if (command === "move-right") {
             world.nudgeMove(1, 0);
-            setLiturgySubtitle("➡️ Stepped right.");
+            setLiturgySubtitle("↪️ Turned right.");
         } else if (command === "move-forward") {
             world.nudgeMove(0, -1);
-            setLiturgySubtitle("⬆️ Moved toward the altar.");
+            setLiturgySubtitle("⬆️ Moved forward.");
         } else if (command === "move-back") {
             world.nudgeMove(0, 1);
-            setLiturgySubtitle("⬇️ Moved toward the nave.");
+            setLiturgySubtitle("⬇️ Moved backward.");
         } else if (command === "jump") {
             world.triggerJump();
             setLiturgySubtitle("⤴️ Small jump.");
@@ -577,6 +577,23 @@ function createVoxelChurch(container) {
     addWindowSet(16.0, 5.1, -2.2, 0);
     addWindowSet(16.0, 5.1, 5.4, 0);
 
+    const collisionObstacles = [];
+    const playerCollisionRadius = 0.72;
+    const worldBounds = { minX: -13.8, maxX: 13.8, minZ: -14.6, maxZ: 14.8 };
+    function addCollisionRect(centerX, centerZ, width, depth, extra = playerCollisionRadius) {
+        const halfW = width * 0.5 + extra;
+        const halfD = depth * 0.5 + extra;
+        collisionObstacles.push({
+            minX: centerX - halfW,
+            maxX: centerX + halfW,
+            minZ: centerZ - halfD,
+            maxZ: centerZ + halfD,
+        });
+    }
+
+    // Keep distance from the altar table.
+    addCollisionRect(altarGroup.position.x, altarGroup.position.z, 7.2, 4.0, playerCollisionRadius + 0.16);
+
     for (let row = 0; row < 4; row += 1) {
         for (let side = -1; side <= 1; side += 2) {
             const pew = new THREE.Mesh(new THREE.BoxGeometry(5.8, 1.0, 1.45), materials.wood);
@@ -584,10 +601,12 @@ function createVoxelChurch(container) {
             pew.castShadow = true;
             pew.receiveShadow = true;
             root.add(pew);
+            addCollisionRect(pew.position.x, pew.position.z, 5.8, 1.45);
 
             const back = new THREE.Mesh(new THREE.BoxGeometry(5.8, 1.2, 0.35), materials.darkWood);
             back.position.set(side * 7.2, 1.25, row * 3.3 - 3.1);
             root.add(back);
+            addCollisionRect(back.position.x, back.position.z, 5.8, 0.35);
         }
     }
 
@@ -980,6 +999,7 @@ function createVoxelChurch(container) {
 
     const keyState = new Set();
     const playerVelocity = { y: 0 };
+    let forwardSpeed = 0;
     const playerVelocityXZ = new THREE.Vector2(0, 0);
     const playerMotion = {
         speed: 7.1,
@@ -991,6 +1011,7 @@ function createVoxelChurch(container) {
         jumpLatch: false,
         groundY: 0,
     };
+    const turnRate = 2.6;
 
     function attemptJump() {
         if (playerMotion.onGround && !playerMotion.jumpLatch) {
@@ -1000,15 +1021,66 @@ function createVoxelChurch(container) {
         }
     }
 
+    function normalizeAngle(angle) {
+        let wrapped = angle;
+        while (wrapped <= -Math.PI) wrapped += Math.PI * 2;
+        while (wrapped > Math.PI) wrapped -= Math.PI * 2;
+        return wrapped;
+    }
+
+    function updateDirectionFromYaw() {
+        moveDirection.set(Math.sin(facingState.yaw), 0, -Math.cos(facingState.yaw));
+        cameraBehindDirection.set(-moveDirection.x, 0, -moveDirection.z);
+    }
+
+    function collidesAt(x, z) {
+        return collisionObstacles.some((obstacle) =>
+            x > obstacle.minX &&
+            x < obstacle.maxX &&
+            z > obstacle.minZ &&
+            z < obstacle.maxZ
+        );
+    }
+
+    function attemptMoveTo(nextX, nextZ) {
+        const currentX = playerRig.position.x;
+        const currentZ = playerRig.position.z;
+        let resolvedX = THREE.MathUtils.clamp(nextX, worldBounds.minX, worldBounds.maxX);
+        let resolvedZ = THREE.MathUtils.clamp(nextZ, worldBounds.minZ, worldBounds.maxZ);
+        let blocked = false;
+
+        if (collidesAt(resolvedX, currentZ)) {
+            resolvedX = currentX;
+            blocked = true;
+        }
+        if (collidesAt(resolvedX, resolvedZ)) {
+            resolvedZ = currentZ;
+            blocked = true;
+        }
+        if (collidesAt(resolvedX, resolvedZ)) {
+            resolvedX = currentX;
+            resolvedZ = currentZ;
+            blocked = true;
+        }
+
+        playerRig.position.x = resolvedX;
+        playerRig.position.z = resolvedZ;
+        return blocked;
+    }
+
     function nudgeMove(dx, dz) {
-        const length = Math.hypot(dx, dz);
-        if (length === 0) {
+        if (dx !== 0) {
+            facingState.yaw = normalizeAngle(facingState.yaw + dx * 0.3);
+            updateDirectionFromYaw();
             return;
         }
-        const nx = dx / length;
-        const nz = dz / length;
-        playerRig.position.x = THREE.MathUtils.clamp(playerRig.position.x + nx * 1.15, -13.8, 13.8);
-        playerRig.position.z = THREE.MathUtils.clamp(playerRig.position.z + nz * 1.15, -14.6, 14.8);
+        if (dz !== 0) {
+            const directionSign = dz < 0 ? 1 : -1;
+            const stepDistance = 1.12 * directionSign;
+            const targetX = playerRig.position.x + moveDirection.x * stepDistance;
+            const targetZ = playerRig.position.z + moveDirection.z * stepDistance;
+            attemptMoveTo(targetX, targetZ);
+        }
     }
 
     function onKeyDown(event) {
@@ -1195,7 +1267,7 @@ function createVoxelChurch(container) {
     const moveDirection = new THREE.Vector3(0, 0, -1);
     const cameraBehindDirection = new THREE.Vector3(0, 0, 1);
     const facingState = {
-        yaw: Math.PI,
+        yaw: 0,
     };
     const clock = new THREE.Clock();
     const spriteFacingState = {
@@ -1205,23 +1277,31 @@ function createVoxelChurch(container) {
         motionBlend: 0,
     };
 
-    function updatePlayerSpriteMotion(velocityX, velocityZ, dt) {
+    updateDirectionFromYaw();
+
+    function updatePlayerSpriteMotion(velocityX, velocityZ, turnInput, dt) {
         const speed = Math.hypot(velocityX, velocityZ);
+        const signedForwardSpeed = velocityX * moveDirection.x + velocityZ * moveDirection.z;
         const moving = speed > 0.18;
 
         if (moving) {
-            if (!spriteFacingState.facingBack) {
-                spriteFacingState.facingBack = true;
-                playerSpriteMaterial.map = playerTextures.back;
+            const shouldFaceBack = signedForwardSpeed >= -0.02;
+            if (spriteFacingState.facingBack !== shouldFaceBack) {
+                spriteFacingState.facingBack = shouldFaceBack;
+                playerSpriteMaterial.map = shouldFaceBack ? playerTextures.back : playerTextures.front;
                 playerSpriteMaterial.needsUpdate = true;
             }
             if (Math.abs(velocityX) > 0.08) {
                 spriteFacingState.xDir = velocityX < 0 ? -1 : 1;
+            } else if (Math.abs(turnInput) > 0.05) {
+                spriteFacingState.xDir = turnInput < 0 ? -1 : 1;
             }
         } else if (spriteFacingState.facingBack) {
             spriteFacingState.facingBack = false;
             playerSpriteMaterial.map = playerTextures.front;
             playerSpriteMaterial.needsUpdate = true;
+        } else if (Math.abs(turnInput) > 0.05) {
+            spriteFacingState.xDir = turnInput < 0 ? -1 : 1;
         }
 
         const blendTarget = moving && playerMotion.onGround ? 1 : 0;
@@ -1233,7 +1313,7 @@ function createVoxelChurch(container) {
             : Math.sin(performance.now() * 0.0035) * 0.03;
         const squash = 1 - spriteFacingState.motionBlend * 0.02 + Math.cos(spriteFacingState.walkPhase) * spriteFacingState.motionBlend * 0.025;
         const stretchX = 1 + spriteFacingState.motionBlend * 0.03;
-        const tiltTarget = THREE.MathUtils.clamp(-velocityX * 0.014, -0.12, 0.12);
+        const tiltTarget = THREE.MathUtils.clamp((-velocityX * 0.012) + turnInput * -0.06, -0.16, 0.16);
 
         playerSprite.scale.x = playerSpriteBaseScale.x * spriteFacingState.xDir * stretchX;
         playerSprite.scale.y = playerSpriteBaseScale.y * squash;
@@ -1269,47 +1349,27 @@ function createVoxelChurch(container) {
         const down = keyState.has("ArrowDown") || keyState.has("KeyS");
         const jump = keyState.has("Space");
 
-        let moveX = (right ? 1 : 0) - (left ? 1 : 0);
-        let moveZ = (down ? 1 : 0) - (up ? 1 : 0);
-        const moveLength = Math.hypot(moveX, moveZ);
-        if (moveLength > 0) {
-            moveX /= moveLength;
-            moveZ /= moveLength;
-        }
+        const turnInput = (right ? 1 : 0) - (left ? 1 : 0);
+        const throttleInput = (up ? 1 : 0) - (down ? 1 : 0);
+        facingState.yaw = normalizeAngle(facingState.yaw + turnInput * turnRate * dt);
+        updateDirectionFromYaw();
 
-        const desiredVelocityX = moveX * playerMotion.speed;
-        const desiredVelocityZ = moveZ * playerMotion.speed;
-        const acceleration = moveLength > 0 ? playerMotion.acceleration : playerMotion.deceleration;
+        const targetForwardSpeed = throttleInput * playerMotion.speed;
+        const acceleration = throttleInput !== 0 ? playerMotion.acceleration : playerMotion.deceleration;
         const blend = Math.min(dt * acceleration, 1);
-        playerVelocityXZ.x += (desiredVelocityX - playerVelocityXZ.x) * blend;
-        playerVelocityXZ.y += (desiredVelocityZ - playerVelocityXZ.y) * blend;
+        forwardSpeed += (targetForwardSpeed - forwardSpeed) * blend;
+        playerVelocityXZ.set(moveDirection.x * forwardSpeed, moveDirection.z * forwardSpeed);
 
-        playerRig.position.x += playerVelocityXZ.x * dt;
-        playerRig.position.z += playerVelocityXZ.y * dt;
-
-        const clampedX = THREE.MathUtils.clamp(playerRig.position.x, -13.8, 13.8);
-        const clampedZ = THREE.MathUtils.clamp(playerRig.position.z, -14.6, 14.8);
-        if (clampedX !== playerRig.position.x) {
-            playerVelocityXZ.x = 0;
+        const blocked = attemptMoveTo(
+            playerRig.position.x + playerVelocityXZ.x * dt,
+            playerRig.position.z + playerVelocityXZ.y * dt,
+        );
+        if (blocked) {
+            forwardSpeed *= 0.15;
+            playerVelocityXZ.set(0, 0);
         }
-        if (clampedZ !== playerRig.position.z) {
-            playerVelocityXZ.y = 0;
-        }
-        playerRig.position.x = clampedX;
-        playerRig.position.z = clampedZ;
 
         const horizontalSpeed = playerVelocityXZ.length();
-        if (horizontalSpeed > 0.12) {
-            moveDirection.set(playerVelocityXZ.x / horizontalSpeed, 0, playerVelocityXZ.y / horizontalSpeed);
-            const desiredYaw = Math.atan2(moveDirection.x, -moveDirection.z);
-            const yawDelta = Math.atan2(
-                Math.sin(desiredYaw - facingState.yaw),
-                Math.cos(desiredYaw - facingState.yaw),
-            );
-            facingState.yaw += yawDelta * Math.min(dt * 7.5, 1);
-            cameraBehindDirection.set(-moveDirection.x, 0, -moveDirection.z);
-        }
-
         playerRig.rotation.y = facingState.yaw;
 
         if (jump) {
@@ -1332,7 +1392,7 @@ function createVoxelChurch(container) {
         updateArmPoseSmoothing(dt);
         applyArmSecondaryMotion(horizontalSpeed);
         updateLiturgyItem();
-        updatePlayerSpriteMotion(playerVelocityXZ.x, playerVelocityXZ.y, dt);
+        updatePlayerSpriteMotion(playerVelocityXZ.x, playerVelocityXZ.y, turnInput, dt);
 
         playerShadow.position.x = playerRig.position.x;
         playerShadow.position.z = playerRig.position.z;
