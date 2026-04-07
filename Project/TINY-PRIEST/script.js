@@ -43,6 +43,38 @@ function getDoorAnchor() {
     };
 }
 
+function setZoomOriginFromDoor() {
+    const entryScreen = document.getElementById("entry-screen");
+    const door = getDoorAnchor();
+    const xPercent = (door.x / window.innerWidth) * 100;
+    const yPercent = (door.y / window.innerHeight) * 100;
+    entryScreen.style.setProperty("--zoom-x", `${xPercent}%`);
+    entryScreen.style.setProperty("--zoom-y", `${yPercent}%`);
+    return { xPercent, yPercent };
+}
+
+function animateDoorZoomTransition() {
+    return new Promise((resolve) => {
+        const entryScreen = document.getElementById("entry-screen");
+        const flash = document.getElementById("entry-flash");
+        const { xPercent, yPercent } = setZoomOriginFromDoor();
+
+        flash.style.setProperty("--zoom-x", `${xPercent}%`);
+        flash.style.setProperty("--zoom-y", `${yPercent}%`);
+        entryScreen.classList.add("is-entering-zoom");
+
+        requestAnimationFrame(() => {
+            flash.classList.add("is-active");
+        });
+
+        setTimeout(() => {
+            flash.classList.remove("is-active");
+            flash.removeAttribute("style");
+            resolve();
+        }, 620);
+    });
+}
+
 function getCharacterElement(character) {
     return document.getElementById(`character-${character}`);
 }
@@ -189,9 +221,13 @@ function getLiturgicalSeason(inputDate = new Date()) {
 }
 
 function createVoxelChurch(container) {
+    if (typeof THREE === "undefined") {
+        throw new Error("Three.js is not loaded.");
+    }
+
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xf5f5dc);
-    scene.fog = new THREE.Fog(0xf5f5dc, 24, 46);
+    scene.fog = new THREE.Fog(0xf5f5dc, 20, 56);
 
     const camera = new THREE.PerspectiveCamera(54, window.innerWidth / window.innerHeight, 0.1, 100);
 
@@ -199,75 +235,144 @@ function createVoxelChurch(container) {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.shadowMap.enabled = true;
     container.innerHTML = "";
     container.appendChild(renderer.domElement);
 
-    const ambientLight = new THREE.AmbientLight(0xfff0d0, 1.05);
-    const hemiLight = new THREE.HemisphereLight(0xffefcf, 0xc6b38d, 0.55);
-    const sunLight = new THREE.DirectionalLight(0xffe4b2, 0.7);
-    sunLight.position.set(8, 12, 9);
+    const ambientLight = new THREE.AmbientLight(0xfff0d0, 1.15);
+    const hemiLight = new THREE.HemisphereLight(0xffefcf, 0xc6b38d, 0.7);
+    const sunLight = new THREE.DirectionalLight(0xffdfab, 0.9);
+    sunLight.position.set(10, 14, 5);
+    sunLight.castShadow = true;
 
-    scene.add(ambientLight, hemiLight, sunLight);
+    const altarGlow = new THREE.PointLight(0xfff1cc, 0.8, 30, 2);
+    altarGlow.position.set(0, 7.5, -12);
+
+    scene.add(ambientLight, hemiLight, sunLight, altarGlow);
 
     const materials = {
-        floor: new THREE.MeshLambertMaterial({ color: 0xd8c89e }),
-        floorPath: new THREE.MeshLambertMaterial({ color: 0xe7d8b4 }),
-        wood: new THREE.MeshLambertMaterial({ color: 0xb18357 }),
-        darkWood: new THREE.MeshLambertMaterial({ color: 0x8f673f }),
-        wall: new THREE.MeshLambertMaterial({ color: 0xf1e4c6 }),
+        floor: new THREE.MeshLambertMaterial({ color: 0xdac69f }),
+        floorPath: new THREE.MeshLambertMaterial({ color: 0xe9d8b5 }),
+        wood: new THREE.MeshLambertMaterial({ color: 0xb48960 }),
+        darkWood: new THREE.MeshLambertMaterial({ color: 0x8d6541 }),
+        wall: new THREE.MeshLambertMaterial({ color: 0xf2e6cb }),
+        roof: new THREE.MeshLambertMaterial({ color: 0xe5d1a6 }),
         altarCloth: new THREE.MeshLambertMaterial({ color: 0x4d9c5a }),
+        stainedGlassBlue: new THREE.MeshLambertMaterial({ color: 0x8cc2e8 }),
+        stainedGlassGold: new THREE.MeshLambertMaterial({ color: 0xe8d17c }),
+        candleWax: new THREE.MeshLambertMaterial({ color: 0xf8f1dc }),
+        candleFlame: new THREE.MeshBasicMaterial({ color: 0xffcf73 }),
     };
 
     const root = new THREE.Group();
     scene.add(root);
 
-    const floor = new THREE.Mesh(new THREE.BoxGeometry(30, 1, 24), materials.floor);
+    const floor = new THREE.Mesh(new THREE.BoxGeometry(34, 1, 36), materials.floor);
     floor.position.set(0, -0.5, 0);
+    floor.receiveShadow = true;
     root.add(floor);
 
-    const centralPath = new THREE.Mesh(new THREE.BoxGeometry(5, 0.18, 22), materials.floorPath);
-    centralPath.position.set(0, 0.1, 0);
+    const centralPath = new THREE.Mesh(new THREE.BoxGeometry(4.3, 0.2, 29), materials.floorPath);
+    centralPath.position.set(0, 0.11, 0.5);
     root.add(centralPath);
 
-    const backWall = new THREE.Mesh(new THREE.BoxGeometry(30, 8, 1), materials.wall);
-    backWall.position.set(0, 4, -11.5);
-    root.add(backWall);
+    const backWall = new THREE.Mesh(new THREE.BoxGeometry(34, 12, 1), materials.wall);
+    backWall.position.set(0, 6, -17.5);
+    const leftWall = new THREE.Mesh(new THREE.BoxGeometry(1, 12, 36), materials.wall);
+    leftWall.position.set(-16.5, 6, 0);
+    const rightWall = new THREE.Mesh(new THREE.BoxGeometry(1, 12, 36), materials.wall);
+    rightWall.position.set(16.5, 6, 0);
+    const ceiling = new THREE.Mesh(new THREE.BoxGeometry(34, 1, 36), materials.roof);
+    ceiling.position.set(0, 12.1, 0);
+    root.add(backWall, leftWall, rightWall, ceiling);
+
+    const sanctuaryStep = new THREE.Mesh(new THREE.BoxGeometry(12, 0.8, 7), materials.wood);
+    sanctuaryStep.position.set(0, 0.4, -12.4);
+    root.add(sanctuaryStep);
 
     const altarGroup = new THREE.Group();
-    altarGroup.position.set(0, 0, -7.8);
+    altarGroup.position.set(0, 0.4, -12.2);
     root.add(altarGroup);
 
     const altarBase = new THREE.Mesh(new THREE.BoxGeometry(7, 2.3, 3.7), materials.wood);
     altarBase.position.y = 1.15;
     altarBase.userData.interactive = true;
+    altarBase.castShadow = true;
     altarGroup.add(altarBase);
 
     const altarCloth = new THREE.Mesh(new THREE.BoxGeometry(7.2, 0.42, 3.9), materials.altarCloth);
     altarCloth.position.y = 2.52;
     altarCloth.userData.interactive = true;
+    altarCloth.castShadow = true;
     altarGroup.add(altarCloth);
 
-    const crossStand = new THREE.Mesh(new THREE.BoxGeometry(0.7, 4, 0.7), materials.darkWood);
-    crossStand.position.set(0, 4.2, -0.2);
+    const crossStand = new THREE.Mesh(new THREE.BoxGeometry(0.8, 5.2, 0.8), materials.darkWood);
+    crossStand.position.set(0, 6.1, -0.2);
     crossStand.userData.interactive = true;
+    crossStand.castShadow = true;
     altarGroup.add(crossStand);
 
-    const crossBeam = new THREE.Mesh(new THREE.BoxGeometry(2.7, 0.7, 0.7), materials.darkWood);
-    crossBeam.position.set(0, 5.1, -0.2);
+    const crossBeam = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.8, 0.8), materials.darkWood);
+    crossBeam.position.set(0, 7.3, -0.2);
     crossBeam.userData.interactive = true;
+    crossBeam.castShadow = true;
     altarGroup.add(crossBeam);
 
-    for (let row = 0; row < 3; row += 1) {
+    const candleL = new THREE.Mesh(new THREE.BoxGeometry(0.35, 1.2, 0.35), materials.candleWax);
+    candleL.position.set(-2.8, 3.2, 0.7);
+    candleL.userData.interactive = true;
+    altarGroup.add(candleL);
+
+    const candleR = new THREE.Mesh(new THREE.BoxGeometry(0.35, 1.2, 0.35), materials.candleWax);
+    candleR.position.set(2.8, 3.2, 0.7);
+    candleR.userData.interactive = true;
+    altarGroup.add(candleR);
+
+    const flameL = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.28, 0.22), materials.candleFlame);
+    flameL.position.set(-2.8, 4.0, 0.7);
+    altarGroup.add(flameL);
+
+    const flameR = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.28, 0.22), materials.candleFlame);
+    flameR.position.set(2.8, 4.0, 0.7);
+    altarGroup.add(flameR);
+
+    function addWindowSet(x, y, z, rotationY) {
+        const frame = new THREE.Mesh(new THREE.BoxGeometry(0.9, 2.8, 2.2), materials.darkWood);
+        frame.position.set(x, y, z);
+        frame.rotation.y = rotationY;
+        const glassTop = new THREE.Mesh(new THREE.BoxGeometry(0.25, 2.3, 1.7), materials.stainedGlassBlue);
+        glassTop.position.set(x, y + 0.15, z);
+        glassTop.rotation.y = rotationY;
+        const glassAccent = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.4, 1.7), materials.stainedGlassGold);
+        glassAccent.position.set(x, y - 0.8, z);
+        glassAccent.rotation.y = rotationY;
+        root.add(frame, glassTop, glassAccent);
+    }
+
+    addWindowSet(-16.0, 5.1, -9.8, 0);
+    addWindowSet(-16.0, 5.1, -2.2, 0);
+    addWindowSet(-16.0, 5.1, 5.4, 0);
+    addWindowSet(16.0, 5.1, -9.8, 0);
+    addWindowSet(16.0, 5.1, -2.2, 0);
+    addWindowSet(16.0, 5.1, 5.4, 0);
+
+    for (let row = 0; row < 4; row += 1) {
         for (let side = -1; side <= 1; side += 2) {
-            const pew = new THREE.Mesh(new THREE.BoxGeometry(4.8, 1.1, 1.4), materials.wood);
-            pew.position.set(side * 6, 0.55, row * 3.1 - 1.5);
+            const pew = new THREE.Mesh(new THREE.BoxGeometry(5.8, 1.0, 1.45), materials.wood);
+            pew.position.set(side * 7.2, 0.55, row * 3.3 - 2.6);
+            pew.castShadow = true;
+            pew.receiveShadow = true;
             root.add(pew);
+
+            const back = new THREE.Mesh(new THREE.BoxGeometry(5.8, 1.2, 0.35), materials.darkWood);
+            back.position.set(side * 7.2, 1.25, row * 3.3 - 3.1);
+            root.add(back);
         }
     }
 
     const raycaster = new THREE.Raycaster();
     const pointer = new THREE.Vector2();
-    const interactiveMeshes = [altarBase, altarCloth, crossStand, crossBeam];
+    const interactiveMeshes = [altarBase, altarCloth, crossStand, crossBeam, candleL, candleR];
     const jumpTweens = [];
     const sparkleParticles = [];
 
@@ -351,6 +456,9 @@ function createVoxelChurch(container) {
             spark.material.opacity = Math.max(spark.userData.life, 0);
         }
 
+        flameL.scale.y = 0.85 + Math.sin(performance.now() * 0.013) * 0.08;
+        flameR.scale.y = 0.85 + Math.sin(performance.now() * 0.012 + 0.8) * 0.08;
+
         renderer.render(scene, camera);
         requestAnimationFrame(animate);
     }
@@ -375,13 +483,13 @@ function createVoxelChurch(container) {
 
 function applyRoleCamera(role, camera) {
     if (role === "priest") {
-        camera.position.set(0, 4.5, -11.5);
-        camera.lookAt(0, 2.8, 6);
+        camera.position.set(0, 3.7, -14.8);
+        camera.lookAt(0, 2.7, 7.8);
         return;
     }
 
-    camera.position.set(0, 4.8, 12.5);
-    camera.lookAt(0, 2.6, -8);
+    camera.position.set(0, 3.9, 15.6);
+    camera.lookAt(0, 2.9, -12.3);
 }
 
 function activateThreeScene(role) {
@@ -397,15 +505,24 @@ function activateThreeScene(role) {
     threeContainer.classList.add("is-active");
     threeContainer.setAttribute("aria-hidden", "false");
 
-    if (!APP_STATE.threeWorld) {
-        APP_STATE.threeWorld = createVoxelChurch(threeContainer);
+    try {
+        if (!APP_STATE.threeWorld) {
+            APP_STATE.threeWorld = createVoxelChurch(threeContainer);
+        }
+
+        APP_STATE.threeWorld.altarCloth.material.color.setHex(liturgical.colorHex);
+        APP_STATE.threeWorld.altarCloth.material.needsUpdate = true;
+
+        applyRoleCamera(role, APP_STATE.threeWorld.camera);
+        setDialogue(`Today is ${liturgical.season}. Altar cloth color: ${liturgical.colorName}.`);
+    } catch (error) {
+        console.error("Failed to initialize 3D church scene:", error);
+        entryScreen.classList.remove("is-hidden", "is-entering-zoom");
+        entryScreen.style.display = "flex";
+        threeContainer.classList.remove("is-active");
+        setDialogue("The church interior could not load. Please refresh and try again.");
+        APP_STATE.isTransitioning = false;
     }
-
-    APP_STATE.threeWorld.altarCloth.material.color.setHex(liturgical.colorHex);
-    APP_STATE.threeWorld.altarCloth.material.needsUpdate = true;
-
-    applyRoleCamera(role, APP_STATE.threeWorld.camera);
-    setDialogue(`Today is ${liturgical.season}. Altar cloth color: ${liturgical.colorName}.`);
 }
 
 /**
@@ -431,6 +548,7 @@ async function handleInteract(character) {
     setDialogue(CHARACTER_CONFIG[character].welcomeText);
 
     await animateCharacterEntry(characterEl);
+    await animateDoorZoomTransition();
     activateThreeScene(character);
 }
 

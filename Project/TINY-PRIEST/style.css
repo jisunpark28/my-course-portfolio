@@ -145,6 +145,7 @@ body {
 .three-container {
     position: fixed;
     inset: 0;
+    z-index: 100;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.7s ease;
@@ -160,6 +161,47 @@ body {
     width: 100%;
     height: 100%;
     display: block;
+}
+
+.entry-flash {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    background: radial-gradient(circle at var(--zoom-x, 50%) var(--zoom-y, 50%), rgba(255, 250, 236, 0) 0%, rgba(255, 250, 236, 0.78) 68%, rgba(255, 250, 236, 1) 100%);
+    transition: opacity 0.36s ease;
+    z-index: 95;
+}
+
+.entry-flash.is-active {
+    opacity: 1;
+}
+
+#entry-screen.is-entering-zoom #church-scene {
+    transform-origin: var(--zoom-x, 50%) var(--zoom-y, 73%);
+    animation: door-zoom-in 0.58s cubic-bezier(0.2, 0.84, 0.24, 1) forwards;
+}
+
+#entry-screen.is-entering-zoom .main-title,
+#entry-screen.is-entering-zoom .dialogue-box,
+#entry-screen.is-entering-zoom .statue-mary {
+    transition: opacity 0.34s ease;
+    opacity: 0;
+}
+
+@keyframes door-zoom-in {
+    0% {
+        transform: scale(1);
+        filter: blur(0);
+    }
+    70% {
+        transform: scale(1.62);
+        filter: blur(1px);
+    }
+    100% {
+        transform: scale(1.95);
+        filter: blur(2.5px);
+    }
 }
 
 @media (max-width: 900px) {
