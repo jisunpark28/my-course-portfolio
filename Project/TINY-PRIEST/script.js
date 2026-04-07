@@ -578,7 +578,7 @@ function createVoxelChurch(container) {
     addWindowSet(16.0, 5.1, 5.4, 0);
 
     const collisionObstacles = [];
-    const playerCollisionRadius = 0.72;
+    const playerCollisionRadius = 0.56;
     const worldBounds = { minX: -13.8, maxX: 13.8, minZ: -14.6, maxZ: 14.8 };
     function addCollisionRect(centerX, centerZ, width, depth, extra = playerCollisionRadius) {
         const halfW = width * 0.5 + extra;
@@ -592,7 +592,7 @@ function createVoxelChurch(container) {
     }
 
     // Keep distance from the altar table.
-    addCollisionRect(altarGroup.position.x, altarGroup.position.z, 7.2, 4.0, playerCollisionRadius + 0.16);
+    addCollisionRect(altarGroup.position.x, altarGroup.position.z, 7.2, 4.0, playerCollisionRadius + 0.08);
 
     for (let row = 0; row < 4; row += 1) {
         for (let side = -1; side <= 1; side += 2) {
