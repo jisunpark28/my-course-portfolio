@@ -26,14 +26,52 @@ const THREE_CDN_FALLBACKS = [
 ];
 
 const GESTURE_NARRATION = {
-    idle: "🙂 준비 자세를 유지하며 다음 예식을 기다립니다.",
-    point: "👉 말씀 전례에서 복음의 핵심을 가리키며 설명합니다.",
-    hold: "📖 예물을 두 손으로 공손히 잡아 봉헌을 준비합니다.",
-    lift: "🙌 예물을 높이 들어 하느님께 봉헌합니다.",
-    pray: "🙏 양손을 모아 마음을 모으고 기도합니다.",
-    ourFather: "👐 주님의 기도를 바치며 양팔을 부드럽게 펼칩니다.",
-    signCross: "✝️ 성부와 성자와 성령의 이름으로, 성호를 긋습니다.",
+    idle: "🙂 The celebrant stands ready in reverent stillness.",
+    point: "👉 The celebrant points to the Gospel and teaches the assembly.",
+    hold: "📖 The gifts are held carefully in preparation for the offertory.",
+    lift: "🙌 The gifts are raised high in offering to God.",
+    pray: "🙏 Hands are joined in prayerful focus and silence.",
+    ourFather: "👐 Arms open gently while praying the Lord's Prayer together.",
+    signCross: "✝️ In the name of the Father, and of the Son, and of the Holy Spirit.",
 };
+
+const MASS_FLOW_STEPS = [
+    {
+        gesture: "signCross",
+        title: "Entrance Rites",
+        text: "✝️ The Mass begins with the Sign of the Cross and liturgical greeting.",
+    },
+    {
+        gesture: "pray",
+        title: "Penitential Act",
+        text: "🙏 The assembly asks for mercy and prepares hearts for worship.",
+    },
+    {
+        gesture: "point",
+        title: "Liturgy of the Word",
+        text: "📖 The Scriptures are proclaimed, and the Gospel is explained in the homily.",
+    },
+    {
+        gesture: "hold",
+        title: "Preparation of the Gifts",
+        text: "🍞🍷 Bread and wine are presented and prepared at the altar.",
+    },
+    {
+        gesture: "lift",
+        title: "Eucharistic Prayer",
+        text: "✨ The gifts are offered as the Church gives thanks and praise to God.",
+    },
+    {
+        gesture: "ourFather",
+        title: "Communion Rite",
+        text: "👐 The faithful pray the Lord's Prayer and prepare for Communion.",
+    },
+    {
+        gesture: "pray",
+        title: "Concluding Rite",
+        text: "🔔 The people are blessed and sent forth to live the Gospel.",
+    },
+];
 
 function loadThreeFromUrl(url) {
     return new Promise((resolve, reject) => {
@@ -114,7 +152,7 @@ function setHudButtonsState(currentGesture, massActive) {
         massButton.classList.toggle("is-active", Boolean(massActive));
         const label = massButton.querySelector(".control-label");
         if (label) {
-            label.textContent = massActive ? "미사 진행 중지" : "미사 진행 시작";
+            label.textContent = massActive ? "Stop Mass" : "Start Mass";
         }
     }
 }
@@ -146,19 +184,19 @@ function bindHudControls() {
         else if (command === "mass-toggle") world.toggleMassSequence();
         else if (command === "move-left") {
             world.nudgeMove(-1, 0);
-            setLiturgySubtitle("⬅️ 왼쪽으로 한 걸음 이동했습니다.");
+            setLiturgySubtitle("⬅️ Stepped left.");
         } else if (command === "move-right") {
             world.nudgeMove(1, 0);
-            setLiturgySubtitle("➡️ 오른쪽으로 한 걸음 이동했습니다.");
+            setLiturgySubtitle("➡️ Stepped right.");
         } else if (command === "move-forward") {
             world.nudgeMove(0, -1);
-            setLiturgySubtitle("⬆️ 제대 쪽으로 이동했습니다.");
+            setLiturgySubtitle("⬆️ Moved toward the altar.");
         } else if (command === "move-back") {
             world.nudgeMove(0, 1);
-            setLiturgySubtitle("⬇️ 뒤쪽으로 이동했습니다.");
+            setLiturgySubtitle("⬇️ Moved toward the nave.");
         } else if (command === "jump") {
             world.triggerJump();
-            setLiturgySubtitle("⤴️ 가볍게 점프했습니다.");
+            setLiturgySubtitle("⤴️ Small jump.");
         }
     });
 
@@ -688,7 +726,7 @@ function createVoxelChurch(container) {
         massTimer: 0,
         massStepDuration: 2.8,
     };
-    const massSequence = ["signCross", "pray", "point", "hold", "lift", "ourFather", "pray"];
+    const massSequence = MASS_FLOW_STEPS.map((step) => step.gesture);
 
     function narrateGesture(name, prefix = "") {
         const message = GESTURE_NARRATION[name] || GESTURE_NARRATION.idle;
@@ -713,11 +751,13 @@ function createVoxelChurch(container) {
     }
 
     function advanceMassStep() {
-        const next = massSequence[actionState.massIndex % massSequence.length];
-        const stepNumber = (actionState.massIndex % massSequence.length) + 1;
-        const prefix = `🎼 미사 동작 ${stepNumber}/${massSequence.length}`;
+        const stepIndex = actionState.massIndex % MASS_FLOW_STEPS.length;
+        const step = MASS_FLOW_STEPS[stepIndex];
+        const next = step.gesture;
+        const stepNumber = stepIndex + 1;
+        const prefix = `🎼 ${step.title} (${stepNumber}/${MASS_FLOW_STEPS.length})`;
         actionState.massIndex += 1;
-        triggerGesture(next, prefix);
+        triggerGesture(next, `${prefix} ${step.text}`);
     }
 
     function setMassMode(isActive) {
@@ -732,7 +772,7 @@ function createVoxelChurch(container) {
             return;
         }
         triggerGesture("idle");
-        setLiturgySubtitle("⏸️ 미사 동작 시퀀스를 멈췄습니다. 원하는 동작을 직접 선택해보세요.");
+        setLiturgySubtitle("⏸️ Mass sequence paused. Select any gesture manually.");
         setDialogue("Mass sequence paused.");
     }
 
@@ -880,7 +920,7 @@ function createVoxelChurch(container) {
             if (actionState.currentGesture === "signCross") {
                 actionState.currentGesture = "pray";
                 setGesturePose("pray");
-                narrateGesture("pray", "✝️ 성호를 마치고");
+                narrateGesture("pray", "✝️ After completing the Sign of the Cross,");
             }
         }
     }
@@ -1141,7 +1181,7 @@ function resetEntryAfterFailure(message) {
     entryScreen.style.display = "flex";
     APP_STATE.isTransitioning = false;
     setDialogue(message);
-    setLiturgySubtitle("🎵 미사 안내 자막이 이곳에 표시됩니다.");
+    setLiturgySubtitle("🎵 Mass guidance subtitles will appear here.");
 }
 
 async function activateThreeScene(role) {
