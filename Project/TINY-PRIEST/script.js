@@ -643,56 +643,76 @@ function createVoxelChurch(container) {
     liturgyItem.visible = false;
     playerRig.add(liturgyItem);
 
-    const armStyle = isPriest
+    // Palette values were sampled from the actual PNG sprites to keep visual consistency.
+    const spritePalette = isPriest
         ? {
-            shoulderX: 0.62,
-            shoulderY: 2.25,
-            shoulderZ: 0.24,
-            upperWidth: 0.38,
-            upperLength: 0.88,
-            lowerWidth: 0.32,
-            lowerLength: 0.8,
-            elbowDrop: 0.9,
-            handRadius: 0.115,
-            cuffWidth: 0.28,
-            cuffLength: 0.12,
-            sleeveColor: 0x3a3f54,
-            cuffColor: 0xe8edf7,
-            handColor: 0xf4dcc4,
+            robePrimary: 0x3f3d37,
+            robeSecondary: 0x2f2d29,
+            trim: 0xefe1d0,
+            skin: 0xd8ad90,
         }
         : {
-            shoulderX: 0.58,
-            shoulderY: 2.24,
-            shoulderZ: 0.24,
-            upperWidth: 0.35,
-            upperLength: 0.84,
-            lowerWidth: 0.3,
-            lowerLength: 0.76,
-            elbowDrop: 0.86,
-            handRadius: 0.108,
-            cuffWidth: 0.25,
+            robePrimary: 0x272722,
+            robeSecondary: 0x1d1d18,
+            trim: 0xf6f2eb,
+            skin: 0xe8c4a7,
+        };
+
+    const armStyle = isPriest
+        ? {
+            shoulderX: 0.74,
+            shoulderY: 2.02,
+            shoulderZ: 0.22,
+            upperWidth: 0.28,
+            upperLength: 0.78,
+            lowerWidth: 0.24,
+            lowerLength: 0.72,
+            elbowDrop: 0.73,
+            handRadius: 0.1,
+            cuffWidth: 0.22,
             cuffLength: 0.1,
-            sleeveColor: 0x4f4a63,
-            cuffColor: 0xf4f1fb,
-            handColor: 0xf6dfcb,
+            chestCoverRadius: 0.28,
+            chestCoverY: 1.95,
+        }
+        : {
+            shoulderX: 0.7,
+            shoulderY: 2.0,
+            shoulderZ: 0.22,
+            upperWidth: 0.26,
+            upperLength: 0.74,
+            lowerWidth: 0.22,
+            lowerLength: 0.68,
+            elbowDrop: 0.7,
+            handRadius: 0.095,
+            cuffWidth: 0.2,
+            cuffLength: 0.09,
+            chestCoverRadius: 0.3,
+            chestCoverY: 1.9,
         };
 
     const sleeveMaterial = new THREE.MeshLambertMaterial({
-        color: armStyle.sleeveColor,
+        color: spritePalette.robePrimary,
         transparent: true,
         opacity: 0.97,
         side: THREE.DoubleSide,
         depthWrite: false,
     });
+    const sleeveShadeMaterial = new THREE.MeshLambertMaterial({
+        color: spritePalette.robeSecondary,
+        transparent: true,
+        opacity: 0.58,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+    });
     const cuffMaterial = new THREE.MeshLambertMaterial({
-        color: armStyle.cuffColor,
+        color: spritePalette.trim,
         transparent: true,
         opacity: 0.96,
         side: THREE.DoubleSide,
         depthWrite: false,
     });
     const handOverlayMaterial = new THREE.MeshLambertMaterial({
-        color: armStyle.handColor,
+        color: spritePalette.skin,
         transparent: true,
         opacity: 0.98,
         side: THREE.DoubleSide,
@@ -706,14 +726,32 @@ function createVoxelChurch(container) {
         const upper = new THREE.Mesh(new THREE.PlaneGeometry(armStyle.upperWidth, armStyle.upperLength), sleeveMaterial);
         upper.position.set(0, -armStyle.upperLength * 0.5, 0);
         shoulder.add(upper);
+        const upperShade = new THREE.Mesh(
+            new THREE.PlaneGeometry(armStyle.upperWidth * 0.65, armStyle.upperLength * 0.9),
+            sleeveShadeMaterial,
+        );
+        upperShade.position.set(side * 0.015, -armStyle.upperLength * 0.52, 0.006);
+        shoulder.add(upperShade);
+        const upperCap = new THREE.Mesh(new THREE.CircleGeometry(armStyle.upperWidth * 0.44, 14), sleeveMaterial);
+        upperCap.position.set(0, -armStyle.upperLength * 0.03, 0.005);
+        shoulder.add(upperCap);
 
         const elbow = new THREE.Object3D();
         elbow.position.y = -armStyle.elbowDrop;
         shoulder.add(elbow);
+        const elbowCap = new THREE.Mesh(new THREE.CircleGeometry(armStyle.lowerWidth * 0.5, 14), sleeveMaterial);
+        elbowCap.position.set(0, -0.03, 0.005);
+        elbow.add(elbowCap);
 
         const lower = new THREE.Mesh(new THREE.PlaneGeometry(armStyle.lowerWidth, armStyle.lowerLength), sleeveMaterial);
         lower.position.set(0, -armStyle.lowerLength * 0.48, 0);
         elbow.add(lower);
+        const lowerShade = new THREE.Mesh(
+            new THREE.PlaneGeometry(armStyle.lowerWidth * 0.62, armStyle.lowerLength * 0.9),
+            sleeveShadeMaterial,
+        );
+        lowerShade.position.set(side * 0.012, -armStyle.lowerLength * 0.5, 0.006);
+        elbow.add(lowerShade);
 
         const cuff = new THREE.Mesh(new THREE.PlaneGeometry(armStyle.cuffWidth, armStyle.cuffLength), cuffMaterial);
         cuff.position.set(0, -armStyle.lowerLength * 0.92, 0.006);
@@ -723,18 +761,31 @@ function createVoxelChurch(container) {
         hand.position.set(0, -armStyle.lowerLength * 1.08, 0.01);
         elbow.add(hand);
 
-        [upper, lower, cuff, hand].forEach((mesh) => {
+        [upper, upperShade, upperCap, elbowCap, lower, lowerShade, cuff, hand].forEach((mesh) => {
             mesh.renderOrder = 2;
             mesh.castShadow = false;
             mesh.receiveShadow = false;
         });
 
         playerRig.add(shoulder);
-        return { shoulder, elbow };
+        return { shoulder, elbow, upper, lower, hand };
     }
 
     const leftArm = createArm(-1);
     const rightArm = createArm(1);
+    const chestCover = new THREE.Mesh(
+        new THREE.CircleGeometry(armStyle.chestCoverRadius, 20),
+        new THREE.MeshLambertMaterial({
+            color: spritePalette.robePrimary,
+            transparent: true,
+            opacity: 0.96,
+            side: THREE.DoubleSide,
+            depthWrite: false,
+        }),
+    );
+    chestCover.position.set(0, armStyle.chestCoverY, armStyle.shoulderZ + 0.01);
+    chestCover.renderOrder = 2.2;
+    playerRig.add(chestCover);
 
     // Keep the cute 2D character in 3D and hide the temporary voxel body parts.
     torso.visible = false;
@@ -758,92 +809,92 @@ function createVoxelChurch(container) {
     const gesturePoses = isPriest
         ? {
             idle: {
-                left: { ux: -0.34, uy: 0.14, uz: 0.3, lx: -0.2, ly: 0, lz: 0 },
-                right: { ux: -0.34, uy: -0.14, uz: -0.3, lx: -0.2, ly: 0, lz: 0 },
+                left: { ux: -0.42, uy: 0.24, uz: 0.46, lx: -0.3, ly: 0, lz: 0 },
+                right: { ux: -0.42, uy: -0.24, uz: -0.46, lx: -0.3, ly: 0, lz: 0 },
             },
             point: {
-                left: { ux: -0.62, uy: 0.18, uz: 0.42, lx: -0.34, ly: 0, lz: 0 },
-                right: { ux: -1.18, uy: -0.28, uz: -0.52, lx: -0.22, ly: 0, lz: 0 },
+                left: { ux: -0.68, uy: 0.22, uz: 0.58, lx: -0.4, ly: 0, lz: 0 },
+                right: { ux: -1.08, uy: -0.3, uz: -0.74, lx: -0.16, ly: 0, lz: 0 },
             },
             hold: {
-                left: { ux: -1.08, uy: 0.1, uz: 0.52, lx: -0.65, ly: 0, lz: 0 },
-                right: { ux: -1.08, uy: -0.1, uz: -0.52, lx: -0.65, ly: 0, lz: 0 },
+                left: { ux: -1.12, uy: 0.08, uz: 0.62, lx: -0.82, ly: 0, lz: 0 },
+                right: { ux: -1.12, uy: -0.08, uz: -0.62, lx: -0.82, ly: 0, lz: 0 },
             },
             lift: {
-                left: { ux: -2.08, uy: 0.14, uz: 0.24, lx: -0.22, ly: 0, lz: 0 },
-                right: { ux: -2.08, uy: -0.14, uz: -0.24, lx: -0.22, ly: 0, lz: 0 },
+                left: { ux: -1.9, uy: 0.14, uz: 0.34, lx: -0.08, ly: 0, lz: 0 },
+                right: { ux: -1.9, uy: -0.14, uz: -0.34, lx: -0.08, ly: 0, lz: 0 },
             },
             pray: {
-                left: { ux: -1.38, uy: 0.1, uz: 0.66, lx: -0.58, ly: 0, lz: 0 },
-                right: { ux: -1.38, uy: -0.1, uz: -0.66, lx: -0.58, ly: 0, lz: 0 },
+                left: { ux: -1.04, uy: 0.04, uz: 0.84, lx: -0.78, ly: 0, lz: 0 },
+                right: { ux: -1.04, uy: -0.04, uz: -0.84, lx: -0.78, ly: 0, lz: 0 },
             },
             ourFather: {
-                left: { ux: -0.88, uy: 0.24, uz: 1.12, lx: -0.76, ly: 0, lz: 0 },
-                right: { ux: -0.88, uy: -0.24, uz: -1.12, lx: -0.76, ly: 0, lz: 0 },
+                left: { ux: -0.82, uy: 0.28, uz: 1.22, lx: -0.64, ly: 0, lz: 0 },
+                right: { ux: -0.82, uy: -0.28, uz: -1.22, lx: -0.64, ly: 0, lz: 0 },
             },
         }
         : {
             idle: {
-                left: { ux: -0.4, uy: 0.18, uz: 0.34, lx: -0.24, ly: 0, lz: 0 },
-                right: { ux: -0.4, uy: -0.18, uz: -0.34, lx: -0.24, ly: 0, lz: 0 },
+                left: { ux: -0.48, uy: 0.24, uz: 0.48, lx: -0.3, ly: 0, lz: 0 },
+                right: { ux: -0.48, uy: -0.24, uz: -0.48, lx: -0.3, ly: 0, lz: 0 },
             },
             point: {
-                left: { ux: -0.68, uy: 0.22, uz: 0.48, lx: -0.36, ly: 0, lz: 0 },
-                right: { ux: -1.26, uy: -0.24, uz: -0.56, lx: -0.18, ly: 0, lz: 0 },
+                left: { ux: -0.76, uy: 0.24, uz: 0.62, lx: -0.42, ly: 0, lz: 0 },
+                right: { ux: -1.16, uy: -0.28, uz: -0.8, lx: -0.12, ly: 0, lz: 0 },
             },
             hold: {
-                left: { ux: -1.14, uy: 0.12, uz: 0.58, lx: -0.72, ly: 0, lz: 0 },
-                right: { ux: -1.14, uy: -0.12, uz: -0.58, lx: -0.72, ly: 0, lz: 0 },
+                left: { ux: -1.16, uy: 0.1, uz: 0.7, lx: -0.84, ly: 0, lz: 0 },
+                right: { ux: -1.16, uy: -0.1, uz: -0.7, lx: -0.84, ly: 0, lz: 0 },
             },
             lift: {
-                left: { ux: -2.02, uy: 0.18, uz: 0.22, lx: -0.2, ly: 0, lz: 0 },
-                right: { ux: -2.02, uy: -0.18, uz: -0.22, lx: -0.2, ly: 0, lz: 0 },
+                left: { ux: -1.84, uy: 0.17, uz: 0.3, lx: -0.06, ly: 0, lz: 0 },
+                right: { ux: -1.84, uy: -0.17, uz: -0.3, lx: -0.06, ly: 0, lz: 0 },
             },
             pray: {
-                left: { ux: -1.32, uy: 0.12, uz: 0.72, lx: -0.6, ly: 0, lz: 0 },
-                right: { ux: -1.32, uy: -0.12, uz: -0.72, lx: -0.6, ly: 0, lz: 0 },
+                left: { ux: -1.0, uy: 0.06, uz: 0.9, lx: -0.78, ly: 0, lz: 0 },
+                right: { ux: -1.0, uy: -0.06, uz: -0.9, lx: -0.78, ly: 0, lz: 0 },
             },
             ourFather: {
-                left: { ux: -0.82, uy: 0.28, uz: 1.18, lx: -0.74, ly: 0, lz: 0 },
-                right: { ux: -0.82, uy: -0.28, uz: -1.18, lx: -0.74, ly: 0, lz: 0 },
+                left: { ux: -0.76, uy: 0.3, uz: 1.28, lx: -0.62, ly: 0, lz: 0 },
+                right: { ux: -0.76, uy: -0.3, uz: -1.28, lx: -0.62, ly: 0, lz: 0 },
             },
         };
 
     const signCrossPoses = isPriest
         ? [
             {
-                left: { ux: -1.04, uy: 0.09, uz: 0.5, lx: -0.44, ly: 0, lz: 0 },
-                right: { ux: -1.95, uy: -0.14, uz: -0.04, lx: -0.58, ly: 0, lz: 0 },
+                left: { ux: -0.92, uy: 0.08, uz: 0.66, lx: -0.56, ly: 0, lz: 0 },
+                right: { ux: -1.78, uy: -0.14, uz: -0.08, lx: -0.52, ly: 0, lz: 0 },
             },
             {
-                left: { ux: -1.04, uy: 0.09, uz: 0.5, lx: -0.44, ly: 0, lz: 0 },
-                right: { ux: -1.3, uy: 0, uz: 0.14, lx: -0.24, ly: 0, lz: 0 },
+                left: { ux: -0.92, uy: 0.08, uz: 0.66, lx: -0.56, ly: 0, lz: 0 },
+                right: { ux: -1.16, uy: 0.04, uz: 0.2, lx: -0.18, ly: 0, lz: 0 },
             },
             {
-                left: { ux: -1.04, uy: 0.09, uz: 0.5, lx: -0.44, ly: 0, lz: 0 },
-                right: { ux: -1.05, uy: 0.54, uz: 0.32, lx: -0.1, ly: 0, lz: 0 },
+                left: { ux: -0.92, uy: 0.08, uz: 0.66, lx: -0.56, ly: 0, lz: 0 },
+                right: { ux: -0.94, uy: 0.6, uz: 0.38, lx: -0.06, ly: 0, lz: 0 },
             },
             {
-                left: { ux: -1.04, uy: 0.09, uz: 0.5, lx: -0.44, ly: 0, lz: 0 },
-                right: { ux: -1.05, uy: -0.54, uz: -0.32, lx: -0.1, ly: 0, lz: 0 },
+                left: { ux: -0.92, uy: 0.08, uz: 0.66, lx: -0.56, ly: 0, lz: 0 },
+                right: { ux: -0.94, uy: -0.6, uz: -0.38, lx: -0.06, ly: 0, lz: 0 },
             },
         ]
         : [
             {
-                left: { ux: -1.0, uy: 0.12, uz: 0.56, lx: -0.46, ly: 0, lz: 0 },
-                right: { ux: -1.86, uy: -0.14, uz: -0.03, lx: -0.54, ly: 0, lz: 0 },
+                left: { ux: -0.9, uy: 0.1, uz: 0.72, lx: -0.58, ly: 0, lz: 0 },
+                right: { ux: -1.72, uy: -0.15, uz: -0.08, lx: -0.46, ly: 0, lz: 0 },
             },
             {
-                left: { ux: -1.0, uy: 0.12, uz: 0.56, lx: -0.46, ly: 0, lz: 0 },
-                right: { ux: -1.24, uy: 0.02, uz: 0.18, lx: -0.22, ly: 0, lz: 0 },
+                left: { ux: -0.9, uy: 0.1, uz: 0.72, lx: -0.58, ly: 0, lz: 0 },
+                right: { ux: -1.08, uy: 0.06, uz: 0.24, lx: -0.16, ly: 0, lz: 0 },
             },
             {
-                left: { ux: -1.0, uy: 0.12, uz: 0.56, lx: -0.46, ly: 0, lz: 0 },
-                right: { ux: -0.98, uy: 0.58, uz: 0.36, lx: -0.08, ly: 0, lz: 0 },
+                left: { ux: -0.9, uy: 0.1, uz: 0.72, lx: -0.58, ly: 0, lz: 0 },
+                right: { ux: -0.9, uy: 0.64, uz: 0.42, lx: -0.04, ly: 0, lz: 0 },
             },
             {
-                left: { ux: -1.0, uy: 0.12, uz: 0.56, lx: -0.46, ly: 0, lz: 0 },
-                right: { ux: -0.98, uy: -0.58, uz: -0.36, lx: -0.08, ly: 0, lz: 0 },
+                left: { ux: -0.9, uy: 0.1, uz: 0.72, lx: -0.58, ly: 0, lz: 0 },
+                right: { ux: -0.9, uy: -0.64, uz: -0.42, lx: -0.04, ly: 0, lz: 0 },
             },
         ];
 
