@@ -14,13 +14,14 @@ Hi! I'm a passionate developer focused on Software Programming and Database Mana
 
 ## Projects
 
-| Project | Description | Language | Status |
-| :--- | :--- | :--- | :--- |
-| [**Star Whale**](./Project/STAR-WHALE) | Integrated project | C++ | `In Progress` 🏗️ |
-| [**Lumina Dream Store**](./Project/LUMINA-DREAM-STORE) | Interactive input form | HTML / CSS / JS | `Completed` ✅ |
-| [**Hangman Game**](./Project/HANGMAN-GAME/HANGMAN-JS) | WEB interface | JavaScript / Web | `In Progress` 🏗️ |
-| [**Hangman Game**](./Project/HANGMAN-GAME/HANGMAN-BASH) | File I/O | Bash / Shell | `Completed` ✅ |
-| [**Hangman Game**](./Project/HANGMAN-GAME/HANGMAN-C) | API integration | C | `Completed` ✅ |
+| Project | Version | Tech Stack | Core Logic & Features | Status |
+| :--- | :--- | :--- | :--- | :---: |
+| [**Tiny Church**](./Project/TINY-CHURCH) | **AI-Native Web** | `Cursor` `HTML/CSS/JS` | **AI-Assisted Development**: Interactive 3D church scene with GSAP animations | `In Progress` 🏗️ |
+| [**Lumina Dream**](./Project/LUMINA-DREAM-STORE) | **Web Store** | `HTML` `CSS` `JS` | Interactive input form & Dream sharing interface | `Completed` ✅ |
+| **Hangman Game** | [**C++ (Star Whale)**](./Project/HANGMAN-GAME/C++-Ver) | `C++` | **Solid Engine**: OOP principles (Encapsulation, Inheritance), Unit Testing | `In Progress` 🏗️ |
+| | [**JS Ver**](./Project/HANGMAN-GAME/HANGMAN-JS) | `JavaScript` | Interactive Flower Visuals, Closure-based logic, MVP.css | `Completed` ✅ |
+| | [**C Ver**](./Project/HANGMAN-GAME/HANGMAN-C) | `C` `libcurl` | **Gemini API** integration, JSON parsing, API communication | `Completed` ✅ |
+| | [**Bash Ver**](./Project/HANGMAN-GAME/HANGMAN-BASH) | `Shell` | File I/O stream, Linux native command optimization | `Completed` ✅ |
 
 ## LeetCode (C#)
 
