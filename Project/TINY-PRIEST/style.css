@@ -179,6 +179,123 @@ body {
     transition: transform 0.35s ease, opacity 0.35s ease;
 }
 
+.mass-navigator {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 141;
+    width: min(380px, 38vw);
+    max-height: calc(100vh - 180px);
+    padding: 10px 10px 8px;
+    border-radius: 12px;
+    border: 2px solid rgba(150, 116, 86, 0.35);
+    background: rgba(255, 252, 244, 0.9);
+    backdrop-filter: blur(4px);
+    overflow-y: auto;
+    box-shadow: 0 10px 22px rgba(82, 58, 44, 0.15);
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+    transition: opacity 0.28s ease, transform 0.28s ease;
+}
+
+.mass-navigator.is-active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.mass-nav-title {
+    margin: 0 0 8px;
+    font-size: 0.92rem;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    color: #5d4037;
+}
+
+.mass-nav-group {
+    border: 1px solid rgba(173, 139, 110, 0.35);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 6px;
+    margin-bottom: 7px;
+}
+
+.mass-part-btn {
+    width: 100%;
+    border: 1.4px solid rgba(156, 116, 76, 0.32);
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.93);
+    color: #5d4037;
+    padding: 5px 8px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 0.79rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.mass-part-btn small {
+    font-size: 0.67rem;
+    font-weight: 700;
+    color: rgba(93, 64, 55, 0.78);
+}
+
+.mass-step-list {
+    margin: 0;
+    padding: 5px 0 0;
+    display: grid;
+    gap: 4px;
+}
+
+.mass-step-btn {
+    width: 100%;
+    text-align: left;
+    border: 1.4px solid rgba(160, 121, 86, 0.28);
+    background: rgba(255, 255, 255, 0.88);
+    color: #5d4037;
+    border-radius: 8px;
+    padding: 6px 8px;
+    display: flex;
+    gap: 7px;
+    align-items: baseline;
+    cursor: pointer;
+    transition: border-color 0.14s ease, background 0.14s ease, transform 0.14s ease;
+}
+
+.mass-step-btn:hover,
+.mass-part-btn:hover {
+    border-color: rgba(149, 109, 73, 0.55);
+    transform: translateY(-1px);
+}
+
+.mass-step-btn.is-active,
+.mass-part-btn.is-active {
+    border-color: rgba(97, 149, 91, 0.88);
+    background: rgba(228, 248, 220, 0.96);
+}
+
+.mass-step-btn.is-complete,
+.mass-part-btn.is-complete {
+    border-color: rgba(120, 167, 121, 0.45);
+    background: rgba(242, 252, 237, 0.82);
+}
+
+.mass-step-order {
+    min-width: 20px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: rgba(93, 64, 55, 0.72);
+}
+
+.mass-step-title {
+    font-size: 0.74rem;
+    line-height: 1.25;
+    font-weight: 700;
+}
+
 .liturgy-hud.is-active {
     transform: translateY(0);
     opacity: 1;
@@ -325,5 +442,15 @@ body {
     .liturgy-controls {
         grid-template-columns: repeat(4, minmax(68px, 1fr));
         max-height: 118px;
+    }
+
+    .mass-navigator {
+        position: static;
+        width: min(1100px, 96vw);
+        max-height: 160px;
+        margin: 0 auto 8px;
+        transform: none;
+        opacity: 1;
+        pointer-events: auto;
     }
 }

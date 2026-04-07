@@ -17,6 +17,7 @@ const APP_STATE = {
     threeWorld: null,
     threeLoadPromise: null,
     hudBound: false,
+    massNavBound: false,
 };
 
 const THREE_CDN_FALLBACKS = [
@@ -37,41 +38,206 @@ const GESTURE_NARRATION = {
 
 const MASS_FLOW_STEPS = [
     {
+        part: "입당",
+        partEn: "Entrance",
+        gesture: "idle",
+        title: "입당 성가와 행렬",
+        text: "🎶 The assembly gathers and the entrance procession begins.",
+    },
+    {
+        part: "입당",
+        partEn: "Entrance",
         gesture: "signCross",
-        title: "Entrance Rites",
+        title: "성호경과 인사",
         text: "✝️ The Mass begins with the Sign of the Cross and liturgical greeting.",
     },
     {
+        part: "입당",
+        partEn: "Entrance",
         gesture: "pray",
-        title: "Penitential Act",
+        title: "참회 예식",
         text: "🙏 The assembly asks for mercy and prepares hearts for worship.",
     },
     {
+        part: "입당",
+        partEn: "Entrance",
+        gesture: "pray",
+        title: "본기도",
+        text: "🕯️ The opening prayer gathers the intentions of the faithful.",
+    },
+    {
+        part: "봉헌",
+        partEn: "Offertory",
+        gesture: "hold",
+        title: "예물 준비",
+        text: "🍞 Bread and wine are brought forward to the altar.",
+    },
+    {
+        part: "봉헌",
+        partEn: "Offertory",
+        gesture: "lift",
+        title: "예물 봉헌",
+        text: "🙌 The gifts are lifted in thanksgiving and offering to God.",
+    },
+    {
+        part: "봉헌",
+        partEn: "Offertory",
+        gesture: "pray",
+        title: "봉헌 기도",
+        text: "🙏 The celebrant invites all to pray over the gifts.",
+    },
+    {
+        part: "전례",
+        partEn: "Liturgy",
         gesture: "point",
-        title: "Liturgy of the Word",
+        title: "말씀 선포",
         text: "📖 The Scriptures are proclaimed, and the Gospel is explained in the homily.",
     },
     {
-        gesture: "hold",
-        title: "Preparation of the Gifts",
-        text: "🍞🍷 Bread and wine are presented and prepared at the altar.",
+        part: "전례",
+        partEn: "Liturgy",
+        gesture: "point",
+        title: "강론과 신앙 고백",
+        text: "🕊️ The homily deepens faith and the Creed is professed together.",
     },
     {
-        gesture: "lift",
-        title: "Eucharistic Prayer",
-        text: "✨ The gifts are offered as the Church gives thanks and praise to God.",
-    },
-    {
+        part: "전례",
+        partEn: "Liturgy",
         gesture: "ourFather",
-        title: "Communion Rite",
+        title: "공동 전구",
+        text: "🫶 The community prays for the Church and the world.",
+    },
+    {
+        part: "전례",
+        partEn: "Liturgy",
+        gesture: "hold",
+        title: "성찬 기도",
+        text: "✨ The Church gives thanks and praise through the Eucharistic Prayer.",
+    },
+    {
+        part: "전례",
+        partEn: "Liturgy",
+        gesture: "ourFather",
+        title: "영성체 예식",
         text: "👐 The faithful pray the Lord's Prayer and prepare for Communion.",
     },
     {
+        part: "파견",
+        partEn: "Dismissal",
         gesture: "pray",
-        title: "Concluding Rite",
+        title: "강복",
+        text: "🔔 The celebrant blesses the people before sending forth.",
+    },
+    {
+        part: "파견",
+        partEn: "Dismissal",
+        gesture: "point",
+        title: "파견",
         text: "🔔 The people are blessed and sent forth to live the Gospel.",
     },
 ];
+
+function buildMassFlowNavigation() {
+    const groupsContainer = document.getElementById("mass-nav-groups");
+    if (!groupsContainer || groupsContainer.dataset.built === "true") {
+        return;
+    }
+
+    const groups = new Map();
+    MASS_FLOW_STEPS.forEach((step, index) => {
+        const key = `${step.part}|${step.partEn}`;
+        if (!groups.has(key)) {
+            groups.set(key, {
+                part: step.part,
+                partEn: step.partEn,
+                indices: [],
+            });
+        }
+        groups.get(key).indices.push(index);
+    });
+
+    groupsContainer.innerHTML = "";
+    groups.forEach((group) => {
+        const section = document.createElement("section");
+        section.className = "mass-nav-group";
+
+        const firstIndex = group.indices[0];
+        const headerButton = document.createElement("button");
+        headerButton.type = "button";
+        headerButton.className = "mass-nav-part-btn";
+        headerButton.dataset.stepIndex = String(firstIndex);
+        headerButton.innerHTML = `<span>${group.part}</span><small>${group.partEn}</small>`;
+        section.appendChild(headerButton);
+
+        const list = document.createElement("div");
+        list.className = "mass-nav-step-list";
+        group.indices.forEach((stepIndex) => {
+            const step = MASS_FLOW_STEPS[stepIndex];
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "mass-nav-step-btn";
+            button.dataset.stepIndex = String(stepIndex);
+            button.innerHTML = `<span class="mass-nav-step-order">${stepIndex + 1}</span><span class="mass-nav-step-title">${step.title}</span>`;
+            list.appendChild(button);
+        });
+        section.appendChild(list);
+        groupsContainer.appendChild(section);
+    });
+
+    groupsContainer.dataset.built = "true";
+}
+
+function setMassFlowStatus(text) {
+    const status = document.getElementById("mass-nav-status");
+    if (status) {
+        status.textContent = text;
+    }
+}
+
+function setMassFlowStepState(activeStepIndex, massActive) {
+    const buttons = document.querySelectorAll(".mass-nav-step-btn[data-step-index], .mass-nav-part-btn[data-step-index]");
+    buttons.forEach((button) => {
+        const stepIndex = Number(button.dataset.stepIndex);
+        if (!Number.isFinite(stepIndex)) {
+            return;
+        }
+        button.classList.toggle("is-active", stepIndex === activeStepIndex);
+        button.classList.toggle("is-complete", massActive && activeStepIndex >= 0 && stepIndex < activeStepIndex);
+    });
+}
+
+function setMassNavigatorVisible(isVisible) {
+    const nav = document.getElementById("mass-navigator");
+    if (!nav) {
+        return;
+    }
+    nav.classList.toggle("is-active", isVisible);
+    nav.setAttribute("aria-hidden", isVisible ? "false" : "true");
+}
+
+function bindMassNavigator() {
+    if (APP_STATE.massNavBound) {
+        return;
+    }
+    const nav = document.getElementById("mass-navigator");
+    if (!nav) {
+        return;
+    }
+
+    nav.addEventListener("click", (event) => {
+        const button = event.target.closest(".mass-nav-step-btn[data-step-index], .mass-nav-part-btn[data-step-index]");
+        if (!button || !APP_STATE.threeWorld) {
+            return;
+        }
+        const stepIndex = Number(button.dataset.stepIndex);
+        if (!Number.isFinite(stepIndex) || typeof APP_STATE.threeWorld.jumpToMassStep !== "function") {
+            return;
+        }
+        APP_STATE.threeWorld.jumpToMassStep(stepIndex);
+    });
+
+    APP_STATE.massNavBound = true;
+}
 
 function loadThreeFromUrl(url) {
     return new Promise((resolve, reject) => {
@@ -928,10 +1094,10 @@ function createVoxelChurch(container) {
         signCrossTime: 0,
         massActive: false,
         massIndex: 0,
+        currentMassStepIndex: -1,
         massTimer: 0,
         massStepDuration: 2.8,
     };
-    const massSequence = MASS_FLOW_STEPS.map((step) => step.gesture);
 
     function narrateGesture(name, prefix = "") {
         const message = GESTURE_NARRATION[name] || GESTURE_NARRATION.idle;
@@ -940,19 +1106,26 @@ function createVoxelChurch(container) {
         setHudButtonsState(name, actionState.massActive);
     }
 
-    function triggerGesture(name, prefix = "") {
+    function triggerGesture(name, prefix = "", massStepIndex = -1) {
         actionState.currentGesture = name;
         actionState.massTimer = actionState.massStepDuration;
+        if (Number.isInteger(massStepIndex)) {
+            actionState.currentMassStepIndex = massStepIndex;
+        } else if (!actionState.massActive) {
+            actionState.currentMassStepIndex = -1;
+        }
         if (name === "signCross") {
             actionState.signCrossActive = true;
             actionState.signCrossTime = 0;
             setGesturePose("pray");
             narrateGesture("signCross", prefix);
+            setMassFlowStepState(actionState.currentMassStepIndex, actionState.massActive);
             return;
         }
         actionState.signCrossActive = false;
         setGesturePose(name);
         narrateGesture(name, prefix);
+        setMassFlowStepState(actionState.currentMassStepIndex, actionState.massActive);
     }
 
     function advanceMassStep() {
@@ -960,9 +1133,24 @@ function createVoxelChurch(container) {
         const step = MASS_FLOW_STEPS[stepIndex];
         const next = step.gesture;
         const stepNumber = stepIndex + 1;
-        const prefix = `🎼 ${step.title} (${stepNumber}/${MASS_FLOW_STEPS.length})`;
+        const prefix = `🎼 ${step.part} · ${step.title} (${stepNumber}/${MASS_FLOW_STEPS.length})`;
         actionState.massIndex += 1;
-        triggerGesture(next, `${prefix} ${step.text}`);
+        triggerGesture(next, `${prefix} ${step.text}`, stepIndex);
+        setMassFlowStatus(`▶️ Auto: ${step.part} (${step.partEn}) > ${step.title}`);
+    }
+
+    function jumpToMassStep(stepIndex) {
+        if (!Number.isInteger(stepIndex) || stepIndex < 0 || stepIndex >= MASS_FLOW_STEPS.length) {
+            return;
+        }
+        if (actionState.massActive) {
+            actionState.massActive = false;
+        }
+        const step = MASS_FLOW_STEPS[stepIndex];
+        actionState.massIndex = stepIndex;
+        triggerGesture(step.gesture, `📍 ${step.part} · ${step.title} — ${step.text}`, stepIndex);
+        setDialogue(`Jumped to ${step.part} (${step.partEn}) - ${step.title}.`);
+        setMassFlowStatus(`📌 Current: ${step.part} (${step.partEn}) > ${step.title}`);
     }
 
     function setMassMode(isActive) {
@@ -971,17 +1159,21 @@ function createVoxelChurch(container) {
         }
         actionState.massActive = isActive;
         if (actionState.massActive) {
-            actionState.massIndex = 0;
+            actionState.massIndex = actionState.currentMassStepIndex >= 0 ? actionState.currentMassStepIndex : 0;
             advanceMassStep();
             setDialogue("Mass sequence started. Press M again to stop.");
+            setMassFlowStatus("▶️ Auto Mass progression running...");
             return;
         }
-        triggerGesture("idle");
+        triggerGesture("idle", "", -1);
         setLiturgySubtitle("⏸️ Mass sequence paused. Select any gesture manually.");
         setDialogue("Mass sequence paused.");
+        setMassFlowStatus("⏸️ Paused. Click a step to jump there.");
     }
 
-    triggerGesture("idle");
+    triggerGesture("idle", "", -1);
+    setMassFlowStepState(-1, false);
+    setMassFlowStatus("🧭 Choose a part and click a detailed step.");
 
     const playerShadow = new THREE.Mesh(
         new THREE.CircleGeometry(0.82, 16),
@@ -1474,6 +1666,7 @@ function createVoxelChurch(container) {
         },
         getCurrentGesture: () => actionState.currentGesture,
         isMassActive: () => actionState.massActive,
+        jumpToMassStep,
     };
 }
 
@@ -1514,6 +1707,7 @@ function resetEntryAfterFailure(message) {
     threeContainer.classList.remove("is-active");
     threeContainer.setAttribute("aria-hidden", "true");
     setLiturgyHudVisible(false);
+    setMassNavigatorVisible(false);
     entryScreen.classList.remove("is-hidden", "is-entering-zoom");
     entryScreen.style.display = "flex";
     APP_STATE.isTransitioning = false;
@@ -1540,7 +1734,10 @@ async function activateThreeScene(role) {
     threeContainer.classList.add("is-active");
     threeContainer.setAttribute("aria-hidden", "false");
     bindHudControls();
+    buildMassFlowNavigation();
+    bindMassNavigator();
     setLiturgyHudVisible(true);
+    setMassNavigatorVisible(true);
 
     try {
         if (!APP_STATE.threeWorld) {
