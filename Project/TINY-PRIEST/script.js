@@ -980,8 +980,11 @@ function createVoxelChurch(container) {
 
     const keyState = new Set();
     const playerVelocity = { y: 0 };
+    const playerVelocityXZ = new THREE.Vector2(0, 0);
     const playerMotion = {
         speed: 7.1,
+        acceleration: 10.5,
+        deceleration: 8.8,
         gravity: 18,
         jump: 8,
         onGround: true,
@@ -1189,41 +1192,48 @@ function createVoxelChurch(container) {
     const cameraLookOffset = new THREE.Vector3(0, 1.4, -4.1);
     const cameraTarget = new THREE.Vector3();
     const cameraLookTarget = new THREE.Vector3();
+    const moveDirection = new THREE.Vector3(0, 0, -1);
+    const cameraBehindDirection = new THREE.Vector3(0, 0, 1);
+    const facingState = {
+        yaw: Math.PI,
+    };
     const clock = new THREE.Clock();
     const spriteFacingState = {
         xDir: 1,
         walkPhase: 0,
         facingBack: false,
+        motionBlend: 0,
     };
 
-    function updatePlayerSpriteMotion(moveX, moveZ, dt) {
-        const moveStrength = Math.hypot(moveX, moveZ);
+    function updatePlayerSpriteMotion(velocityX, velocityZ, dt) {
+        const speed = Math.hypot(velocityX, velocityZ);
+        const moving = speed > 0.18;
 
-        if (moveStrength > 0.04) {
-            if (Math.abs(moveZ) >= Math.abs(moveX) * 0.65) {
-                const shouldFaceBack = moveZ < 0;
-                if (shouldFaceBack !== spriteFacingState.facingBack) {
-                    spriteFacingState.facingBack = shouldFaceBack;
-                    playerSpriteMaterial.map = shouldFaceBack ? playerTextures.back : playerTextures.front;
-                    playerSpriteMaterial.needsUpdate = true;
-                }
+        if (moving) {
+            if (!spriteFacingState.facingBack) {
+                spriteFacingState.facingBack = true;
+                playerSpriteMaterial.map = playerTextures.back;
+                playerSpriteMaterial.needsUpdate = true;
             }
-            if (Math.abs(moveX) > 0.08) {
-                spriteFacingState.xDir = moveX < 0 ? -1 : 1;
+            if (Math.abs(velocityX) > 0.08) {
+                spriteFacingState.xDir = velocityX < 0 ? -1 : 1;
             }
+        } else if (spriteFacingState.facingBack) {
+            spriteFacingState.facingBack = false;
+            playerSpriteMaterial.map = playerTextures.front;
+            playerSpriteMaterial.needsUpdate = true;
         }
 
-        if (moveStrength > 0.04 && playerMotion.onGround) {
-            spriteFacingState.walkPhase += dt * 11;
-        }
+        const blendTarget = moving && playerMotion.onGround ? 1 : 0;
+        spriteFacingState.motionBlend += (blendTarget - spriteFacingState.motionBlend) * Math.min(dt * 8, 1);
+        spriteFacingState.walkPhase += dt * (4 + speed * 1.6);
 
-        const moving = moveStrength > 0.04;
-        const walkBob = moving && playerMotion.onGround
-            ? Math.sin(spriteFacingState.walkPhase) * 0.1
+        const walkBob = spriteFacingState.motionBlend > 0.02
+            ? Math.sin(spriteFacingState.walkPhase) * (0.04 + spriteFacingState.motionBlend * 0.08)
             : Math.sin(performance.now() * 0.0035) * 0.03;
-        const squash = moving ? (0.98 + Math.cos(spriteFacingState.walkPhase) * 0.02) : 1;
-        const stretchX = moving ? 1.03 : 1;
-        const tiltTarget = -moveX * 0.06;
+        const squash = 1 - spriteFacingState.motionBlend * 0.02 + Math.cos(spriteFacingState.walkPhase) * spriteFacingState.motionBlend * 0.025;
+        const stretchX = 1 + spriteFacingState.motionBlend * 0.03;
+        const tiltTarget = THREE.MathUtils.clamp(-velocityX * 0.014, -0.12, 0.12);
 
         playerSprite.scale.x = playerSpriteBaseScale.x * spriteFacingState.xDir * stretchX;
         playerSprite.scale.y = playerSpriteBaseScale.y * squash;
@@ -1235,13 +1245,23 @@ function createVoxelChurch(container) {
         );
     }
 
+    function applyArmSecondaryMotion(speed) {
+        if (speed < 0.1 || !playerMotion.onGround) {
+            return;
+        }
+        const energy = Math.min(speed / playerMotion.speed, 1);
+        const sway = Math.sin(spriteFacingState.walkPhase * 1.1) * 0.08 * energy;
+        leftArm.shoulder.rotation.z += sway * 0.55;
+        rightArm.shoulder.rotation.z -= sway * 0.55;
+        leftArm.elbow.rotation.x += Math.abs(sway) * 0.18;
+        rightArm.elbow.rotation.x += Math.abs(sway) * 0.18;
+    }
+
     function animate() {
         const dt = Math.min(clock.getDelta(), 0.05);
 
         updateMassSequence(dt);
         updateSignOfCross(dt);
-        updateArmPoseSmoothing(dt);
-        updateLiturgyItem();
 
         const left = keyState.has("ArrowLeft") || keyState.has("KeyA");
         const right = keyState.has("ArrowRight") || keyState.has("KeyD");
@@ -1257,10 +1277,40 @@ function createVoxelChurch(container) {
             moveZ /= moveLength;
         }
 
-        playerRig.position.x += moveX * playerMotion.speed * dt;
-        playerRig.position.z += moveZ * playerMotion.speed * dt;
-        playerRig.position.x = THREE.MathUtils.clamp(playerRig.position.x, -13.8, 13.8);
-        playerRig.position.z = THREE.MathUtils.clamp(playerRig.position.z, -14.6, 14.8);
+        const desiredVelocityX = moveX * playerMotion.speed;
+        const desiredVelocityZ = moveZ * playerMotion.speed;
+        const acceleration = moveLength > 0 ? playerMotion.acceleration : playerMotion.deceleration;
+        const blend = Math.min(dt * acceleration, 1);
+        playerVelocityXZ.x += (desiredVelocityX - playerVelocityXZ.x) * blend;
+        playerVelocityXZ.y += (desiredVelocityZ - playerVelocityXZ.y) * blend;
+
+        playerRig.position.x += playerVelocityXZ.x * dt;
+        playerRig.position.z += playerVelocityXZ.y * dt;
+
+        const clampedX = THREE.MathUtils.clamp(playerRig.position.x, -13.8, 13.8);
+        const clampedZ = THREE.MathUtils.clamp(playerRig.position.z, -14.6, 14.8);
+        if (clampedX !== playerRig.position.x) {
+            playerVelocityXZ.x = 0;
+        }
+        if (clampedZ !== playerRig.position.z) {
+            playerVelocityXZ.y = 0;
+        }
+        playerRig.position.x = clampedX;
+        playerRig.position.z = clampedZ;
+
+        const horizontalSpeed = playerVelocityXZ.length();
+        if (horizontalSpeed > 0.12) {
+            moveDirection.set(playerVelocityXZ.x / horizontalSpeed, 0, playerVelocityXZ.y / horizontalSpeed);
+            const desiredYaw = Math.atan2(moveDirection.x, -moveDirection.z);
+            const yawDelta = Math.atan2(
+                Math.sin(desiredYaw - facingState.yaw),
+                Math.cos(desiredYaw - facingState.yaw),
+            );
+            facingState.yaw += yawDelta * Math.min(dt * 7.5, 1);
+            cameraBehindDirection.set(-moveDirection.x, 0, -moveDirection.z);
+        }
+
+        playerRig.rotation.y = facingState.yaw;
 
         if (jump) {
             attemptJump();
@@ -1279,7 +1329,10 @@ function createVoxelChurch(container) {
             }
         }
 
-        updatePlayerSpriteMotion(moveX, moveZ, dt);
+        updateArmPoseSmoothing(dt);
+        applyArmSecondaryMotion(horizontalSpeed);
+        updateLiturgyItem();
+        updatePlayerSpriteMotion(playerVelocityXZ.x, playerVelocityXZ.y, dt);
 
         playerShadow.position.x = playerRig.position.x;
         playerShadow.position.z = playerRig.position.z;
@@ -1316,9 +1369,16 @@ function createVoxelChurch(container) {
         flameL.scale.y = 0.85 + Math.sin(performance.now() * 0.013) * 0.08;
         flameR.scale.y = 0.85 + Math.sin(performance.now() * 0.012 + 0.8) * 0.08;
 
-        cameraTarget.copy(playerRig.position).add(cameraOffset);
-        camera.position.lerp(cameraTarget, 0.1);
-        cameraLookTarget.copy(playerRig.position).add(cameraLookOffset);
+        cameraTarget.copy(playerRig.position);
+        cameraTarget.x += cameraBehindDirection.x * cameraOffset.z;
+        cameraTarget.y += cameraOffset.y;
+        cameraTarget.z += cameraBehindDirection.z * cameraOffset.z;
+        camera.position.lerp(cameraTarget, 0.11);
+
+        cameraLookTarget.copy(playerRig.position);
+        cameraLookTarget.x += moveDirection.x * 2.4;
+        cameraLookTarget.y += cameraLookOffset.y;
+        cameraLookTarget.z += moveDirection.z * 2.4;
         camera.lookAt(cameraLookTarget);
 
         renderer.render(scene, camera);
