@@ -14,14 +14,58 @@ Hi! I'm a passionate developer focused on Software Programming and Database Mana
 
 ## Projects
 
-| Project | Version | Tech Stack | Core Logic & Features | Status |
-| :--- | :--- | :--- | :--- | :---: |
-| [**Tiny Church**](./Project/TINY-CHURCH) | **AI-Native Web** | `Cursor` `HTML/CSS/JS` | **AI-Assisted Development**: Interactive 3D church scene with GSAP animations | `In Progress` 🏗️ |
-| [**Lumina Dream**](./Project/LUMINA-DREAM-STORE) | **Web Store** | `HTML` `CSS` `JS` | Interactive input form & Dream sharing interface | `Completed` ✅ |
-| **Hangman Game** | [**C++ (Star Whale)**](./Project/HANGMAN-GAME/C++-Ver) | `C++` | **Solid Engine**: OOP principles (Encapsulation, Inheritance), Unit Testing | `In Progress` 🏗️ |
-| | [**JS Ver**](./Project/HANGMAN-GAME/HANGMAN-JS) | `JavaScript` | Interactive Flower Visuals, Closure-based logic, MVP.css | `Completed` ✅ |
-| | [**C Ver**](./Project/HANGMAN-GAME/HANGMAN-C) | `C` `libcurl` | **Gemini API** integration, JSON parsing, API communication | `Completed` ✅ |
-| | [**Bash Ver**](./Project/HANGMAN-GAME/HANGMAN-BASH) | `Shell` | File I/O stream, Linux native command optimization | `Completed` ✅ |
+<table>
+  <thead>
+    <tr>
+      <th>Project</th>
+      <th>Version</th>
+      <th>Tech Stack</th>
+      <th>Core Logic & Features</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="./Project/TINY-CHURCH"><b>Tiny Church</b></a></td>
+      <td><b>AI-Native Web</b></td>
+      <td><code>Cursor</code> <code>HTML/CSS/JS</code></td>
+      <td><b>AI-Assisted Development</b>: Interactive 3D church scene with GSAP animations</td>
+      <td align="center">In Progress 🏗️</td>
+    </tr>
+    <tr>
+      <td><a href="./Project/LUMINA-DREAM-STORE"><b>Lumina Dream</b></a></td>
+      <td><b>Web Store</b></td>
+      <td><code>HTML</code> <code>CSS</code> <code>JS</code></td>
+      <td>Interactive input form & Dream sharing interface</td>
+      <td align="center">Completed ✅</td>
+    </tr>
+    <tr>
+      <td rowspan="4" align="center"><b>Hangman Game</b><br>(Multi-Lang)</td>
+      <td><a href="./Project/HANGMAN-GAME/C++-Ver"><b>C++ (Star Whale)</b></a></td>
+      <td><code>C++</code></td>
+      <td>OOP principles, Unit Testing</td>
+      <td align="center">In Progress 🏗️</td>
+    </tr>
+    <tr>
+      <td><a href="./Project/HANGMAN-GAME/HANGMAN-JS"><b>JS Ver</b></a></td>
+      <td><code>JavaScript</code></td>
+      <td>Interactive Flower Visuals, Closure-based logic, MVP.css</td>
+      <td align="center">Completed ✅</td>
+    </tr>
+    <tr>
+      <td><a href="./Project/HANGMAN-GAME/HANGMAN-C"><b>C Ver</b></a></td>
+      <td><code>C</code> <code>libcurl</code></td>
+      <td><b>Gemini API</b> integration, JSON parsing, API communication</td>
+      <td align="center">Completed ✅</td>
+    </tr>
+    <tr>
+      <td><a href="./Project/HANGMAN-GAME/HANGMAN-BASH"><b>Bash Ver</b></a></td>
+      <td><code>Shell</code></td>
+      <td>File I/O stream, Linux native command optimization</td>
+      <td align="center">Completed ✅</td>
+    </tr>
+  </tbody>
+</table>
 
 ## LeetCode (C#)
 
