@@ -643,15 +643,56 @@ function createVoxelChurch(container) {
     liturgyItem.visible = false;
     playerRig.add(liturgyItem);
 
+    const armStyle = isPriest
+        ? {
+            shoulderX: 0.62,
+            shoulderY: 2.25,
+            shoulderZ: 0.24,
+            upperWidth: 0.38,
+            upperLength: 0.88,
+            lowerWidth: 0.32,
+            lowerLength: 0.8,
+            elbowDrop: 0.9,
+            handRadius: 0.115,
+            cuffWidth: 0.28,
+            cuffLength: 0.12,
+            sleeveColor: 0x3a3f54,
+            cuffColor: 0xe8edf7,
+            handColor: 0xf4dcc4,
+        }
+        : {
+            shoulderX: 0.58,
+            shoulderY: 2.24,
+            shoulderZ: 0.24,
+            upperWidth: 0.35,
+            upperLength: 0.84,
+            lowerWidth: 0.3,
+            lowerLength: 0.76,
+            elbowDrop: 0.86,
+            handRadius: 0.108,
+            cuffWidth: 0.25,
+            cuffLength: 0.1,
+            sleeveColor: 0x4f4a63,
+            cuffColor: 0xf4f1fb,
+            handColor: 0xf6dfcb,
+        };
+
     const sleeveMaterial = new THREE.MeshLambertMaterial({
-        color: isPriest ? 0x303038 : 0x2a2a34,
+        color: armStyle.sleeveColor,
+        transparent: true,
+        opacity: 0.97,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+    });
+    const cuffMaterial = new THREE.MeshLambertMaterial({
+        color: armStyle.cuffColor,
         transparent: true,
         opacity: 0.96,
         side: THREE.DoubleSide,
         depthWrite: false,
     });
     const handOverlayMaterial = new THREE.MeshLambertMaterial({
-        color: 0xf4dcc2,
+        color: armStyle.handColor,
         transparent: true,
         opacity: 0.98,
         side: THREE.DoubleSide,
@@ -660,25 +701,29 @@ function createVoxelChurch(container) {
 
     function createArm(side) {
         const shoulder = new THREE.Object3D();
-        shoulder.position.set(side * 0.64, 2.28, 0.24);
+        shoulder.position.set(side * armStyle.shoulderX, armStyle.shoulderY, armStyle.shoulderZ);
 
-        const upper = new THREE.Mesh(new THREE.PlaneGeometry(0.34, 0.98), sleeveMaterial);
-        upper.position.set(0, -0.5, 0);
+        const upper = new THREE.Mesh(new THREE.PlaneGeometry(armStyle.upperWidth, armStyle.upperLength), sleeveMaterial);
+        upper.position.set(0, -armStyle.upperLength * 0.5, 0);
         shoulder.add(upper);
 
         const elbow = new THREE.Object3D();
-        elbow.position.y = -1.0;
+        elbow.position.y = -armStyle.elbowDrop;
         shoulder.add(elbow);
 
-        const lower = new THREE.Mesh(new THREE.PlaneGeometry(0.3, 0.9), sleeveMaterial);
-        lower.position.set(0, -0.44, 0);
+        const lower = new THREE.Mesh(new THREE.PlaneGeometry(armStyle.lowerWidth, armStyle.lowerLength), sleeveMaterial);
+        lower.position.set(0, -armStyle.lowerLength * 0.48, 0);
         elbow.add(lower);
 
-        const hand = new THREE.Mesh(new THREE.CircleGeometry(0.12, 14), handOverlayMaterial);
-        hand.position.set(0, -0.92, 0.01);
+        const cuff = new THREE.Mesh(new THREE.PlaneGeometry(armStyle.cuffWidth, armStyle.cuffLength), cuffMaterial);
+        cuff.position.set(0, -armStyle.lowerLength * 0.92, 0.006);
+        elbow.add(cuff);
+
+        const hand = new THREE.Mesh(new THREE.CircleGeometry(armStyle.handRadius, 16), handOverlayMaterial);
+        hand.position.set(0, -armStyle.lowerLength * 1.08, 0.01);
         elbow.add(hand);
 
-        [upper, lower, hand].forEach((mesh) => {
+        [upper, lower, cuff, hand].forEach((mesh) => {
             mesh.renderOrder = 2;
             mesh.castShadow = false;
             mesh.receiveShadow = false;
@@ -710,44 +755,101 @@ function createVoxelChurch(container) {
         Object.assign(armPoseTarget.right, right);
     }
 
-    function setGesturePose(gesture) {
-        switch (gesture) {
-            case "point":
-                setArmTargets(
-                    { ux: -0.4, uy: 0.15, uz: 0.2, lx: -0.28, ly: 0, lz: 0 },
-                    { ux: -1.35, uy: -0.2, uz: -0.32, lx: -0.18, ly: 0, lz: 0 },
-                );
-                break;
-            case "hold":
-                setArmTargets(
-                    { ux: -1.0, uy: 0.18, uz: 0.44, lx: -0.52, ly: 0, lz: 0 },
-                    { ux: -1.0, uy: -0.18, uz: -0.44, lx: -0.52, ly: 0, lz: 0 },
-                );
-                break;
-            case "lift":
-                setArmTargets(
-                    { ux: -2.35, uy: 0.1, uz: 0.16, lx: -0.2, ly: 0, lz: 0 },
-                    { ux: -2.35, uy: -0.1, uz: -0.16, lx: -0.2, ly: 0, lz: 0 },
-                );
-                break;
-            case "pray":
-                setArmTargets(
-                    { ux: -1.25, uy: 0.1, uz: 0.58, lx: -0.5, ly: 0, lz: 0 },
-                    { ux: -1.25, uy: -0.1, uz: -0.58, lx: -0.5, ly: 0, lz: 0 },
-                );
-                break;
-            case "ourFather":
-                setArmTargets(
-                    { ux: -0.75, uy: 0.2, uz: 1.02, lx: -0.82, ly: 0, lz: 0 },
-                    { ux: -0.75, uy: -0.2, uz: -1.02, lx: -0.82, ly: 0, lz: 0 },
-                );
-                break;
-            default:
-                setArmTargets(
-                    { ux: -0.2, uy: 0.08, uz: 0.18, lx: -0.08, ly: 0, lz: 0 },
-                    { ux: -0.2, uy: -0.08, uz: -0.18, lx: -0.08, ly: 0, lz: 0 },
-                );
+    const gesturePoses = isPriest
+        ? {
+            idle: {
+                left: { ux: -0.34, uy: 0.14, uz: 0.3, lx: -0.2, ly: 0, lz: 0 },
+                right: { ux: -0.34, uy: -0.14, uz: -0.3, lx: -0.2, ly: 0, lz: 0 },
+            },
+            point: {
+                left: { ux: -0.62, uy: 0.18, uz: 0.42, lx: -0.34, ly: 0, lz: 0 },
+                right: { ux: -1.18, uy: -0.28, uz: -0.52, lx: -0.22, ly: 0, lz: 0 },
+            },
+            hold: {
+                left: { ux: -1.08, uy: 0.1, uz: 0.52, lx: -0.65, ly: 0, lz: 0 },
+                right: { ux: -1.08, uy: -0.1, uz: -0.52, lx: -0.65, ly: 0, lz: 0 },
+            },
+            lift: {
+                left: { ux: -2.08, uy: 0.14, uz: 0.24, lx: -0.22, ly: 0, lz: 0 },
+                right: { ux: -2.08, uy: -0.14, uz: -0.24, lx: -0.22, ly: 0, lz: 0 },
+            },
+            pray: {
+                left: { ux: -1.38, uy: 0.1, uz: 0.66, lx: -0.58, ly: 0, lz: 0 },
+                right: { ux: -1.38, uy: -0.1, uz: -0.66, lx: -0.58, ly: 0, lz: 0 },
+            },
+            ourFather: {
+                left: { ux: -0.88, uy: 0.24, uz: 1.12, lx: -0.76, ly: 0, lz: 0 },
+                right: { ux: -0.88, uy: -0.24, uz: -1.12, lx: -0.76, ly: 0, lz: 0 },
+            },
         }
+        : {
+            idle: {
+                left: { ux: -0.4, uy: 0.18, uz: 0.34, lx: -0.24, ly: 0, lz: 0 },
+                right: { ux: -0.4, uy: -0.18, uz: -0.34, lx: -0.24, ly: 0, lz: 0 },
+            },
+            point: {
+                left: { ux: -0.68, uy: 0.22, uz: 0.48, lx: -0.36, ly: 0, lz: 0 },
+                right: { ux: -1.26, uy: -0.24, uz: -0.56, lx: -0.18, ly: 0, lz: 0 },
+            },
+            hold: {
+                left: { ux: -1.14, uy: 0.12, uz: 0.58, lx: -0.72, ly: 0, lz: 0 },
+                right: { ux: -1.14, uy: -0.12, uz: -0.58, lx: -0.72, ly: 0, lz: 0 },
+            },
+            lift: {
+                left: { ux: -2.02, uy: 0.18, uz: 0.22, lx: -0.2, ly: 0, lz: 0 },
+                right: { ux: -2.02, uy: -0.18, uz: -0.22, lx: -0.2, ly: 0, lz: 0 },
+            },
+            pray: {
+                left: { ux: -1.32, uy: 0.12, uz: 0.72, lx: -0.6, ly: 0, lz: 0 },
+                right: { ux: -1.32, uy: -0.12, uz: -0.72, lx: -0.6, ly: 0, lz: 0 },
+            },
+            ourFather: {
+                left: { ux: -0.82, uy: 0.28, uz: 1.18, lx: -0.74, ly: 0, lz: 0 },
+                right: { ux: -0.82, uy: -0.28, uz: -1.18, lx: -0.74, ly: 0, lz: 0 },
+            },
+        };
+
+    const signCrossPoses = isPriest
+        ? [
+            {
+                left: { ux: -1.04, uy: 0.09, uz: 0.5, lx: -0.44, ly: 0, lz: 0 },
+                right: { ux: -1.95, uy: -0.14, uz: -0.04, lx: -0.58, ly: 0, lz: 0 },
+            },
+            {
+                left: { ux: -1.04, uy: 0.09, uz: 0.5, lx: -0.44, ly: 0, lz: 0 },
+                right: { ux: -1.3, uy: 0, uz: 0.14, lx: -0.24, ly: 0, lz: 0 },
+            },
+            {
+                left: { ux: -1.04, uy: 0.09, uz: 0.5, lx: -0.44, ly: 0, lz: 0 },
+                right: { ux: -1.05, uy: 0.54, uz: 0.32, lx: -0.1, ly: 0, lz: 0 },
+            },
+            {
+                left: { ux: -1.04, uy: 0.09, uz: 0.5, lx: -0.44, ly: 0, lz: 0 },
+                right: { ux: -1.05, uy: -0.54, uz: -0.32, lx: -0.1, ly: 0, lz: 0 },
+            },
+        ]
+        : [
+            {
+                left: { ux: -1.0, uy: 0.12, uz: 0.56, lx: -0.46, ly: 0, lz: 0 },
+                right: { ux: -1.86, uy: -0.14, uz: -0.03, lx: -0.54, ly: 0, lz: 0 },
+            },
+            {
+                left: { ux: -1.0, uy: 0.12, uz: 0.56, lx: -0.46, ly: 0, lz: 0 },
+                right: { ux: -1.24, uy: 0.02, uz: 0.18, lx: -0.22, ly: 0, lz: 0 },
+            },
+            {
+                left: { ux: -1.0, uy: 0.12, uz: 0.56, lx: -0.46, ly: 0, lz: 0 },
+                right: { ux: -0.98, uy: 0.58, uz: 0.36, lx: -0.08, ly: 0, lz: 0 },
+            },
+            {
+                left: { ux: -1.0, uy: 0.12, uz: 0.56, lx: -0.46, ly: 0, lz: 0 },
+                right: { ux: -0.98, uy: -0.58, uz: -0.36, lx: -0.08, ly: 0, lz: 0 },
+            },
+        ];
+
+    function setGesturePose(gesture) {
+        const pose = gesturePoses[gesture] || gesturePoses.idle;
+        setArmTargets(pose.left, pose.right);
     }
 
     const actionState = {
@@ -926,27 +1028,12 @@ function createVoxelChurch(container) {
         const normalized = Math.min(actionState.signCrossTime / 2.2, 1);
         const phase = normalized * 4;
 
-        if (phase < 1) {
-            setArmTargets(
-                { ux: -0.95, uy: 0.08, uz: 0.42, lx: -0.42, ly: 0, lz: 0 },
-                { ux: -2.05, uy: -0.12, uz: -0.06, lx: -0.6, ly: 0, lz: 0 },
-            );
-        } else if (phase < 2) {
-            setArmTargets(
-                { ux: -0.95, uy: 0.08, uz: 0.42, lx: -0.42, ly: 0, lz: 0 },
-                { ux: -1.2, uy: 0, uz: 0.08, lx: -0.2, ly: 0, lz: 0 },
-            );
-        } else if (phase < 3) {
-            setArmTargets(
-                { ux: -0.95, uy: 0.08, uz: 0.42, lx: -0.42, ly: 0, lz: 0 },
-                { ux: -1.0, uy: 0.55, uz: 0.26, lx: -0.12, ly: 0, lz: 0 },
-            );
-        } else {
-            setArmTargets(
-                { ux: -0.95, uy: 0.08, uz: 0.42, lx: -0.42, ly: 0, lz: 0 },
-                { ux: -1.0, uy: -0.55, uz: -0.26, lx: -0.12, ly: 0, lz: 0 },
-            );
-        }
+        const signPose =
+            phase < 1 ? signCrossPoses[0]
+            : phase < 2 ? signCrossPoses[1]
+            : phase < 3 ? signCrossPoses[2]
+            : signCrossPoses[3];
+        setArmTargets(signPose.left, signPose.right);
 
         if (normalized >= 1) {
             actionState.signCrossActive = false;
