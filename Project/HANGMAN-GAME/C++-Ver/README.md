@@ -3,17 +3,17 @@
 ## Architecture (OOP Design)
 Below is the 5-tier architecture incorporating OOP principles and Test-Driven Development (TDD).
 
-1. Interfaces
+1. Interfaces ✅
    - IWordProvider.h
    - ISkill.h
    
-2. Data & State
+2. Data & State ✅
    - WordData.h
    - PlayerProfile.h / .cpp
      - [Unit/Integration Test] PlayerProfile Testing -> test_PlayerProfile.cpp
 
-3. Implementations
-   - FileWordProvider.h / .cpp
+3. Implementations 🏗️
+   - FileWordProvider.h / .cpp 
      - [Unit Test] FileWordProvider Testing -> test_FileWordProvider.cpp
    - StarlightHint.h / .cpp
      - [Unit Test] StarlightHint Testing -> test_StarlightHint.cpp
