@@ -643,25 +643,46 @@ function createVoxelChurch(container) {
     liturgyItem.visible = false;
     playerRig.add(liturgyItem);
 
+    const sleeveMaterial = new THREE.MeshLambertMaterial({
+        color: isPriest ? 0x303038 : 0x2a2a34,
+        transparent: true,
+        opacity: 0.96,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+    });
+    const handOverlayMaterial = new THREE.MeshLambertMaterial({
+        color: 0xf4dcc2,
+        transparent: true,
+        opacity: 0.98,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+    });
+
     function createArm(side) {
         const shoulder = new THREE.Object3D();
-        shoulder.position.set(side * 0.82, 2.16, -0.05);
+        shoulder.position.set(side * 0.64, 2.28, 0.24);
 
-        const upper = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.92, 0.24), robeMaterial);
-        upper.position.y = -0.46;
+        const upper = new THREE.Mesh(new THREE.PlaneGeometry(0.34, 0.98), sleeveMaterial);
+        upper.position.set(0, -0.5, 0);
         shoulder.add(upper);
 
         const elbow = new THREE.Object3D();
-        elbow.position.y = -0.92;
+        elbow.position.y = -1.0;
         shoulder.add(elbow);
 
-        const lower = new THREE.Mesh(new THREE.BoxGeometry(0.21, 0.84, 0.21), robeMaterial);
-        lower.position.y = -0.42;
+        const lower = new THREE.Mesh(new THREE.PlaneGeometry(0.3, 0.9), sleeveMaterial);
+        lower.position.set(0, -0.44, 0);
         elbow.add(lower);
 
-        const hand = new THREE.Mesh(new THREE.BoxGeometry(0.19, 0.19, 0.19), skinMaterial);
-        hand.position.y = -0.86;
+        const hand = new THREE.Mesh(new THREE.CircleGeometry(0.12, 14), handOverlayMaterial);
+        hand.position.set(0, -0.92, 0.01);
         elbow.add(hand);
+
+        [upper, lower, hand].forEach((mesh) => {
+            mesh.renderOrder = 2;
+            mesh.castShadow = false;
+            mesh.receiveShadow = false;
+        });
 
         playerRig.add(shoulder);
         return { shoulder, elbow };
@@ -674,8 +695,6 @@ function createVoxelChurch(container) {
     torso.visible = false;
     head.visible = false;
     collar.visible = false;
-    leftArm.shoulder.visible = false;
-    rightArm.shoulder.visible = false;
 
     const armPoseCurrent = {
         left: { ux: 0, uy: 0, uz: 0, lx: 0, ly: 0, lz: 0 },
