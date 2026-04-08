@@ -17,11 +17,11 @@ Date        Reason
 
 #include "HangmanWordData.h"
 
-class IWordProvider {
+class IHangmanWordProvider {
 public:
 
-    virtual WordData getWord() = 0;
-    virtual ~IWordProvider() = default;
+    virtual HangmanWordData getWord() = 0;
+    virtual ~IHangmanWordProvider() = default;
 
 };
 

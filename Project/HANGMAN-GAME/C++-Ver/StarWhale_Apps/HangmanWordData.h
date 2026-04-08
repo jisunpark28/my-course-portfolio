@@ -18,7 +18,7 @@ Date        Reason
 
 #include <string>
 
-struct WordData {
+struct HangmanWordData {
     std::string word;    
     std::string meaning;    
     std::string example;    

@@ -1,7 +1,7 @@
 /* Citation and Sources...
 Hangman C++ Version: Star Whale
 Module: Data & State
-Purpose: Declares the PlayerProfile class for managing player stats and inventory.
+Purpose: Declares the HangmanPlayerProfile class for managing player stats and inventory.
 Filename: HangmanPlayerProfile.h
 Version 0.2
 Author: Jisun Park, Email: jisunpark28@gmail.com
@@ -20,19 +20,19 @@ Date        Reason
 #include <memory>
 #include "IHangmanSkill.h"
 
-class ISkill; // Forward declaration
+class IHangmanSkill; // Forward declaration
 
-class PlayerProfile {
+class HangmanPlayerProfile {
 private:
     std::string name;       // Player's name
     int starPieces;         // Score (Collected stars)
     int bridgeEnergy;       // Remaining trials (HP)
 
-    std::vector<std::unique_ptr<ISkill>> skills; // Skill inventory
+    std::vector<std::unique_ptr<IHangmanSkill>> skills; // Skill inventory
 
 public:
     // Constructor
-    PlayerProfile(std::string playerName);
+    HangmanPlayerProfile(std::string playerName);
 
     // Getters
     std::string getName() const;         // Get player name
@@ -46,7 +46,7 @@ public:
     bool isAlive() const;                // Check if HP > 0
 
     // Inventory Management
-    void addSkill(std::unique_ptr<ISkill> newSkill); // Add new skill
+    void addSkill(std::unique_ptr<IHangmanSkill> newSkill); // Add new skill
 };
 
 #endif

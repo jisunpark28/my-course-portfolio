@@ -17,13 +17,13 @@ Date        Reason
 
 #include <string>
 
-class PlayerProfile;
+class HangmanPlayerProfile;
 
-class ISkill {
+class IHangmanSkill {
 public:
     virtual std::string getName() const = 0;
-    virtual void use(PlayerProfile& player) = 0;
-    virtual ~ISkill() = default;
+    virtual void use(HangmanPlayerProfile& player) = 0;
+    virtual ~IHangmanSkill() = default;
 };
 
 #endif
