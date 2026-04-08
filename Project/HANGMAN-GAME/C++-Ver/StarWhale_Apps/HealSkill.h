@@ -10,3 +10,17 @@ Revision History
 Date        Reason
 2026/04/07  Initial File
 -----------------------------------------------------------*/
+
+#ifndef HEAL_SKILL_H
+#define HEAL_SKILL_H
+
+#include "IHangmanSkill.h"
+
+class HealSkill : public IHangmanSkill {
+public:
+    std::string getName() const override;
+    void use(HangmanPlayerProfile& player) override;
+    ~HealSkill() override = default;
+};
+
+#endif

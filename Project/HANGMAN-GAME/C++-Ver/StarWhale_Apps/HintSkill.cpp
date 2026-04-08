@@ -10,3 +10,18 @@ Revision History
 Date        Reason
 2026/04/07  Initial File
 -----------------------------------------------------------*/
+
+#include "HintSkill.h"
+#include "HangmanPlayerProfile.h"
+
+std::string HintSkill::getName() const {
+    return "Hint Skill";
+}
+
+void HintSkill::use(HangmanPlayerProfile& player) {
+    // Minimal skill rule for skeleton implementation:
+    // using hint consumes one energy if player is alive.
+    if (player.isAlive()) {
+        player.decreaseEnergy();
+    }
+}
