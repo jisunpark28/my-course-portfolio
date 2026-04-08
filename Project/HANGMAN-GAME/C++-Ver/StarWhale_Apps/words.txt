@@ -1,0 +1,15 @@
+ENCAPSULATION:Grouping data and methods together and hiding internal details
+INHERITANCE:Mechanism where one class acquires the properties of another
+POLYMORPHISM:The ability of an object to take on many forms
+ABSTRACTION:Hiding complex implementation details and showing only functionality
+CONSTRUCTOR:A special member function that initializes an object
+DESTRUCTOR:A function called when an object is destroyed to free memory
+CLASS:A blueprint or template for creating objects
+OBJECT:An instance of a class that has state and behavior
+INTERFACE:A collection of abstract methods that a class must implement
+VIRTUAL:Keyword used to support dynamic binding in inheritance
+POINTER:A variable that stores the memory address of another variable
+REFERENCE:An alias or another name for an existing variable
+OVERLOADING:Multiple functions with the same name but different parameters
+OVERRIDING:A child class providing a specific implementation of a parent method
+DYNAMIC:Memory allocation that happens at runtime using 'new'
