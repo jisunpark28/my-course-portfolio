@@ -809,10 +809,10 @@ function createVoxelChurch(container) {
         texture.minFilter = THREE.NearestFilter;
     });
 
-    const playerSpriteMaterial = new THREE.MeshLambertMaterial({
+    const playerSpriteMaterial = new THREE.MeshBasicMaterial({
         map: playerTextures.front,
         transparent: true,
-        alphaTest: 0.18,
+        alphaTest: 0.02,
         side: THREE.DoubleSide,
         depthWrite: false,
     });
