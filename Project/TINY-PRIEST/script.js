@@ -821,6 +821,7 @@ function createVoxelChurch(container) {
     const playerSpriteBaseScale = { x: 2.85, y: 3.35 };
     playerSprite.scale.set(playerSpriteBaseScale.x, playerSpriteBaseScale.y, 1);
     playerSprite.position.set(0, 1.62, 0.08);
+    playerSprite.renderOrder = 3;
     playerRig.add(playerSprite);
 
     const itemMaterial = new THREE.MeshLambertMaterial({ color: 0xc6a278 });
@@ -858,6 +859,7 @@ function createVoxelChurch(container) {
             cuffLength: 0.1,
             chestCoverRadius: 0.28,
             chestCoverY: 1.95,
+            handDepthFront: 0.026,
         }
         : {
             shoulderX: 0.7,
@@ -873,12 +875,13 @@ function createVoxelChurch(container) {
             cuffLength: 0.09,
             chestCoverRadius: 0.3,
             chestCoverY: 1.9,
+            handDepthFront: 0.024,
         };
 
     const sleeveMaterial = new THREE.MeshLambertMaterial({
         color: spritePalette.robePrimary,
         transparent: true,
-        opacity: 0.97,
+        opacity: 0.8,
         side: THREE.DoubleSide,
         depthWrite: false,
     });
@@ -906,51 +909,54 @@ function createVoxelChurch(container) {
 
     function createArm(side) {
         const shoulder = new THREE.Object3D();
-        shoulder.position.set(side * armStyle.shoulderX, armStyle.shoulderY, armStyle.shoulderZ);
+        shoulder.position.set(side * armStyle.shoulderX, armStyle.shoulderY, armStyle.shoulderZ - 0.19);
 
         const upper = new THREE.Mesh(new THREE.PlaneGeometry(armStyle.upperWidth, armStyle.upperLength), sleeveMaterial);
-        upper.position.set(0, -armStyle.upperLength * 0.5, 0);
+        upper.position.set(0, -armStyle.upperLength * 0.5, -0.02);
         shoulder.add(upper);
         const upperShade = new THREE.Mesh(
             new THREE.PlaneGeometry(armStyle.upperWidth * 0.65, armStyle.upperLength * 0.9),
             sleeveShadeMaterial,
         );
-        upperShade.position.set(side * 0.015, -armStyle.upperLength * 0.52, 0.006);
+        upperShade.position.set(side * 0.015, -armStyle.upperLength * 0.52, -0.01);
         shoulder.add(upperShade);
         const upperCap = new THREE.Mesh(new THREE.CircleGeometry(armStyle.upperWidth * 0.44, 14), sleeveMaterial);
-        upperCap.position.set(0, -armStyle.upperLength * 0.03, 0.005);
+        upperCap.position.set(0, -armStyle.upperLength * 0.03, -0.014);
         shoulder.add(upperCap);
 
         const elbow = new THREE.Object3D();
         elbow.position.y = -armStyle.elbowDrop;
         shoulder.add(elbow);
         const elbowCap = new THREE.Mesh(new THREE.CircleGeometry(armStyle.lowerWidth * 0.5, 14), sleeveMaterial);
-        elbowCap.position.set(0, -0.03, 0.005);
+        elbowCap.position.set(0, -0.03, -0.014);
         elbow.add(elbowCap);
 
         const lower = new THREE.Mesh(new THREE.PlaneGeometry(armStyle.lowerWidth, armStyle.lowerLength), sleeveMaterial);
-        lower.position.set(0, -armStyle.lowerLength * 0.48, 0);
+        lower.position.set(0, -armStyle.lowerLength * 0.48, -0.02);
         elbow.add(lower);
         const lowerShade = new THREE.Mesh(
             new THREE.PlaneGeometry(armStyle.lowerWidth * 0.62, armStyle.lowerLength * 0.9),
             sleeveShadeMaterial,
         );
-        lowerShade.position.set(side * 0.012, -armStyle.lowerLength * 0.5, 0.006);
+        lowerShade.position.set(side * 0.012, -armStyle.lowerLength * 0.5, -0.01);
         elbow.add(lowerShade);
 
         const cuff = new THREE.Mesh(new THREE.PlaneGeometry(armStyle.cuffWidth, armStyle.cuffLength), cuffMaterial);
-        cuff.position.set(0, -armStyle.lowerLength * 0.92, 0.006);
+        cuff.position.set(0, -armStyle.lowerLength * 0.92, -0.012);
         elbow.add(cuff);
 
         const hand = new THREE.Mesh(new THREE.CircleGeometry(armStyle.handRadius, 16), handOverlayMaterial);
-        hand.position.set(0, -armStyle.lowerLength * 1.08, 0.01);
+        hand.position.set(0, -armStyle.lowerLength * 1.08, armStyle.handDepthFront);
         elbow.add(hand);
 
-        [upper, upperShade, upperCap, elbowCap, lower, lowerShade, cuff, hand].forEach((mesh) => {
-            mesh.renderOrder = 2;
+        [upper, upperShade, upperCap, elbowCap, lower, lowerShade, cuff].forEach((mesh) => {
+            mesh.renderOrder = 1.5;
             mesh.castShadow = false;
             mesh.receiveShadow = false;
         });
+        hand.renderOrder = 2.5;
+        hand.castShadow = false;
+        hand.receiveShadow = false;
 
         playerRig.add(shoulder);
         return { shoulder, elbow, upper, lower, hand };
