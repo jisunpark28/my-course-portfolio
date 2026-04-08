@@ -1,8 +1,8 @@
 /* Citation and Sources...
 Hangman C++ Version: Star Whale
-Module: Game Controller
-Purpose: Implements the core game loop, input processing, and win/loss conditions.
-Filename: StarWhaleGame.cpp
+Module: Skills
+Purpose: Declares the Starlight Hint skill class.
+Filename: HintSkill.h
 Version 0.1
 Author: Jisun Park, Email: jisunpark28@gmail.com
 Revision History

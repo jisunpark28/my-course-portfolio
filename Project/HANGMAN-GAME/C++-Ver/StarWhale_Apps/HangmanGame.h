@@ -1,8 +1,8 @@
 /* Citation and Sources...
 Hangman C++ Version: Star Whale
-Module: Word Providers
-Purpose: Implements the file reading logic to provide words to the game engine.
-Filename: FileWordProvider.cpp
+Module: Game Controller
+Purpose: Declares the main game engine, state management, and rule validation.
+Filename: HangmanGame.h
 Version 0.1
 Author: Jisun Park, Email: jisunpark28@gmail.com
 Revision History

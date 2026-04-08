@@ -19,24 +19,24 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\StarWhale_Apps\FileWordProvider.cpp" />
-    <ClCompile Include="..\..\StarWhale_Apps\PlayerProfile.cpp" />
-    <ClCompile Include="..\..\StarWhale_Apps\StardustHeal.cpp" />
-    <ClCompile Include="..\..\StarWhale_Apps\StarlightHint.cpp" />
-    <ClCompile Include="..\..\StarWhale_Apps\StarWhaleGame.cpp" />
+    <ClCompile Include="..\..\StarWhale_Apps\FileHangmanWordProvider.cpp" />
+    <ClCompile Include="..\..\StarWhale_Apps\HangmanPlayerProfile.cpp" />
+    <ClCompile Include="..\..\StarWhale_Apps\HealSkill.cpp" />
+    <ClCompile Include="..\..\StarWhale_Apps\HintSkill.cpp" />
+    <ClCompile Include="..\..\StarWhale_Apps\HangmanGame.cpp" />
     <ClCompile Include="..\..\StarWhale_Apps\StarWhale_Apps.cpp" />
-    <ClCompile Include="..\..\StarWhale_Apps\WhaleRenderer.cpp" />
+    <ClCompile Include="..\..\StarWhale_Apps\HangmanRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\StarWhale_Apps\FileWordProvider.h" />
-    <ClInclude Include="..\..\StarWhale_Apps\ISkill.h" />
-    <ClInclude Include="..\..\StarWhale_Apps\IWordProvider.h" />
-    <ClInclude Include="..\..\StarWhale_Apps\PlayerProfile.h" />
-    <ClInclude Include="..\..\StarWhale_Apps\StardustHeal.h" />
-    <ClInclude Include="..\..\StarWhale_Apps\StarlightHint.h" />
-    <ClInclude Include="..\..\StarWhale_Apps\StarWhaleGame.h" />
-    <ClInclude Include="..\..\StarWhale_Apps\WhaleRenderer.h" />
-    <ClInclude Include="..\..\StarWhale_Apps\WordData.h" />
+    <ClInclude Include="..\..\StarWhale_Apps\FileHangmanWordProvider.h" />
+    <ClInclude Include="..\..\StarWhale_Apps\IHangmanSkill.h" />
+    <ClInclude Include="..\..\StarWhale_Apps\IHangmanWordProvider.h" />
+    <ClInclude Include="..\..\StarWhale_Apps\HangmanPlayerProfile.h" />
+    <ClInclude Include="..\..\StarWhale_Apps\HealSkill.h" />
+    <ClInclude Include="..\..\StarWhale_Apps\HintSkill.h" />
+    <ClInclude Include="..\..\StarWhale_Apps\HangmanGame.h" />
+    <ClInclude Include="..\..\StarWhale_Apps\HangmanRenderer.h" />
+    <ClInclude Include="..\..\StarWhale_Apps\HangmanWordData.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

@@ -2,7 +2,7 @@
 Hangman C++ Version: Star Whale
 Module: Renderer
 Purpose: Implements the drawing logic for the bridge, Star Whale, and game screens.
-Filename: WhaleRenderer.cpp
+Filename: HangmanRenderer.cpp
 Version 0.1
 Author: Jisun Park, Email: jisunpark28@gmail.com
 Revision History

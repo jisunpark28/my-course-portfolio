@@ -2,7 +2,7 @@
 Hangman C++ Version: Star Whale
 Module: Test
 Purpose: PlayerProfile unit/integration/acceptance tests using MSVC framework.
-Filename: test_PlayerProfile.cpp
+Filename: test_HangmanPlayerProfile.cpp
 Version 0.2
 Author: Jisun Park, Email: jisunpark28@gmail.com
 Revision History
@@ -16,8 +16,8 @@ Date        Reason
 #include "CppUnitTest.h"
 #include <string>
 #include <memory>
-#include "PlayerProfile.h"
-#include "ISkill.h"
+#include "HangmanPlayerProfile.h"
+#include "IHangmanSkill.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 

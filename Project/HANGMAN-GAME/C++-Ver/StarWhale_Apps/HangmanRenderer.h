@@ -1,8 +1,8 @@
 /* Citation and Sources...
 Hangman C++ Version: Star Whale
-Module: Skills
-Purpose: Declares the Starlight Hint skill class.
-Filename: StarlightHint.h
+Module: Renderer
+Purpose: Declares the class responsible for UI, console output, and visual effects.
+Filename: HangmanRenderer.h
 Version 0.1
 Author: Jisun Park, Email: jisunpark28@gmail.com
 Revision History

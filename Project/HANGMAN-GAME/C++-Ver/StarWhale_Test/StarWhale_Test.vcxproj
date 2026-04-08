@@ -162,13 +162,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="test_Main.cpp" />
-    <ClCompile Include="test_StarWhaleGame.cpp" />
-    <ClCompile Include="test_FileWordProvider.cpp" />
-    <ClCompile Include="test_PlayerProfile.cpp" />
-    <ClCompile Include="test_StardustHeal.cpp" />
-    <ClCompile Include="test_StarlightHint.cpp" />
-    <ClCompile Include="test_WhaleRenderer.cpp" />
+    <ClCompile Include="test_HangmanMain.cpp" />
+    <ClCompile Include="test_HangmanGame.cpp" />
+    <ClCompile Include="test_FileHangmanWordProvider.cpp" />
+    <ClCompile Include="test_HangmanPlayerProfile.cpp" />
+    <ClCompile Include="test_HealSkill.cpp" />
+    <ClCompile Include="test_HintSkill.cpp" />
+    <ClCompile Include="test_HangmanRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />

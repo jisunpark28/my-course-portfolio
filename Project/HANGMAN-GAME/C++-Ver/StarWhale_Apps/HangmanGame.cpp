@@ -1,8 +1,8 @@
 /* Citation and Sources...
 Hangman C++ Version: Star Whale
-Module: Renderer
-Purpose: Declares the class responsible for UI, console output, and visual effects.
-Filename: WhaleRenderer.h
+Module: Game Controller
+Purpose: Implements the core game loop, input processing, and win/loss conditions.
+Filename: HangmanGame.cpp
 Version 0.1
 Author: Jisun Park, Email: jisunpark28@gmail.com
 Revision History

@@ -1,8 +1,8 @@
 /* Citation and Sources...
 Hangman C++ Version: Star Whale
 Module: Skills
-Purpose: Implements the logic for recovering lost bridge energy.
-Filename: StardustHeal.cpp
+Purpose: Implements the logic for revealing a hidden letter on the board.
+Filename: HintSkill.cpp
 Version 0.1
 Author: Jisun Park, Email: jisunpark28@gmail.com
 Revision History

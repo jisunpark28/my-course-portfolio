@@ -2,7 +2,7 @@
 Hangman C++ Version: Star Whale
 Module: Data & State
 Purpose: Declares the PlayerProfile class for managing player stats and inventory.
-Filename: PlayerProfile.h
+Filename: HangmanPlayerProfile.h
 Version 0.2
 Author: Jisun Park, Email: jisunpark28@gmail.com
 Revision History
@@ -18,7 +18,7 @@ Date        Reason
 #include <string>
 #include <vector>
 #include <memory>
-#include "ISkill.h"
+#include "IHangmanSkill.h"
 
 class ISkill; // Forward declaration
 

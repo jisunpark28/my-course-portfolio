@@ -1,8 +1,8 @@
 /* Citation and Sources...
 Hangman C++ Version: Star Whale
 Module: Word Providers
-Purpose: Declares the class for reading words from a text file.
-Filename: FileWordProvider.h
+Purpose: Implements the file reading logic to provide words to the game engine.
+Filename: FileHangmanWordProvider.cpp
 Version 0.1
 Author: Jisun Park, Email: jisunpark28@gmail.com
 Revision History

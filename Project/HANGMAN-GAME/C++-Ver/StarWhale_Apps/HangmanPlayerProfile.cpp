@@ -2,7 +2,7 @@
 Hangman C++ Version: Star Whale
 Module: Data & State
 Purpose: Implements the PlayerProfile class logic and state encapsulation.
-Filename: PlayerProfile.cpp
+Filename: HangmanPlayerProfile.cpp
 Version 0.2
 Author: Jisun Park, Email: jisunpark28@gmail.com
 Revision History
@@ -12,7 +12,7 @@ Date        Reason
 2026/04/07  Add Function Implementations
 -----------------------------------------------------------*/
 
-#include "PlayerProfile.h"
+#include "HangmanPlayerProfile.h"
 
 // Initialize player with 0 stars and 6 HP
 PlayerProfile::PlayerProfile(std::string playerName)

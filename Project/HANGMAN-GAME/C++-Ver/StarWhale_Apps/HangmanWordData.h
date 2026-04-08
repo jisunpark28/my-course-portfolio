@@ -3,7 +3,7 @@
 Hangman C++ Version: Star Whale
 Module: Data & State
 Purpose: Defines the structure for storing word, meaning, and example data.
-Filename: WordData.h
+Filename: HangmanWordData.h
 Version 0.2
 Author: Jisun Park, Email: jisunpark28@gmail.com
 Revision History
