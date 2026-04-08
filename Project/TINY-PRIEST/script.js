@@ -1112,6 +1112,16 @@ function createVoxelChurch(container) {
         setHudButtonsState(name, actionState.massActive);
     }
 
+    function shouldShowOverlayHands(gesture) {
+        // Keep sprite's own hands for calm poses to avoid doubled-hand look.
+        return ["point", "hold", "lift", "ourFather", "signCross"].includes(gesture);
+    }
+
+    function setOverlayHandsVisible(isVisible) {
+        leftArm.hand.visible = isVisible;
+        rightArm.hand.visible = isVisible;
+    }
+
     function triggerGesture(name, prefix = "", massStepIndex = -1) {
         actionState.currentGesture = name;
         actionState.massTimer = actionState.massStepDuration;
@@ -1124,12 +1134,14 @@ function createVoxelChurch(container) {
             actionState.signCrossActive = true;
             actionState.signCrossTime = 0;
             setGesturePose("pray");
+            setOverlayHandsVisible(true);
             narrateGesture("signCross", prefix);
             setMassFlowStepState(actionState.currentMassStepIndex, actionState.massActive);
             return;
         }
         actionState.signCrossActive = false;
         setGesturePose(name);
+        setOverlayHandsVisible(shouldShowOverlayHands(name));
         narrateGesture(name, prefix);
         setMassFlowStepState(actionState.currentMassStepIndex, actionState.massActive);
     }
