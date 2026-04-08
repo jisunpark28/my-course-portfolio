@@ -607,8 +607,16 @@ function createVoxelChurch(container) {
         stainedGlassGold: new THREE.MeshLambertMaterial({ color: 0xe8d17c }),
         candleWax: new THREE.MeshLambertMaterial({ color: 0xf8f1dc }),
         candleFlame: new THREE.MeshBasicMaterial({ color: 0xffcf73 }),
-        corpusSkin: new THREE.MeshLambertMaterial({ color: 0xf1d0b1 }),
-        corpusCloth: new THREE.MeshLambertMaterial({ color: 0xf2eee4 }),
+        corpusSkin: new THREE.MeshLambertMaterial({
+            color: 0xf0caa3,
+            emissive: 0x2a1a11,
+            emissiveIntensity: 0.14,
+        }),
+        corpusCloth: new THREE.MeshLambertMaterial({
+            color: 0xf7f3e7,
+            emissive: 0x231a13,
+            emissiveIntensity: 0.06,
+        }),
     };
 
     const root = new THREE.Group();
@@ -666,44 +674,48 @@ function createVoxelChurch(container) {
     altarGroup.add(crossBeam);
 
     const corpusGroup = new THREE.Group();
-    corpusGroup.position.set(0, 0, 0);
+    corpusGroup.position.set(0, 0, 0.56);
     altarGroup.add(corpusGroup);
 
-    const corpusTorso = new THREE.Mesh(new THREE.BoxGeometry(0.62, 1.9, 0.3), materials.corpusSkin);
-    corpusTorso.position.set(0, 6.2, 0.25);
+    const corpusTorso = new THREE.Mesh(new THREE.BoxGeometry(0.72, 2.2, 0.35), materials.corpusSkin);
+    corpusTorso.position.set(0, 6.32, 0.24);
     corpusTorso.castShadow = true;
     corpusTorso.name = "corpus-torso";
     corpusGroup.add(corpusTorso);
 
-    const corpusHead = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.52, 0.38), materials.corpusSkin);
-    corpusHead.position.set(0, 7.42, 0.25);
+    const corpusHead = new THREE.Mesh(new THREE.BoxGeometry(0.58, 0.62, 0.42), materials.corpusSkin);
+    corpusHead.position.set(0, 7.74, 0.24);
     corpusHead.castShadow = true;
     corpusHead.name = "corpus-head";
     corpusGroup.add(corpusHead);
 
-    const corpusArms = new THREE.Mesh(new THREE.BoxGeometry(2.35, 0.26, 0.28), materials.corpusSkin);
-    corpusArms.position.set(0, 7.15, 0.25);
+    const corpusArms = new THREE.Mesh(new THREE.BoxGeometry(2.7, 0.32, 0.3), materials.corpusSkin);
+    corpusArms.position.set(0, 7.3, 0.24);
     corpusArms.castShadow = true;
     corpusArms.name = "corpus-arms";
     corpusGroup.add(corpusArms);
 
-    const corpusLeftLeg = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.95, 0.24), materials.corpusSkin);
-    corpusLeftLeg.position.set(-0.12, 4.78, 0.24);
+    const corpusLeftLeg = new THREE.Mesh(new THREE.BoxGeometry(0.28, 1.15, 0.26), materials.corpusSkin);
+    corpusLeftLeg.position.set(-0.14, 4.84, 0.24);
     corpusLeftLeg.castShadow = true;
     corpusLeftLeg.name = "corpus-left-leg";
     corpusGroup.add(corpusLeftLeg);
 
-    const corpusRightLeg = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.95, 0.24), materials.corpusSkin);
-    corpusRightLeg.position.set(0.12, 4.78, 0.24);
+    const corpusRightLeg = new THREE.Mesh(new THREE.BoxGeometry(0.28, 1.15, 0.26), materials.corpusSkin);
+    corpusRightLeg.position.set(0.14, 4.84, 0.24);
     corpusRightLeg.castShadow = true;
     corpusRightLeg.name = "corpus-right-leg";
     corpusGroup.add(corpusRightLeg);
 
-    const corpusCloth = new THREE.Mesh(new THREE.BoxGeometry(0.78, 0.42, 0.3), materials.corpusCloth);
-    corpusCloth.position.set(0, 5.38, 0.26);
+    const corpusCloth = new THREE.Mesh(new THREE.BoxGeometry(0.94, 0.5, 0.32), materials.corpusCloth);
+    corpusCloth.position.set(0, 5.52, 0.26);
     corpusCloth.castShadow = true;
     corpusCloth.name = "corpus-cloth";
     corpusGroup.add(corpusCloth);
+
+    const corpusLight = new THREE.PointLight(0xffe3bf, 0.62, 11, 2);
+    corpusLight.position.set(0, 6.8, 1.35);
+    altarGroup.add(corpusLight);
 
     const candleL = new THREE.Mesh(new THREE.BoxGeometry(0.35, 1.2, 0.35), materials.candleWax);
     candleL.position.set(-2.8, 3.2, 0.7);
@@ -770,7 +782,8 @@ function createVoxelChurch(container) {
             addCollisionRect(pew.position.x, pew.position.z, 5.8, 1.45);
 
             const back = new THREE.Mesh(new THREE.BoxGeometry(5.8, 1.2, 0.35), materials.darkWood);
-            back.position.set(side * 7.2, 1.25, row * 3.3 - 3.1);
+            // Move backrest behind the seated direction (toward nave) so pews face the altar.
+            back.position.set(side * 7.2, 1.25, row * 3.3 - 1.85);
             root.add(back);
             addCollisionRect(back.position.x, back.position.z, 5.8, 0.35);
         }
@@ -782,22 +795,6 @@ function createVoxelChurch(container) {
     const playerRig = new THREE.Group();
     playerRig.position.set(0, 0, 10.8);
     root.add(playerRig);
-
-    const robeMaterial = new THREE.MeshLambertMaterial({ color: isPriest ? 0x252529 : 0x1c1c22 });
-    const skinMaterial = new THREE.MeshLambertMaterial({ color: 0xf3d8bd });
-    const accentMaterial = new THREE.MeshLambertMaterial({ color: isPriest ? 0xd9d9df : 0xe3e3ea });
-
-    const torso = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.6, 0.6), robeMaterial);
-    torso.position.set(0, 1.35, -0.2);
-    playerRig.add(torso);
-
-    const head = new THREE.Mesh(new THREE.BoxGeometry(0.78, 0.78, 0.68), skinMaterial);
-    head.position.set(0, 2.6, -0.18);
-    playerRig.add(head);
-
-    const collar = new THREE.Mesh(new THREE.BoxGeometry(0.52, 0.18, 0.62), accentMaterial);
-    collar.position.set(0, 2.06, 0.02);
-    playerRig.add(collar);
 
     const textureLoader = new THREE.TextureLoader();
     const playerTextures = {
@@ -812,15 +809,17 @@ function createVoxelChurch(container) {
         texture.minFilter = THREE.NearestFilter;
     });
 
-    const playerSpriteMaterial = new THREE.SpriteMaterial({
+    const playerSpriteMaterial = new THREE.MeshLambertMaterial({
         map: playerTextures.front,
         transparent: true,
         alphaTest: 0.18,
+        side: THREE.DoubleSide,
+        depthWrite: false,
     });
-    const playerSprite = new THREE.Sprite(playerSpriteMaterial);
+    const playerSprite = new THREE.Mesh(new THREE.PlaneGeometry(2.85, 3.35), playerSpriteMaterial);
     const playerSpriteBaseScale = { x: 2.85, y: 3.35 };
     playerSprite.scale.set(playerSpriteBaseScale.x, playerSpriteBaseScale.y, 1);
-    playerSprite.position.set(0, 1.62, 0.08);
+    playerSprite.position.set(0, 1.62, 0.14);
     playerSprite.renderOrder = 3;
     playerRig.add(playerSprite);
 
@@ -959,7 +958,12 @@ function createVoxelChurch(container) {
         hand.receiveShadow = false;
 
         playerRig.add(shoulder);
-        return { shoulder, elbow, upper, lower, hand };
+        return {
+            shoulder,
+            elbow,
+            hand,
+            segments: [upper, upperShade, upperCap, elbowCap, lower, lowerShade, cuff],
+        };
     }
 
     const leftArm = createArm(-1);
@@ -977,11 +981,10 @@ function createVoxelChurch(container) {
     chestCover.position.set(0, armStyle.chestCoverY, armStyle.shoulderZ + 0.01);
     chestCover.renderOrder = 2.2;
     playerRig.add(chestCover);
-
-    // Keep the cute 2D character in 3D and hide the temporary voxel body parts.
-    torso.visible = false;
-    head.visible = false;
-    collar.visible = false;
+    chestCover.visible = false;
+    [...leftArm.segments, ...rightArm.segments].forEach((segment) => {
+        segment.visible = false;
+    });
 
     const armPoseCurrent = {
         left: { ux: 0, uy: 0, uz: 0, lx: 0, ly: 0, lz: 0 },
