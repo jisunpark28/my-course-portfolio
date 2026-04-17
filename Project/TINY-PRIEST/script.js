@@ -14,6 +14,7 @@
 const APP_STATE = {
     isTransitioning: false,
     selectedCharacter: null,
+    playableCharacter: "priest",
     threeWorld: null,
     threeLoadPromise: null,
     hudBound: false,
@@ -206,6 +207,11 @@ const MASS_FLOW_STEPS = [
         text: "🔔 The people are blessed and sent forth to live the Gospel.",
     },
 ];
+
+function resolvePlayableCharacter(character) {
+    // MVP scope: the 3D playable role is fixed to priest.
+    return character === "priest" ? "priest" : "priest";
+}
 
 function buildMassFlowNavigation() {
     const groupsContainer = document.getElementById("mass-nav-groups");
@@ -859,8 +865,9 @@ function createVoxelChurch(container) {
         }
     }
 
-    const selected = CHARACTER_CONFIG[APP_STATE.selectedCharacter] || CHARACTER_CONFIG.nun;
-    const isPriest = APP_STATE.selectedCharacter === "priest";
+    const activeRole = APP_STATE.playableCharacter || "priest";
+    const selected = CHARACTER_CONFIG[activeRole] || CHARACTER_CONFIG.priest;
+    const isPriest = activeRole === "priest";
 
     const playerRig = new THREE.Group();
     playerRig.position.set(0, 0, 10.8);
@@ -1858,6 +1865,7 @@ async function handleInteract(character) {
 
     APP_STATE.isTransitioning = true;
     APP_STATE.selectedCharacter = character;
+    APP_STATE.playableCharacter = resolvePlayableCharacter(character);
 
     const characterEl = getCharacterElement(character);
     if (!characterEl) {
@@ -1867,11 +1875,15 @@ async function handleInteract(character) {
 
     lockCharacterSelection();
     switchToBackSprite(character, characterEl);
-    setDialogue(CHARACTER_CONFIG[character].welcomeText);
+    const isRoleDeferred = APP_STATE.playableCharacter !== character;
+    const entryMessage = isRoleDeferred
+        ? `${CHARACTER_CONFIG[character].welcomeText} Sister 3D mode will be added next, so we'll continue with Father Priest for now.`
+        : CHARACTER_CONFIG[character].welcomeText;
+    setDialogue(entryMessage);
 
     await animateCharacterEntry(characterEl);
     await animateDoorZoomTransition();
-    await activateThreeScene(character);
+    await activateThreeScene(APP_STATE.playableCharacter);
 }
 
 window.handleInteract = handleInteract;
