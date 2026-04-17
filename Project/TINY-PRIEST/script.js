@@ -2,6 +2,22 @@
     priest: {
         frontImage: "assets/priest_front.png",
         backImage: "assets/priest_back.png",
+        frontImageCandidates: [
+            "assets/characters/priest/priest_front.png",
+            "assets/characters/priest/front.png",
+            "assets/characters/priest/priest_front.webp",
+            "assets/characters/priest/front.webp",
+            "assets/characters/priest/priest_front.jpg",
+            "assets/characters/priest/front.jpg",
+        ],
+        backImageCandidates: [
+            "assets/characters/priest/priest_back.png",
+            "assets/characters/priest/back.png",
+            "assets/characters/priest/priest_back.webp",
+            "assets/characters/priest/back.webp",
+            "assets/characters/priest/priest_back.jpg",
+            "assets/characters/priest/back.jpg",
+        ],
         welcomeText: "Father: Peace be with you! Let's walk through the center door.",
     },
     nun: {
@@ -20,6 +36,8 @@ const APP_STATE = {
     hudBound: false,
     massNavBound: false,
 };
+
+const ASSET_PROBE_CACHE = new Map();
 
 const THREE_CDN_FALLBACKS = [
     "vendor/three.min.js",
@@ -211,6 +229,63 @@ const MASS_FLOW_STEPS = [
 function resolvePlayableCharacter(character) {
     // MVP scope: the 3D playable role is fixed to priest.
     return character === "priest" ? "priest" : "priest";
+}
+
+function probeImageExists(url) {
+    if (!url) {
+        return Promise.resolve(false);
+    }
+    if (ASSET_PROBE_CACHE.has(url)) {
+        return ASSET_PROBE_CACHE.get(url);
+    }
+
+    const probePromise = new Promise((resolve) => {
+        const image = new Image();
+        image.onload = () => resolve(true);
+        image.onerror = () => resolve(false);
+        image.src = url;
+    });
+    ASSET_PROBE_CACHE.set(url, probePromise);
+    return probePromise;
+}
+
+async function resolveAssetFromCandidates(candidates, fallbackUrl) {
+    for (const url of candidates || []) {
+        // Prefer the newly organized assets folder when available.
+        if (await probeImageExists(url)) {
+            return url;
+        }
+    }
+    return fallbackUrl;
+}
+
+async function ensureCharacterAssetsResolved(character) {
+    const config = CHARACTER_CONFIG[character];
+    if (!config || config.assetsResolved) {
+        return;
+    }
+
+    config.frontImage = await resolveAssetFromCandidates(config.frontImageCandidates, config.frontImage);
+    config.backImage = await resolveAssetFromCandidates(config.backImageCandidates, config.backImage);
+    config.assetsResolved = true;
+}
+
+function syncEntryCharacterImage(character) {
+    const config = CHARACTER_CONFIG[character];
+    const characterEl = getCharacterElement(character);
+    const imageEl = characterEl?.querySelector("img");
+    if (config?.frontImage && imageEl) {
+        imageEl.src = config.frontImage;
+    }
+}
+
+async function initializeCharacterAssets() {
+    await Promise.all(
+        Object.keys(CHARACTER_CONFIG).map(async (character) => {
+            await ensureCharacterAssetsResolved(character);
+            syncEntryCharacterImage(character);
+        }),
+    );
 }
 
 function buildMassFlowNavigation() {
@@ -1866,6 +1941,10 @@ async function handleInteract(character) {
     APP_STATE.isTransitioning = true;
     APP_STATE.selectedCharacter = character;
     APP_STATE.playableCharacter = resolvePlayableCharacter(character);
+    await ensureCharacterAssetsResolved(character);
+    await ensureCharacterAssetsResolved(APP_STATE.playableCharacter);
+    syncEntryCharacterImage(character);
+    syncEntryCharacterImage(APP_STATE.playableCharacter);
 
     const characterEl = getCharacterElement(character);
     if (!characterEl) {
@@ -1888,3 +1967,4 @@ async function handleInteract(character) {
 
 window.handleInteract = handleInteract;
 window.getLiturgicalSeason = getLiturgicalSeason;
+initializeCharacterAssets();
