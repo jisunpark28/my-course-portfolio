@@ -2,6 +2,22 @@
     priest: {
         frontImage: "assets/priest_front.png",
         backImage: "assets/priest_back.png",
+        frontImageCandidates: [
+            "assets/characters/priest/priest_front.png",
+            "assets/characters/priest/front.png",
+            "assets/characters/priest/priest_front.webp",
+            "assets/characters/priest/front.webp",
+            "assets/characters/priest/priest_front.jpg",
+            "assets/characters/priest/front.jpg",
+        ],
+        backImageCandidates: [
+            "assets/characters/priest/priest_back.png",
+            "assets/characters/priest/back.png",
+            "assets/characters/priest/priest_back.webp",
+            "assets/characters/priest/back.webp",
+            "assets/characters/priest/priest_back.jpg",
+            "assets/characters/priest/back.jpg",
+        ],
         welcomeText: "Father: Peace be with you! Let's walk through the center door.",
     },
     nun: {
@@ -14,11 +30,14 @@
 const APP_STATE = {
     isTransitioning: false,
     selectedCharacter: null,
+    playableCharacter: "priest",
     threeWorld: null,
     threeLoadPromise: null,
     hudBound: false,
     massNavBound: false,
 };
+
+const ASSET_PROBE_CACHE = new Map();
 
 const THREE_CDN_FALLBACKS = [
     "vendor/three.min.js",
@@ -206,6 +225,68 @@ const MASS_FLOW_STEPS = [
         text: "🔔 The people are blessed and sent forth to live the Gospel.",
     },
 ];
+
+function resolvePlayableCharacter(character) {
+    // MVP scope: the 3D playable role is fixed to priest.
+    return character === "priest" ? "priest" : "priest";
+}
+
+function probeImageExists(url) {
+    if (!url) {
+        return Promise.resolve(false);
+    }
+    if (ASSET_PROBE_CACHE.has(url)) {
+        return ASSET_PROBE_CACHE.get(url);
+    }
+
+    const probePromise = new Promise((resolve) => {
+        const image = new Image();
+        image.onload = () => resolve(true);
+        image.onerror = () => resolve(false);
+        image.src = url;
+    });
+    ASSET_PROBE_CACHE.set(url, probePromise);
+    return probePromise;
+}
+
+async function resolveAssetFromCandidates(candidates, fallbackUrl) {
+    for (const url of candidates || []) {
+        // Prefer the newly organized assets folder when available.
+        if (await probeImageExists(url)) {
+            return url;
+        }
+    }
+    return fallbackUrl;
+}
+
+async function ensureCharacterAssetsResolved(character) {
+    const config = CHARACTER_CONFIG[character];
+    if (!config || config.assetsResolved) {
+        return;
+    }
+
+    config.frontImage = await resolveAssetFromCandidates(config.frontImageCandidates, config.frontImage);
+    config.backImage = await resolveAssetFromCandidates(config.backImageCandidates, config.backImage);
+    config.assetsResolved = true;
+}
+
+function syncEntryCharacterImage(character) {
+    const config = CHARACTER_CONFIG[character];
+    const characterEl = getCharacterElement(character);
+    const imageEl = characterEl?.querySelector("img");
+    if (config?.frontImage && imageEl) {
+        imageEl.src = config.frontImage;
+    }
+}
+
+async function initializeCharacterAssets() {
+    await Promise.all(
+        Object.keys(CHARACTER_CONFIG).map(async (character) => {
+            await ensureCharacterAssetsResolved(character);
+            syncEntryCharacterImage(character);
+        }),
+    );
+}
 
 function buildMassFlowNavigation() {
     const groupsContainer = document.getElementById("mass-nav-groups");
@@ -859,8 +940,9 @@ function createVoxelChurch(container) {
         }
     }
 
-    const selected = CHARACTER_CONFIG[APP_STATE.selectedCharacter] || CHARACTER_CONFIG.nun;
-    const isPriest = APP_STATE.selectedCharacter === "priest";
+    const activeRole = APP_STATE.playableCharacter || "priest";
+    const selected = CHARACTER_CONFIG[activeRole] || CHARACTER_CONFIG.priest;
+    const isPriest = activeRole === "priest";
 
     const playerRig = new THREE.Group();
     playerRig.position.set(0, 0, 10.8);
@@ -1858,6 +1940,11 @@ async function handleInteract(character) {
 
     APP_STATE.isTransitioning = true;
     APP_STATE.selectedCharacter = character;
+    APP_STATE.playableCharacter = resolvePlayableCharacter(character);
+    await ensureCharacterAssetsResolved(character);
+    await ensureCharacterAssetsResolved(APP_STATE.playableCharacter);
+    syncEntryCharacterImage(character);
+    syncEntryCharacterImage(APP_STATE.playableCharacter);
 
     const characterEl = getCharacterElement(character);
     if (!characterEl) {
@@ -1867,12 +1954,17 @@ async function handleInteract(character) {
 
     lockCharacterSelection();
     switchToBackSprite(character, characterEl);
-    setDialogue(CHARACTER_CONFIG[character].welcomeText);
+    const isRoleDeferred = APP_STATE.playableCharacter !== character;
+    const entryMessage = isRoleDeferred
+        ? `${CHARACTER_CONFIG[character].welcomeText} Sister 3D mode will be added next, so we'll continue with Father Priest for now.`
+        : CHARACTER_CONFIG[character].welcomeText;
+    setDialogue(entryMessage);
 
     await animateCharacterEntry(characterEl);
     await animateDoorZoomTransition();
-    await activateThreeScene(character);
+    await activateThreeScene(APP_STATE.playableCharacter);
 }
 
 window.handleInteract = handleInteract;
 window.getLiturgicalSeason = getLiturgicalSeason;
+initializeCharacterAssets();
