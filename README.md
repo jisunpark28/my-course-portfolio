@@ -41,9 +41,9 @@ Hi! I'm a passionate developer focused on Software Programming and Database Mana
     </tr>
     <tr>
       <td rowspan="4" align="center"><b>Hangman Game</b><br>(Multi-Lang)</td>
-      <td><a href="./Project/HANGMAN-GAME/C++-Ver"><b>C++ (Star Whale)</b></a></td>
+      <td><a href="./Project/HANGMAN-GAME/C++-Ver"><b>C++</b></a></td>
       <td><code>C++</code></td>
-      <td>OOP principles, Unit Testing</td>
+      <td>OOP principles, Unit Testing, Connecting Oracle server</td>
       <td align="center">In Progress 🏗️</td>
     </tr>
     <tr>
