@@ -26,10 +26,28 @@ Hi! I'm a passionate developer focused on Software Programming and Database Mana
   </thead>
   <tbody>
     <tr>
-      <td><a href="./Project/TINY-PRIEST"><b>Tine-Priest</b></a></td>
-      <td><b>AI-Native Web</b></td>
-      <td><code>Cursor</code> <code>HTML/CSS/JS</code></td>
-      <td><b>AI-Assisted Development</b>: Interactive 3D church scene with GSAP animations</td>
+      <td rowspan="4" align="center"><b>Hangman Game</b><br>(Multi-Lang)</td>
+      <td><a href="./Project/HANGMAN-GAME/Bash-Ver"><b>Bash Ver</b></a></td>
+      <td><code>Shell</code></td>
+      <td>File I/O stream, Linux native command optimization</td>
+      <td align="center">Completed ✅</td>
+    </tr>
+    <tr>
+      <td><a href="./Project/HANGMAN-GAME/C-Ver"><b>C Ver</b></a></td>
+      <td><code>C</code> <code>libcurl</code></td>
+      <td><b>Gemini API</b> integration, JSON parsing, API communication</td>
+      <td align="center">Completed ✅</td>
+    </tr>
+    <tr>
+      <td><a href="./Project/HANGMAN-GAME/JavaScript-Ver"><b>JS Ver</b></a></td>
+      <td><code>JavaScript</code></td>
+      <td>Interactive Flower Visuals, Closure-based logic, MVP.css</td>
+      <td align="center">Completed ✅</td>
+    </tr>
+    <tr>
+      <td><a href="./Project/HANGMAN-GAME/C++-Ver"><b>C++</b></a></td>
+      <td><code>C++</code></td>
+      <td>OOP principles, Unit Testing, Connecting Oracle server</td>
       <td align="center">In Progress 🏗️</td>
     </tr>
     <tr>
@@ -40,29 +58,11 @@ Hi! I'm a passionate developer focused on Software Programming and Database Mana
       <td align="center">Completed ✅</td>
     </tr>
     <tr>
-      <td rowspan="4" align="center"><b>Hangman Game</b><br>(Multi-Lang)</td>
-      <td><a href="./Project/HANGMAN-GAME/C++-Ver"><b>C++</b></a></td>
-      <td><code>C++</code></td>
-      <td>OOP principles, Unit Testing, Connecting Oracle server</td>
+      <td><a href="./Project/TINY-PRIEST"><b>Tine-Priest</b></a></td>
+      <td><b>AI-Native Web</b></td>
+      <td><code>Cursor</code> <code>HTML/CSS/JS</code></td>
+      <td><b>AI-Assisted Development</b>: Interactive 3D church scene with GSAP animations</td>
       <td align="center">In Progress 🏗️</td>
-    </tr>
-    <tr>
-      <td><a href="./Project/HANGMAN-GAME/JavaScript-Ver"><b>JS Ver</b></a></td>
-      <td><code>JavaScript</code></td>
-      <td>Interactive Flower Visuals, Closure-based logic, MVP.css</td>
-      <td align="center">Completed ✅</td>
-    </tr>
-    <tr>
-      <td><a href="./Project/HANGMAN-GAME/C-Ver"><b>C Ver</b></a></td>
-      <td><code>C</code> <code>libcurl</code></td>
-      <td><b>Gemini API</b> integration, JSON parsing, API communication</td>
-      <td align="center">Completed ✅</td>
-    </tr>
-    <tr>
-      <td><a href="./Project/HANGMAN-GAME/Bash-Ver"><b>Bash Ver</b></a></td>
-      <td><code>Shell</code></td>
-      <td>File I/O stream, Linux native command optimization</td>
-      <td align="center">Completed ✅</td>
     </tr>
   </tbody>
 </table>
