@@ -1,0 +1,306 @@
+.app-shell {
+  max-width: 1260px;
+  margin: 0 auto;
+  padding: 32px 20px 48px;
+}
+
+.hero-panel {
+  padding: 28px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #0f172a, #1d4ed8);
+  color: #f8fafc;
+  margin-bottom: 20px;
+}
+
+.hero-panel h1 {
+  margin: 10px 0;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+}
+
+.hero-panel p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.eyebrow {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.85;
+}
+
+.layout-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1.5fr 1.1fr;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+}
+
+.calendar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.calendar-head h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.calendar-head button,
+.actions button,
+.form-buttons button,
+.form-head button {
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #f8fafc;
+  padding: 8px 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.calendar-head button:hover,
+.actions button:hover,
+.form-buttons button:hover,
+.form-head button:hover {
+  background: #eef2ff;
+}
+
+.weekday-row,
+.month-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.weekday-row {
+  margin-bottom: 6px;
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.weekday-row span {
+  text-align: center;
+}
+
+.day-cell {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  min-height: 56px;
+  background: #fff;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+  color: #0f172a;
+}
+
+.day-cell.outside {
+  color: #94a3b8;
+  background: #f8fafc;
+}
+
+.day-cell.selected {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+.day-cell small {
+  font-size: 0.68rem;
+  color: #475569;
+}
+
+.daily-logs {
+  margin-top: 12px;
+}
+
+.daily-logs h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+
+.daily-logs ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.daily-logs li {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.daily-logs p {
+  margin: 4px 0 0;
+  color: #475569;
+  font-size: 0.92rem;
+}
+
+.published {
+  color: #047857;
+  font-weight: 600;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.form-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.form-head h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+input,
+textarea {
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 10px;
+  font: inherit;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.two-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.checkbox-row {
+  flex-direction: row;
+  align-items: center;
+  font-weight: 500;
+}
+
+.checkbox-row input {
+  width: 16px;
+  height: 16px;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.form-buttons button {
+  background: #1d4ed8;
+  color: #fff;
+  border-color: #1d4ed8;
+}
+
+.preview-card h2 {
+  margin-top: 0;
+}
+
+.preview-paper {
+  background: #f8fafc;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  line-height: 1.5;
+}
+
+.preview-paper p {
+  margin: 0;
+}
+
+.preview-title {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.preview-subtitle {
+  font-weight: 700;
+  color: #1d4ed8;
+}
+
+.preview-image {
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+}
+
+.muted {
+  color: #64748b;
+  margin: 0;
+}
+
+.status {
+  margin: 10px 0 0;
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.status.success {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status.error {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 1180px) {
+  .layout-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .two-columns {
+    grid-template-columns: 1fr;
+  }
+}
