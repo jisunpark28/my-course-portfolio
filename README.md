@@ -64,6 +64,14 @@ Hi! I'm a passionate developer focused on Software Programming and Database Mana
       <td><b>AI-Assisted Development</b>: Interactive 3D church scene with GSAP animations</td>
       <td align="center">In Progress 🏗️</td>
     </tr>
+    <!-- 새로 추가된 Study Notes 섹션 -->
+    <tr>
+      <td><a href="./study-notes"><b>Algorithm &<br>System Analysis</b></a></td>
+      <td><b>Study Notes</b></td>
+      <td><code>Algorithms</code> <code>Logic Design</code></td>
+      <td>Searching algorithm efficiency (Time/Memory Complexity, Big-O)</td>
+      <td align="center">In Progress 🏗️</td>
+    </tr>
   </tbody>
 </table>
 
