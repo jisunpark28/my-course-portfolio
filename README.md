@@ -1,81 +1,142 @@
-﻿# My Course Portfolio
-Hi! I'm a passionate developer focused on Software Programming and Database Management.
+# Toronto Heat Resilience Command Dashboard
+## DEMO DRIVE LINK:
+TBD
+
+## Problem Statement
+Emergency response teams in large cities often rely on fragmented tools while handling heat emergencies.  
+City coordinators must manually combine weather alerts, power infrastructure conditions, demographic risk, and shelter status, which slows down life-critical decisions.  
+A passive citizen-facing map is not enough when vulnerable residents need immediate, precision-targeted intervention.
+
+---
+
+## Solution
+This project delivers a proactive, real-time command-and-control dashboard for heat emergency response.  
+It unifies weather, power, and social vulnerability data into one operational view so teams can identify hotspots, prioritize vulnerable populations, and deploy resources faster.
+
+- Shift from passive monitoring to active emergency orchestration.
+- Precision-target high-risk neighborhoods for equitable, life-saving impact.
+- Generate clear next actions for coordinators during crisis windows.
+
+---
+
+## Features
+- **Hotspot Identification** with multi-layer visualization of:
+  - urban heat islands,
+  - power grid stress,
+  - low-income population density.
+- **Resilience-Driven Triage** for filtering cooling centers by:
+  - backup power availability,
+  - real-time occupancy,
+  - operational accessibility.
+- **Rapid Resource Deployment** through automated recommended actions:
+  - dispatch mobile cooling units,
+  - deploy water trailers,
+  - reroute citizens to viable shelters.
+- **Unified Command Dashboard** to reduce tab-switching and decision fatigue.
+
+---
+
+## Overview
+This solution is designed for:
+
+- **Primary Audience:** Emergency Management Coordinators (City of Toronto)
+- **Secondary Audience:** Public Health Officials and Community Outreach Teams
+
+It transforms emergency operations with:
+
+- **Dynamic Vulnerability Mapping** from live weather, demographics, and infrastructure health.
+- **Resilience-First Filtering** with real-time shelter status awareness.
+- **Automated Actionable Insights** using AI-driven triage logic.
+- **Single-Pane Situational Awareness** for rapid command decisions.
+
+---
+
+## Business ROI
+- **Economic (Cost-Effective):** Reduces unnecessary dispatches and failed evacuation attempts by optimizing resource allocation.
+- **Technical:** Integrates fragmented weather, power, and social datasets seamlessly through the ArcGIS ecosystem.
+- **Operational:** Centralizes command workflows to minimize cognitive load during emergencies.
+- **Time:** Compresses decision cycles from hours of manual analysis to seconds of actionable insight.
+
+---
+
+## Architecture
+The platform is organized into four operational layers:
+
+### 1. Data Integration Layer
+- Ingests weather forecasts, grid health indicators, demographic vulnerability signals, and shelter telemetry.
+- Normalizes datasets through ArcGIS Online Web Maps.
+
+### 2. Spatial Intelligence Layer
+- Applies dynamic vulnerability overlays to identify high-risk zones.
+- Detects hotspot intersections between heat severity, infrastructure strain, and social vulnerability.
+
+### 3. Command & Triage Layer
+- Filters response options using resilience-first rules (backup power, occupancy, accessibility).
+- Produces AI-driven "Next Best Actions" for field operations.
+
+### 4. Unified Dashboard Layer
+- Provides one command surface for emergency coordinators.
+- Supports rapid monitoring, decision-making, and deployment tracking.
+
+---
+
+## Architecture Diagram
+
+```mermaid
+flowchart LR
+    subgraph Data_Integration["Data Integration Layer"]
+        direction TB
+        A[Live Weather Feeds] --> D[ArcGIS Online Web Maps]
+        B[Power Grid Health Data] --> D
+        C[Demographic Vulnerability Data] --> D
+        E[Shelter Telemetry: Occupancy + Backup Power] --> D
+    end
+
+    subgraph Spatial_Intelligence["Spatial Intelligence Layer"]
+        direction TB
+        D --> F[Dynamic Vulnerability Mapping]
+        F --> G[Heat-Risk Hotspot Detection]
+    end
+
+    subgraph Command_Triage["Command and Triage Layer"]
+        direction TB
+        G --> H[Resilience-First Filtering]
+        H --> I[AI Recommended Actions]
+    end
+
+    subgraph Unified_Dashboard["Unified Command Dashboard"]
+        direction TB
+        I --> J[Real-Time Situational Awareness]
+        J --> K[Resource Deployment Decisions]
+    end
+```
+
+---
 
 ## Tech Stack
-![C](https://img.shields.io/badge/C-A8B9CC?style=flat-square&logo=C&logoColor=black)
-![C++](https://img.shields.io/badge/C++-00599C?style=flat-square&logo=C%2B%2B&logoColor=white)
-![C#](https://img.shields.io/badge/C%23-239120?style=flat-square&logo=c-sharp&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=JavaScript&logoColor=black)
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)
-![SQL](https://img.shields.io/badge/SQL-4479A1?style=flat-square&logo=MySQL&logoColor=white)
-![Git](https://img.shields.io/badge/Git-F05032?style=flat-square&logo=Git&logoColor=white)
-![Linux](https://img.shields.io/badge/Linux-FCC624?style=flat-square&logo=Linux&logoColor=black)
+- **Frontend:** React.js, Tailwind CSS
+- **Mapping Engine:** ArcGIS Maps SDK for JavaScript
+- **Data Architecture:** ArcGIS Online (Web Maps)
+- **Core Language:** JavaScript (ES6+)
 
-## Projects
+---
 
-<table>
-  <thead>
-    <tr>
-      <th>Project</th>
-      <th>Version</th>
-      <th>Tech Stack</th>
-      <th>Core Logic & Features</th>
-      <th>Status</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td rowspan="4" align="center"><b>Hangman Game</b><br>(Multi-Lang)</td>
-      <td><a href="./Project/HANGMAN-GAME/Bash-Ver"><b>Bash Ver</b></a></td>
-      <td><code>Shell</code></td>
-      <td>File I/O stream, Linux native command optimization</td>
-      <td align="center">Completed ✅</td>
-    </tr>
-    <tr>
-      <td><a href="./Project/HANGMAN-GAME/C-Ver"><b>C Ver</b></a></td>
-      <td><code>C</code> <code>libcurl</code></td>
-      <td><b>Gemini API</b> integration, JSON parsing, API communication</td>
-      <td align="center">Completed ✅</td>
-    </tr>
-    <tr>
-      <td><a href="./Project/HANGMAN-GAME/JavaScript-Ver"><b>JS Ver</b></a></td>
-      <td><code>JavaScript</code></td>
-      <td>Interactive Flower Visuals, Closure-based logic, MVP.css</td>
-      <td align="center">Completed ✅</td>
-    </tr>
-    <tr>
-      <td><a href="./Project/HANGMAN-GAME/C++-Ver"><b>C++</b></a></td>
-      <td><code>C++</code></td>
-      <td>OOP principles, Unit Testing, Connecting Oracle server</td>
-      <td align="center">In Progress 🏗️</td>
-    </tr>
-    <tr>
-      <td><a href="./Project/LUMINA-DREAM-STORE"><b>Lumina Dream</b></a></td>
-      <td><b>Web Store</b></td>
-      <td><code>HTML</code> <code>CSS</code> <code>JS</code></td>
-      <td>Interactive input form & Dream sharing interface</td>
-      <td align="center">Completed ✅</td>
-    </tr>
-    <tr>
-      <td><a href="./Project/TINY-PRIEST"><b>Tine-Priest</b></a></td>
-      <td><b>AI-Native Web</b></td>
-      <td><code>Cursor</code> <code>HTML/CSS/JS</code></td>
-      <td><b>AI-Assisted Development</b>: Interactive 3D church scene with GSAP animations</td>
-      <td align="center">In Progress 🏗️</td>
-    </tr>
-    <!-- 새로 추가된 Study Notes 섹션 -->
-    <tr>
-      <td><a href="./study-notes"><b>Algorithm &<br>System Analysis</b></a></td>
-      <td><b>Study Notes</b></td>
-      <td><code>Algorithms</code> <code>Logic Design</code></td>
-      <td>Searching algorithm efficiency (Time/Memory Complexity, Big-O)</td>
-      <td align="center">In Progress 🏗️</td>
-    </tr>
-  </tbody>
-</table>
+## Running Steps:
 
-## LeetCode (C#)
+### 1. Install Frontend Dependencies
+```bash
+npm install
+```
 
-![LeetCode Stats](https://leetcard.jacoblin.cool/jisunpark28?theme=dark&font=Recursive&ext=activity)
+### 2. Start the Development Server
+```bash
+npm run dev
+```
 
+### 3. Configure ArcGIS Credentials
+- Set ArcGIS API key or OAuth configuration in your environment settings.
+- Connect required ArcGIS Online web maps and layers.
+
+### 4. Launch and Validate Dashboard Layers
+- Verify heat, grid, demographic, and shelter layers are loading correctly.
+- Confirm recommendation panel updates as live conditions change.
