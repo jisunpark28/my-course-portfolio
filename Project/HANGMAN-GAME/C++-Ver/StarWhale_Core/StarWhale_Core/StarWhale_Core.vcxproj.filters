@@ -15,54 +15,51 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\StarWhale_Apps\FileWordProvider.cpp">
+    <ClCompile Include="..\FileWordProvider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\StarWhale_Apps\PlayerProfile.cpp">
+    <ClCompile Include="..\PlayerProfile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\StarWhale_Apps\StardustHeal.cpp">
+    <ClCompile Include="..\StardustHeal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\StarWhale_Apps\StarlightHint.cpp">
+    <ClCompile Include="..\StarlightHint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\StarWhale_Apps\StarWhale_Apps.cpp">
+    <ClCompile Include="..\StarWhaleGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\StarWhale_Apps\StarWhaleGame.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\StarWhale_Apps\WhaleRenderer.cpp">
+    <ClCompile Include="..\WhaleRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\StarWhale_Apps\FileWordProvider.h">
+    <ClInclude Include="..\FileWordProvider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\StarWhale_Apps\ISkill.h">
+    <ClInclude Include="..\ISkill.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\StarWhale_Apps\IWordProvider.h">
+    <ClInclude Include="..\IWordProvider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\StarWhale_Apps\StardustHeal.h">
+    <ClInclude Include="..\PlayerProfile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\StarWhale_Apps\StarlightHint.h">
+    <ClInclude Include="..\StardustHeal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\StarWhale_Apps\StarWhaleGame.h">
+    <ClInclude Include="..\StarlightHint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\StarWhale_Apps\WhaleRenderer.h">
+    <ClInclude Include="..\StarWhaleGame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\StarWhale_Apps\WordData.h">
+    <ClInclude Include="..\WhaleRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\StarWhale_Apps\PlayerProfile.h">
+    <ClInclude Include="..\WordData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

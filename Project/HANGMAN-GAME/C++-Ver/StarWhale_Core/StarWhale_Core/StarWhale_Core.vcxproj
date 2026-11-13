@@ -19,24 +19,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\StarWhale_Apps\FileWordProvider.cpp" />
-    <ClCompile Include="..\..\StarWhale_Apps\PlayerProfile.cpp" />
-    <ClCompile Include="..\..\StarWhale_Apps\StardustHeal.cpp" />
-    <ClCompile Include="..\..\StarWhale_Apps\StarlightHint.cpp" />
-    <ClCompile Include="..\..\StarWhale_Apps\StarWhaleGame.cpp" />
-    <ClCompile Include="..\..\StarWhale_Apps\StarWhale_Apps.cpp" />
-    <ClCompile Include="..\..\StarWhale_Apps\WhaleRenderer.cpp" />
+    <ClCompile Include="..\FileWordProvider.cpp" />
+    <ClCompile Include="..\PlayerProfile.cpp" />
+    <ClCompile Include="..\StardustHeal.cpp" />
+    <ClCompile Include="..\StarlightHint.cpp" />
+    <ClCompile Include="..\StarWhaleGame.cpp" />
+    <ClCompile Include="..\WhaleRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\StarWhale_Apps\FileWordProvider.h" />
-    <ClInclude Include="..\..\StarWhale_Apps\ISkill.h" />
-    <ClInclude Include="..\..\StarWhale_Apps\IWordProvider.h" />
-    <ClInclude Include="..\..\StarWhale_Apps\PlayerProfile.h" />
-    <ClInclude Include="..\..\StarWhale_Apps\StardustHeal.h" />
-    <ClInclude Include="..\..\StarWhale_Apps\StarlightHint.h" />
-    <ClInclude Include="..\..\StarWhale_Apps\StarWhaleGame.h" />
-    <ClInclude Include="..\..\StarWhale_Apps\WhaleRenderer.h" />
-    <ClInclude Include="..\..\StarWhale_Apps\WordData.h" />
+    <ClInclude Include="..\FileWordProvider.h" />
+    <ClInclude Include="..\ISkill.h" />
+    <ClInclude Include="..\IWordProvider.h" />
+    <ClInclude Include="..\PlayerProfile.h" />
+    <ClInclude Include="..\StardustHeal.h" />
+    <ClInclude Include="..\StarlightHint.h" />
+    <ClInclude Include="..\StarWhaleGame.h" />
+    <ClInclude Include="..\WhaleRenderer.h" />
+    <ClInclude Include="..\WordData.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -44,6 +43,7 @@
     <ProjectGuid>{6d31d36c-0aec-4686-9590-acadf9c23546}</ProjectGuid>
     <RootNamespace>StarWhaleCore</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>HangmanCore</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -96,8 +96,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -113,8 +114,9 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -130,6 +132,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -147,6 +150,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
