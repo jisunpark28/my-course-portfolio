@@ -1,16 +1,26 @@
 ﻿# My Course Portfolio
-Hi! I'm a passionate developer focused on Software Programming and Database Management.
+Hi! I'm a CPAC student at Seneca focused on systems-minded software development: object-oriented C++, relational databases (Oracle SQL, PL/SQL, MongoDB), and full-stack JavaScript.
 
 ## Tech Stack
+![Linux](https://img.shields.io/badge/Linux-FCC624?style=flat-square&logo=Linux&logoColor=black)
 ![C](https://img.shields.io/badge/C-A8B9CC?style=flat-square&logo=C&logoColor=black)
 ![C++](https://img.shields.io/badge/C++-00599C?style=flat-square&logo=C%2B%2B&logoColor=white)
 ![C#](https://img.shields.io/badge/C%23-239120?style=flat-square&logo=c-sharp&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=JavaScript&logoColor=black)
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)
-![SQL](https://img.shields.io/badge/SQL-4479A1?style=flat-square&logo=MySQL&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=nodedotjs&logoColor=white)
+![Express](https://img.shields.io/badge/Express-000000?style=flat-square&logo=express&logoColor=white)
+![Handlebars](https://img.shields.io/badge/Handlebars-000000?style=flat-square&logo=handlebarsdotjs&logoColor=white)
+![Oracle SQL](https://img.shields.io/badge/Oracle%20SQL-F80000?style=flat-square&logo=oracle&logoColor=white)
+![PL/SQL](https://img.shields.io/badge/PL%2FSQL-F80000?style=flat-square&logo=oracle&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=flat-square&logo=mongodb&logoColor=white)
 ![Git](https://img.shields.io/badge/Git-F05032?style=flat-square&logo=Git&logoColor=white)
-![Linux](https://img.shields.io/badge/Linux-FCC624?style=flat-square&logo=Linux&logoColor=black)
+![Jira](https://img.shields.io/badge/Jira-0052CC?style=flat-square&logo=jira&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel&logoColor=white)
+![UML](https://img.shields.io/badge/UML-FABD14?style=flat-square&logo=uml&logoColor=black)
+![Visual Paradigm](https://img.shields.io/badge/Visual%20Paradigm-0072C6?style=flat-square&logoColor=white)
+![VS Code](https://img.shields.io/badge/VS%20Code-007ACC?style=flat-square&logo=visualstudiocode&logoColor=white)
 
 ## Projects
 
@@ -45,28 +55,27 @@ Hi! I'm a passionate developer focused on Software Programming and Database Mana
       <td align="center">Completed ✅</td>
     </tr>
     <tr>
-      <td><a href="./Project/HANGMAN-GAME/C++-Ver"><b>C++</b></a></td>
+      <td><a href="./Project/HANGMAN-GAME/C++-Ver"><b>C++ Ver</b></a></td>
       <td><code>C++</code></td>
-      <td>OOP principles, Unit Testing, Connecting Oracle server</td>
+      <td>OOP design (classes, encapsulation), unit testing, Oracle DB connection</td>
       <td align="center">In Progress 🏗️</td>
     </tr>
     <tr>
-      <td><a href="./Project/LUMINA-DREAM-STORE"><b>Lumina Dream</b></a></td>
-      <td><b>Web Store</b></td>
-      <td><code>HTML</code> <code>CSS</code> <code>JS</code></td>
-      <td>Interactive input form & Dream sharing interface</td>
-      <td align="center">Completed ✅</td>
+      <td align="center"><b>Medication Reminder</b><br>(<a href="https://github.com/jisunpark28/medication-reminder">repo</a>)</td>
+      <td><b>Mobile App</b></td>
+      <td><code>TBD</code></td>
+      <td>Medication & supplement reminders with shared tracking for family and caregivers</td>
+      <td align="center">In Progress 🏗️</td>
     </tr>
     <tr>
-      <td><a href="./Project/TINY-PRIEST"><b>Tine-Priest</b></a></td>
+      <td align="center"><a href="https://catholickidscrafts.com"><b>Catholic Kids Crafts</b></a><br>(<a href="https://github.com/jisunpark28/catholickidscrafts">repo</a>)</td>
       <td><b>AI-Native Web</b></td>
-      <td><code>Cursor</code> <code>HTML/CSS/JS</code></td>
-      <td><b>AI-Assisted Development</b>: Interactive 3D church scene with GSAP animations</td>
-      <td align="center">In Progress 🏗️</td>
+      <td><code>Next.js</code> <code>TypeScript</code> <code>Vercel</code></td>
+      <td><b>Built entirely through AI prompting (Cursor)</b>. I owned product direction, prompt design, review, testing, and deployment.</td>
+      <td align="center">Live ✅</td>
     </tr>
-    <!-- 새로 추가된 Study Notes 섹션 -->
     <tr>
-      <td><a href="./study-notes"><b>Algorithm &<br>System Analysis</b></a></td>
+      <td align="center"><a href="./study-notes"><b>Algorithm &<br>System Analysis</b></a></td>
       <td><b>Study Notes</b></td>
       <td><code>Algorithms</code> <code>Logic Design</code></td>
       <td>Searching algorithm efficiency (Time/Memory Complexity, Big-O)</td>
