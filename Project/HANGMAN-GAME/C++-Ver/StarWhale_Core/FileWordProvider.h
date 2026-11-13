@@ -1,9 +1,9 @@
 /* Citation and Sources...
-Hangman C++ Version: Star Whale
+Hangman C++ Version: Word Hint Hangman
 Module: Word Providers
 Purpose: Declares the class for reading words from a text file.
 Filename: FileWordProvider.h
-Version 0.2
+Version 0.3
 Author: Jisun Park, Email: jisunpark28@gmail.com
 Revision History
 -----------------------------------------------------------
@@ -11,13 +11,15 @@ Date        Reason
 2026/04/07  Initial File
 2026/04/08  Add function prototypes
 2026/04/10  Add function prototypes
+2026/11/13  Implement IWordProvider
 -----------------------------------------------------------*/
 
 #ifndef FILE_WORD_PROVIDER_H
 #define FILE_WORD_PROVIDER_H
+#include "IWordProvider.h"
 #include "WordData.h"
 
-class FileWordProvider {
+class FileWordProvider : public IWordProvider {
     WordData* m_words;    // Single dynamic block for all words
     int m_count;          // Total number of words
     bool m_isLoaded;
@@ -28,19 +30,18 @@ class FileWordProvider {
 
 public:
     FileWordProvider();
-    ~FileWordProvider();
+    ~FileWordProvider() override;
 
     // Rule of Three: Prevent shallow copy
     FileWordProvider(const FileWordProvider&) = delete;
     FileWordProvider& operator=(const FileWordProvider&) = delete;
 
-    bool loadWords(const char*);
-    bool load(const char*);
+    // IWordProvider
+    bool load(const char* source) override;
+    const char* getRandomWord() override;
+    const char* getHintForWord(const char* word) const override;
+    int wordCount() const override;
 
-    const char* getRandomWord();
-    const char* getHintForWord(const char*) const;
-
-    int wordCount() const;
 };
 
 #endif

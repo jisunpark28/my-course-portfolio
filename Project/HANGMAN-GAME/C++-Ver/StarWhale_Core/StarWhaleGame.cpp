@@ -10,6 +10,7 @@ Revision History
 Date        Reason
 2026/04/07  Initial File
 2026/04/08  Add function implementation
+2026/11/13  change fn name (loadWords -> load)
 -----------------------------------------------------------*/
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -40,7 +41,7 @@ void StarWhaleGame::cleanup() {
 bool StarWhaleGame::startNewGame(const char* filename, const char* playerName) {
     cleanup();
 
-    if (!m_wordProvider.loadWords(filename)) return false;
+    if (!m_wordProvider.load(filename)) return false;
 
     m_player = new PlayerProfile(playerName);
     m_player->addSkill(new StarlightHint()); // skillIndex 0

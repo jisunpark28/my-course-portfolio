@@ -12,6 +12,7 @@ Date        Reason
 2026/04/08  Add fuction implementations
 2026/04/09  Add function prototypes
 2026/04/10  Add string header for getline fn.
+2026/11/13  Delete FileWordProvider fn.
 -----------------------------------------------------------*/
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -57,10 +58,6 @@ void FileWordProvider::cleanup() {
 int FileWordProvider::customRand() {
     m_seed = m_seed * 1103515245U + 12345U;
     return static_cast<int>((m_seed / 65536U) % 32768U);
-}
-
-bool FileWordProvider::loadWords(const char* filename) {
-    return load(filename);
 }
 
 bool FileWordProvider::load(const char* filename) {
