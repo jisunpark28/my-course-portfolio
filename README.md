@@ -56,8 +56,8 @@ Hi! I'm a CPAC student at Seneca focused on systems-minded software development:
     </tr>
     <tr>
       <td><a href="./Project/HANGMAN-GAME/C++-Ver"><b>C++ Ver</b></a></td>
-      <td><code>C++</code></td>
-      <td>OOP design (classes, encapsulation), unit testing, Oracle DB connection</td>
+      <td><code>C++</code> <code>Oracle SQL</code> <code>OCCI</code></td>
+      <td>OOP design (interfaces, inheritance, polymorphism), unit testing, Oracle DB via OCCI with file fallback</td>
       <td align="center">In Progress 🏗️</td>
     </tr>
     <tr>
