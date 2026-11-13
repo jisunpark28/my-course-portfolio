@@ -1,15 +1,16 @@
 /* Citation and Sources...
-Hangman C++ Version: Star Whale
+Hangman C++ Version: Word Hint Hangman
 Module: Game Controller
 Purpose: Declares the main game engine, state management, and rule validation.
 Filename: StarWhaleGame.h
-Version 0.2
+Version 0.3
 Author: Jisun Park, Email: jisunpark28@gmail.com
 Revision History
 -----------------------------------------------------------
 Date        Reason
 2026/04/07  Initial File
 2026/04/08  Add function prototypes
+2026/11/13  Inject IWordProvider via constructor (dependency injection)
 -----------------------------------------------------------*/
 
 #ifndef STARWHALE_GAME_H
@@ -19,7 +20,7 @@ Date        Reason
 #include "PlayerProfile.h"
 
 class StarWhaleGame {
-    FileWordProvider m_wordProvider;
+    IWordProvider& m_wordProvider;   // Injected; game does not own it
     PlayerProfile* m_player;
     char* m_answer;          // The correct word to guess
     char* m_display;         // The word shown to player (e.g., "S_N_C_")
@@ -30,7 +31,7 @@ class StarWhaleGame {
     bool revealOneHiddenLetter();
 
 public:
-    StarWhaleGame();
+    explicit StarWhaleGame(IWordProvider& provider);
     ~StarWhaleGame();
 
     // Rule of Three

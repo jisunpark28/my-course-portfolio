@@ -1,16 +1,16 @@
 /* Citation and Sources...
-Hangman C++ Version: Star Whale
+Hangman C++ Version: Word Hint Hangman
 Module: Game Controller
 Purpose: Implements the core game loop, input processing, and win/loss conditions.
 Filename: StarWhaleGame.cpp
-Version 0.2
+Version 0.3
 Author: Jisun Park, Email: jisunpark28@gmail.com
 Revision History
 -----------------------------------------------------------
 Date        Reason
 2026/04/07  Initial File
 2026/04/08  Add function implementation
-2026/11/13  change fn name (loadWords -> load)
+2026/11/13  Inject IWordProvider via constructor (loadWords -> load)
 -----------------------------------------------------------*/
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -20,8 +20,8 @@ Date        Reason
 #include "StarlightHint.h"
 #include "StardustHeal.h"
 
-StarWhaleGame::StarWhaleGame()
-    : m_player(nullptr), m_answer(nullptr), m_display(nullptr), m_isGameOver(false) {
+StarWhaleGame::StarWhaleGame(IWordProvider& provider)
+    : m_wordProvider(provider), m_player(nullptr), m_answer(nullptr), m_display(nullptr), m_isGameOver(false) {
 }
 
 StarWhaleGame::~StarWhaleGame() {

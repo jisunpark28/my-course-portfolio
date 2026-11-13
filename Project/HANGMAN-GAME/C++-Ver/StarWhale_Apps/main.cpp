@@ -1,9 +1,9 @@
 /* Citation and Sources...
-Hangman C++ Version: Star Whale
+Hangman C++ Version: Word Hint Hangman
 Module: Entry Point
 Purpose: Initializes dependencies and starts the Star Whale application.
 Filename: main.cpp
-Version 0.1
+Version 0.3
 Author: Jisun Park, Email: jisunpark28@gmail.com
 Revision History
 -----------------------------------------------------------
@@ -11,6 +11,7 @@ Date        Reason
 2026/04/07  Initial File
 2026/04/09  Implement the main code
 2026/04/10  Add hint feature
+2026/11/13  Inject FileWordProvider into game (dependency injection)
 -----------------------------------------------------------*/
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -21,9 +22,11 @@ Date        Reason
 #include "StarlightHint.h"
 #include "StardustHeal.h"
 #include "PlayerProfile.h"
+#include "FileWordProvider.h"
 
 int main() {
-    StarWhaleGame game;
+    FileWordProvider provider;      // Concrete source chosen here
+    StarWhaleGame game(provider);   // Injected into the game
     WhaleRenderer renderer;
     char playerName[50];
     char guess;
