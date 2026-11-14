@@ -99,7 +99,7 @@ Hi! I'm a CPAC student at Seneca focused on systems-minded software development:
   <tbody>
     <tr>
       <td align="center"><b>Catholic Kids Crafts</b></td>
-      <td><a href="https://github.com/jisunpark28/catholickidscrafts"><b>AI-Native Web</b></a></td>
+      <td><a href="https://github.com/jisunpark28/catholickidscrafts"><b>Web App</b></a></td>
       <td><code>Cursor</code> <code>Vercel</code> <code>Git/GitHub</code></td>
       <td><b>Built entirely through AI prompting (Cursor).</b> Owned product direction, prompt design, iterative review, testing, and live deployment.</td>
       <td align="center"><a href="https://catholickidscrafts.com">Live ✅</a></td>
