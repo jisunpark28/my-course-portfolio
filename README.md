@@ -61,18 +61,18 @@ Hi! I'm a CPAC student at Seneca focused on systems-minded software development:
       <td align="center">Completed ✅</td>
     </tr>
     <tr>
+      <td align="center"><b>Web Banking</b></td>
+      <td><a href="./Project/WEB-BANKING"><b>Full-Stack Web</b></a></td>
+      <td><code>Node.js</code> <code>Express</code> <code>Handlebars</code> <code>JSON</code></td>
+      <td>User authentication, account creation, deposit/withdrawal transactions, SSR views, and JSON-based data persistence</td>
+      <td align="center">Completed ✅</td>
+    </tr>
+    <tr>
       <td align="center"><b>Medication Reminder</b><br></td>
       <td><a href="https://github.com/jisunpark28/medication-reminder"><b>Mobile App</b></a></td>
       <td><code>TBD</code></td>
       <td>Medication & supplement reminders with shared tracking for family and caregivers</td>
       <td align="center">In Progress 🏗️</td>
-    </tr>
-    <tr>
-      <td align="center"><b>Catholic Kids Crafts</b><br></td>
-      <td><a href="https://github.com/jisunpark28/catholickidscrafts"><b>AI-Native Web</b></a></td>
-      <td><code>Next.js</code> <code>TypeScript</code> <code>Vercel</code></td>
-      <td><b>Built entirely through AI prompting (Cursor)</b>. I owned product direction, prompt design, review, testing, and deployment.</td>
-      <td align="center"><a href="https://catholickidscrafts.com">Live ✅</a></td>
     </tr>
     <tr>
       <td align="center"><b>Algorithm &<br>System Analysis</b></td>
@@ -83,6 +83,30 @@ Hi! I'm a CPAC student at Seneca focused on systems-minded software development:
     </tr>
   </tbody>
 </table>
+
+
+<h3>Vibe Coding</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Project</th>
+      <th>Type (repo)</th>
+      <th>Tools & Environment</th>
+      <th>Role & Workflow</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center"><b>Catholic Kids Crafts</b></td>
+      <td><a href="https://github.com/jisunpark28/catholickidscrafts"><b>AI-Native Web</b></a></td>
+      <td><code>Cursor</code> <code>Vercel</code> <code>Git/GitHub</code></td>
+      <td><b>Built entirely through AI prompting (Cursor).</b> Owned product direction, prompt design, iterative review, testing, and live deployment.</td>
+      <td align="center"><a href="https://catholickidscrafts.com">Live ✅</a></td>
+    </tr>
+  </tbody>
+</table>
+
 
 ## LeetCode (C#)
 
