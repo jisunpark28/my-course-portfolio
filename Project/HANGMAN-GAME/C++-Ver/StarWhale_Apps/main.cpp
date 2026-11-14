@@ -11,7 +11,7 @@ Date        Reason
 2026/04/07  Initial File
 2026/04/09  Implement the main code
 2026/04/10  Add hint feature
-2026/11/13  Inject FileWordProvider into game (dependency injection)
+2026/11/13  Inject FileWordProvider into game (dependency injection); Print skill results in UI layer
 -----------------------------------------------------------*/
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -54,10 +54,16 @@ int main() {
         std::cin >> guess;
 
         if (guess == '1') {
-            game.useSkill(0); // Starlight Hint
+            if (game.useSkill(0))
+                std::cout << ">> Starlight Hint used! (Energy -2)" << std::endl;
+            else
+                std::cout << ">> Not enough energy for a hint." << std::endl;
         }
         else if (guess == '2') {
-            game.useSkill(1); // Stardust Heal
+            if (game.useSkill(1))
+                std::cout << ">> Stardust Heal used! (Energy +2)" << std::endl;
+            else
+                std::cout << ">> Cannot heal right now." << std::endl;
         }
         else {
             if (game.makeGuess(guess)) {

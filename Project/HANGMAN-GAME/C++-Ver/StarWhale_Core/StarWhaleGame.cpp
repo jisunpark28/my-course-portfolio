@@ -3,7 +3,7 @@ Hangman C++ Version: Word Hint Hangman
 Module: Game Controller
 Purpose: Implements the core game loop, input processing, and win/loss conditions.
 Filename: StarWhaleGame.cpp
-Version 0.3
+Version 0.4
 Author: Jisun Park, Email: jisunpark28@gmail.com
 Revision History
 -----------------------------------------------------------
@@ -11,6 +11,7 @@ Date        Reason
 2026/04/07  Initial File
 2026/04/08  Add function implementation
 2026/11/13  Inject IWordProvider via constructor (loadWords -> load)
+2026/11/13  Use polymorphic revealsLetter(); remove skillIndex check
 -----------------------------------------------------------*/
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -112,27 +113,20 @@ bool StarWhaleGame::revealOneHiddenLetter() {
     return false;
 }
 
-void StarWhaleGame::useSkill(int skillIndex) {
-    if (m_isGameOver || !m_player) return;
-
+bool StarWhaleGame::useSkill(int skillIndex) {
+    if (m_isGameOver || !m_player) return false;
     ISkill* skill = m_player->getSkill(skillIndex);
-    if (!skill) return;
-
-    int beforeEnergy = m_player->getBridgeEnergy();
-    skill->use(*m_player);
-
-    if (skillIndex == 0 && m_player->getBridgeEnergy() < beforeEnergy) {
-        revealOneHiddenLetter();
-    }
-
+    if (!skill) return false;
+    if (!skill->use(*m_player)) return false;      // Not applied
+    if (skill->revealsLetter()) revealOneHiddenLetter();
     if (std::strcmp(m_answer, m_display) == 0) {
         m_player->addStarPiece(10);
         m_isGameOver = true;
     }
-
     if (!m_player->isAlive()) {
         m_isGameOver = true;
     }
+    return true;
 }
 
 const char* StarWhaleGame::getDisplayWord() const {

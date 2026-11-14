@@ -10,7 +10,7 @@ Revision History
 Date        Reason
 2026/04/07  Initial File
 2026/04/08  Add function prototypes
-2026/11/13  Inject IWordProvider via constructor (dependency injection)
+2026/11/13  Inject IWordProvider via constructor (dependency injection); useSkill() returns bool
 -----------------------------------------------------------*/
 
 #ifndef STARWHALE_GAME_H
@@ -43,7 +43,7 @@ public:
 
     // Game Logic
     bool makeGuess(char);
-    void useSkill(int);
+    bool useSkill(int);
 
     // Getters for UI
     const char* getDisplayWord() const;
