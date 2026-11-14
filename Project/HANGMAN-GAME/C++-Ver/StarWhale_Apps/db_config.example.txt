@@ -1,0 +1,3 @@
+user=YOUR_SENECA_USER
+password=YOUR_PASSWORD
+connect=myoracle12c.senecacollege.ca:1521/oracle12c
