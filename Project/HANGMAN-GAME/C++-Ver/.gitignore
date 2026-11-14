@@ -2,3 +2,6 @@ db_config.txt
 x64/
 *.vcxproj.user
 .vs/
+tmp_design
+tmp_testing
+tmp_test
