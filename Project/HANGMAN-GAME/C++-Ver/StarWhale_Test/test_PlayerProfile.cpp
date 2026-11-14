@@ -1,21 +1,20 @@
 /* Citation and Sources...
-Hangman C++ Version: Star Whale
+Hangman C++ Version: Word Hint Hangman
 Module: Test
 Purpose: PlayerProfile unit/integration/acceptance tests using MSVC framework.
 Filename: test_PlayerProfile.cpp
-Version 0.2
+Version 0.3
 Author: Jisun Park, Email: jisunpark28@gmail.com
 Revision History
 -----------------------------------------------------------
 Date        Reason
 2026/04/07  Initial File
 2026/04/07  Add PlayerProfile Module Unit Test Cases
+2026/11/13  Align tests with Core API (const char*, bool use, raw-pointer ownership)
 -----------------------------------------------------------*/
 
 #include "pch.h"
 #include "CppUnitTest.h"
-#include <string>
-#include <memory>
 #include "PlayerProfile.h"
 #include "ISkill.h"
 
@@ -24,8 +23,8 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 // [Mock Object] Dummy skill for Integration Testing
 class DummySkill : public ISkill {
 public:
-    std::string getName() const override { return "Dummy"; }
-    void use(PlayerProfile& player) override { /* Do nothing for test */ }
+    const char* getName() const override { return "Dummy"; }
+    bool use(PlayerProfile&) override { return true; }
 };
 
 namespace BlackBoxTests
@@ -41,7 +40,7 @@ namespace BlackBoxTests
         TEST_METHOD(BT_PRF001)
         {
             PlayerProfile player("Jisun");  // 1. Initialize a PlayerProfile.
-            Assert::AreEqual(std::string("Jisun"), player.getName());   // 2. Verify all initial values using getters.
+            Assert::AreEqual("Jisun", player.getName());   // 2. Verify all initial values using getters.
             Assert::AreEqual(0, player.getStarPieces());
             Assert::AreEqual(6, player.getBridgeEnergy());
             Assert::IsTrue(player.isAlive());
@@ -93,24 +92,19 @@ namespace WhiteBoxTests
 
 namespace IntegrationTests
 {
-    // ID           Description                     Steps                                   Test Data                       Expected Result
+    // ID           Description                     Steps                                            Test Data                       Expected Result
     // 
-    // IT_PRF001    Inventory System Integration    Add DummySkill via unique_ptr           Mock Object: DummySkill         Return: Success (No memory leak/crash)
+    // IT_PRF001    Inventory System Integration    Add DummySkill (PlayerProfile owns it)           Mock Object: DummySkill         Return: Count 1, Name "Dummy"
     TEST_CLASS(PlayerProfileIntegration)
     {
     public:
         TEST_METHOD(IT_PRF001)
         {
             PlayerProfile player("Jisun");  // 1. Initialize a PlayerProfile.
-            player.addSkill(std::make_unique<DummySkill>());    // 2. Create a Mock DummySkill.
-            // 3. Call addSkill transferring ownership via std::move / make_unique.
-            // Reaching this point without exception implies successful integration of the pointer
-            Assert::IsTrue(true);   // 4. Verify system accepts the object without crashing.
-
-            //template<typename T>
-            //unique_ptr<T> make_unique() {     // <memory> - make_unique() : Dynamically allocated, automatically deallocated.
-            //    return unique_ptr<T>(new T()); 
-            //}
+            player.addSkill(new DummySkill());    // 2. Create a Mock DummySkill.
+            // 3. Verify the skill is stored and owned by PlayerProfile.
+            Assert::AreEqual(1, player.getSkillCount());
+            Assert::AreEqual("Dummy", player.getSkill(0)->getName());
         }
     };
 }
