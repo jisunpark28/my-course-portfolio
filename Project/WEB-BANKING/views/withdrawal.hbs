@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEB322 Assignment Bank - withdrawal</title>
+    <link rel="stylesheet" href="/bank.css" />
+</head>
+
+<body>
+    {{> header}}	
+        <form method="post" action="/withdrawal">
+            <input type="hidden" name="accountNumber" value="{{accountNumber}}"/>
+            <p>Account Number: {{accountNumber}}</p>
+            <br>
+            <label for="depositAmount">Amount</label>
+            <input type="number" name="withdrawalAmount"/>
+            <br><br>
+            <button type="submit" name="action" value="submit">Submit</button>
+            <br><br>
+            <button type="submit" name="action" value="cancel">Cancel</button>
+        </form>
+</body>
+    
+</html>

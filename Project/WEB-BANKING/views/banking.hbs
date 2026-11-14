@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEB322 Assignment Bank - banking</title>
+    <link rel="stylesheet" href="/bank.css" />
+</head>
+
+<body>
+    <div class="userHeader">
+        <span class="userDisplay">{{inputUsername}}</span>
+        <a href="/">Logout</a>
+    </div>
+    
+    <img src="/images/logo.png" alt="Bank Logo"/>
+
+    <form method="post" action="/banking">
+
+        <input type="text" name="accountNumber" placeholder="Account Number" />
+        <br><br>
+
+        <div class="radioButton">
+            <label><input type="radio" name="transactionType" value="Balance">Balance</label>
+            <label><input type="radio" name="transactionType" value="Deposit">Deposit</label>
+            <label><input type="radio" name="transactionType" value="Open an Account">Open an Account</label>
+            <label><input type="radio" name="transactionType" value="Withdrawal">Withdrawal</label>
+        </div>
+        <br><br>
+        
+        {{#if errorMsg}}
+            <div style="color: red; font-weight: bold; text-align: center; margin-bottom: 10px;">
+                {{errorMsg}}
+            </div>
+        {{/if}}
+
+        {{#if successMsg}}
+            <div style="color: red; font-weight: bold; text-align: center; margin-bottom: 10px;">
+                {{successMsg}}
+            </div>
+        {{/if}}
+
+        <button type="submit" value="submit">Submit</button>
+
+    </form>
+</body>
+</html>

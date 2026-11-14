@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEB322 Assignment Bank - balance</title>
+    <link rel="stylesheet" href="/bank.css" />
+</head>
+
+<body>
+    {{> header}}	
+        <form method="get" action="/banking">
+            <p>Account: {{accountNumber}}</p>
+            <p>Account Type: {{accountType}}</p>
+            <P>Account Balance: {{accountBalance}}</p>
+            <br>
+            <button type="submit">OK</button>
+        </form>
+</body>
+    
+</html>

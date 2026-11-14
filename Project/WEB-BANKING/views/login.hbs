@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>WEB322 Assignment Bank - login</title>
+	<link rel="stylesheet" href="/bank.css" />
+</head>	
+
+<body>
+    {{> header}}	
+     
+        <form method="post" action="/login">
+
+                <input name="Username" type="text" required placeholder="Username" value="{{username}}"/>
+                <br><br>
+
+                <input name="Password" type="password" required placeholder="Password" value="{{password}}"/>
+                <br><br>
+
+                <button type="submit" value="submit">Submit</button>
+                <br><br>
+
+                <label style="color: red;">{{errorMsg}}</label>
+
+        </form>
+</body>
+    
+</html>
