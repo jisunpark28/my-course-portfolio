@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learning Data Management System</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <form id="search-form" class="search">
+      <input id="search-input" type="search" placeholder="search words..." />
+      <button type="submit">Search</button>
+    </form>
+    <div class="topbar-actions">
+      <button type="button" id="create-btn">+</button>
+      <button type="button" id="edit-btn">Update</button>
+      <button type="button" id="delete-btn">Delete</button>
+    </div>
+  </header>
+
+  <main>
+    <aside class="list-pane">
+      <ul id="results" class="results">
+        <li class="empty">No search: all notes grouped by group. After search: results only.</li>
+      </ul>
+    </aside>
+
+    <section class="content-pane" id="detail-panel">
+      <div class="content-header">
+        <input id="edit-topic" class="title-field" type="text" placeholder="Title" />
+        <div class="meta">
+          <label>#group: <input id="edit-groups" type="text" /></label>
+          <label>#topic: <input id="edit-note-topic" type="text" /></label>
+          <label>#tags: <input id="edit-tags" type="text" /></label>
+        </div>
+      </div>
+
+      <textarea id="edit-markdown" class="contents" placeholder="contents"></textarea>
+
+      <form id="import-form" class="hidden">
+        <textarea id="markdown-input"></textarea>
+        <input id="file-input" type="file" accept=".md,text/markdown" />
+      </form>
+    </section>
+  </main>
+
+  <template id="result-template">
+    <li>
+      <button type="button" class="result-item">
+        <strong class="result-topic"></strong>
+        <span class="result-group"></span>
+        <span class="result-preview"></span>
+      </button>
+    </li>
+  </template>
+
+  <script src="/app.js"></script>
+</body>
+</html>

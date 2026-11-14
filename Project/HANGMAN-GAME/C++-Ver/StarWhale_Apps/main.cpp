@@ -3,7 +3,7 @@ Hangman C++ Version: Word Hint Hangman
 Module: Entry Point
 Purpose: Initializes dependencies and starts the Star Whale application.
 Filename: main.cpp
-Version 0.3
+Version 0.4
 Author: Jisun Park, Email: jisunpark28@gmail.com
 Revision History
 -----------------------------------------------------------
@@ -12,6 +12,7 @@ Date        Reason
 2026/04/09  Implement the main code
 2026/04/10  Add hint feature
 2026/11/13  Inject FileWordProvider into game (dependency injection); Print skill results in UI layer
+2026/11/13  Choose Oracle provider with file fallback
 -----------------------------------------------------------*/
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -23,10 +24,27 @@ Date        Reason
 #include "StardustHeal.h"
 #include "PlayerProfile.h"
 #include "FileWordProvider.h"
+#include "OracleWordProvider.h"
 
 int main() {
-    FileWordProvider provider;      // Concrete source chosen here
-    StarWhaleGame game(provider);   // Injected into the game
+    // Choose word source: Oracle first, file as fallback
+    OracleWordProvider oracleProvider;
+    FileWordProvider fileProvider;
+
+    IWordProvider* provider = &fileProvider;
+    const char* source = "words.txt";
+
+    if (oracleProvider.load("db_config.txt")) {
+        provider = &oracleProvider;
+        source = "db_config.txt";
+        std::cout << "[DB] Connected to Oracle. Words loaded: "
+            << oracleProvider.wordCount() << std::endl;
+    }
+    else {
+        std::cout << "[DB] Oracle unavailable. Using words.txt instead." << std::endl;
+    }
+
+    StarWhaleGame game(*provider);
     WhaleRenderer renderer;
     char playerName[50];
     char guess;
@@ -36,7 +54,7 @@ int main() {
     std::cin >> playerName;
 
     // Start game with a words file
-    if (!game.startNewGame("words.txt", playerName)) {
+    if (!game.startNewGame(source, playerName)) {
         std::cout << "Failed to load words.txt. Please check the file." << std::endl;
         return 1;
     }
