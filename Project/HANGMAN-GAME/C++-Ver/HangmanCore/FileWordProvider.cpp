@@ -1,9 +1,9 @@
 /* Citation and Sources...
-Hangman C++ Version: Star Whale
+Hangman C++ Version: Word Hint Hangman
 Module: Word Providers
 Purpose: Implements the file reading logic to provide words to the game engine.
 Filename: FileWordProvider.cpp
-Version 0.2
+Version 0.3
 Author: Jisun Park, Email: jisunpark28@gmail.com
 Revision History
 -----------------------------------------------------------
@@ -13,6 +13,7 @@ Date        Reason
 2026/04/09  Add function prototypes
 2026/04/10  Add string header for getline fn.
 2026/11/13  Delete FileWordProvider fn.
+2026/11/13  Rename classes, files, and screen text to Word Hint Hangman
 -----------------------------------------------------------*/
 
 #define _CRT_SECURE_NO_WARNINGS

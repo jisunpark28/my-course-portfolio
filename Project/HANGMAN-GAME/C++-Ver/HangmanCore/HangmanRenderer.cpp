@@ -1,35 +1,36 @@
 ﻿/* Citation and Sources...
-Hangman C++ Version: Star Whale
+Hangman C++ Version: Word Hint Hangman
 Module: Renderer
-Purpose: Implements the drawing logic for the bridge, Star Whale, and game screens.
-Filename: WhaleRenderer.cpp
-Version 0.1
+Purpose: Implements the drawing logic for the hangman figure and game screens.
+Filename: HangmanRenderer.cpp
+Version 0.2
 Author: Jisun Park, Email: jisunpark28@gmail.com
 Revision History
 -----------------------------------------------------------
 Date        Reason
 2026/04/07  Initial File
-2026/04/08  Add StarWhaleGame Module Unit Test Cases
+2026/04/08  Add HangmanGame Module Unit Test Cases
+2026/11/13  Rename classes, files, and screen text to Word Hint Hangman
 -----------------------------------------------------------*/
 
 #include <iostream>
-#include "WhaleRenderer.h"
+#include "HangmanRenderer.h"
 
-WhaleRenderer::WhaleRenderer() : m_currentStage(0) {}
+HangmanRenderer::HangmanRenderer() : m_currentStage(0) {}
 
-void WhaleRenderer::setStage(int stage) {
+void HangmanRenderer::setStage(int stage) {
     // Stage 7 and 8 are special victory animation stages
     if (stage >= 0 && stage <= 8) {
         m_currentStage = stage;
     }
 }
 
-int WhaleRenderer::getStage() const {
+int HangmanRenderer::getStage() const {
     return m_currentStage;
 }
 
-void WhaleRenderer::render() const {
-    std::cout << "\n[ Whale Status ]" << std::endl;
+void HangmanRenderer::render() const {
+    std::cout << "\n[ Hangman Status ]" << std::endl;
 
     // Render based on the current stage (0-6 for failures, 7-8 for victory)
     switch (m_currentStage) {

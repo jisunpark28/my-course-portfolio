@@ -21,16 +21,16 @@
     <ClCompile Include="..\PlayerProfile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\StardustHeal.cpp">
+    <ClCompile Include="..\EnergyHeal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\StarlightHint.cpp">
+    <ClCompile Include="..\LetterHint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\StarWhaleGame.cpp">
+    <ClCompile Include="..\HangmanGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\WhaleRenderer.cpp">
+    <ClCompile Include="..\HangmanRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,16 +47,16 @@
     <ClInclude Include="..\PlayerProfile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\StardustHeal.h">
+    <ClInclude Include="..\EnergyHeal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\StarlightHint.h">
+    <ClInclude Include="..\LetterHint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\StarWhaleGame.h">
+    <ClInclude Include="..\HangmanGame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\WhaleRenderer.h">
+    <ClInclude Include="..\HangmanRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\WordData.h">

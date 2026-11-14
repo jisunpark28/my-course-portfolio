@@ -24,7 +24,7 @@ The database code lives only in the app layer, so the core logic and tests stay 
 ## Setup
 1. Visual Studio 2022, C++17, **Release x64**
 2. Oracle Instant Client 12.2 (OCCI) for the DB mode
-3. Copy `StarWhale_Apps/db_config.example.txt` to `db_config.txt` and fill in your own account
+3. Copy `HangmanApp/db_config.example.txt` to `db_config.txt` and fill in your own account
    (`db_config.txt` is git-ignored)
 4. Create the table and insert words in Oracle:
 ```sql

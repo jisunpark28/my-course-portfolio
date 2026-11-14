@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36414.22
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StarWhale_Core", "StarWhale_Core\StarWhale_Core\StarWhale_Core.vcxproj", "{6D31D36C-0AEC-4686-9590-ACADF9C23546}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HangmanCore", "HangmanCore\HangmanCore\HangmanCore.vcxproj", "{6D31D36C-0AEC-4686-9590-ACADF9C23546}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StarWhale_Test", "StarWhale_Test\StarWhale_Test.vcxproj", "{EF1C2204-F0E1-7199-8E79-9F32D39278FE}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HangmanTest", "HangmanTest\HangmanTest.vcxproj", "{EF1C2204-F0E1-7199-8E79-9F32D39278FE}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StarWhale_Apps", "StarWhale_Apps\StarWhale_Apps.vcxproj", "{B910963A-7CA0-4D15-856A-08A179E1C05F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HangmanApp", "HangmanApp\HangmanApp.vcxproj", "{B910963A-7CA0-4D15-856A-08A179E1C05F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

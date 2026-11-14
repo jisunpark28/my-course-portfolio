@@ -1,9 +1,9 @@
 /* Citation and Sources...
 Hangman C++ Version: Word Hint Hangman
 Module: Skills
-Purpose: Declares the Starlight Hint skill class.
-Filename: StarlightHint.h
-Version 0.3
+Purpose: Declares the Letter Hint skill class.
+Filename: LetterHint.h
+Version 0.4
 Author: Jisun Park, Email: jisunpark28@gmail.com
 Revision History
 -----------------------------------------------------------
@@ -11,14 +11,15 @@ Date        Reason
 2026/04/07  Initial File
 2026/04/08  Add function prototypes
 2026/11/13  use() returns bool; override revealsLetter()
+2026/11/13  Rename classes, files, and screen text to Word Hint Hangman
 -----------------------------------------------------------*/
 
-#ifndef STARLIGHT_HINT_H
-#define STARLIGHT_HINT_H
+#ifndef LETTER_HINT_H
+#define LETTER_HINT_H
 
 #include "ISkill.h"
 
-class StarlightHint : public ISkill {
+class LetterHint : public ISkill {
 public:
     // Returns the name of the skill as a C-string
     const char* getName() const override;
@@ -30,6 +31,6 @@ public:
     bool revealsLetter() const override;
 
     // Virtual destructor for safe inheritance
-    virtual ~StarlightHint() {}
+    virtual ~LetterHint() {}
 };
 #endif

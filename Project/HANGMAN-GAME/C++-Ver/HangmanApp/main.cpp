@@ -1,9 +1,9 @@
 /* Citation and Sources...
 Hangman C++ Version: Word Hint Hangman
 Module: Entry Point
-Purpose: Initializes dependencies and starts the Star Whale application.
+Purpose: Initializes dependencies and starts the Word Hint Hangman application.
 Filename: main.cpp
-Version 0.4
+Version 0.5
 Author: Jisun Park, Email: jisunpark28@gmail.com
 Revision History
 -----------------------------------------------------------
@@ -13,15 +13,16 @@ Date        Reason
 2026/04/10  Add hint feature
 2026/11/13  Inject FileWordProvider into game (dependency injection); Print skill results in UI layer
 2026/11/13  Choose Oracle provider with file fallback
+2026/11/13  Rename classes, files, and screen text to Word Hint Hangman
 -----------------------------------------------------------*/
 
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <cstring>
-#include "StarWhaleGame.h"
-#include "WhaleRenderer.h"
-#include "StarlightHint.h"
-#include "StardustHeal.h"
+#include "HangmanGame.h"
+#include "HangmanRenderer.h"
+#include "LetterHint.h"
+#include "EnergyHeal.h"
 #include "PlayerProfile.h"
 #include "FileWordProvider.h"
 #include "OracleWordProvider.h"
@@ -44,18 +45,18 @@ int main() {
         std::cout << "[DB] Oracle unavailable. Using words.txt instead." << std::endl;
     }
 
-    StarWhaleGame game(*provider);
-    WhaleRenderer renderer;
+    HangmanGame game(*provider);
+    HangmanRenderer renderer;
     char playerName[50];
     char guess;
 
-    std::cout << "--- Welcome to Star Whale Hangman ---" << std::endl;
+    std::cout << "--- Welcome to Word Hint Hangman ---" << std::endl;
     std::cout << "Enter your name: ";
     std::cin >> playerName;
 
     // Start game with a words file
     if (!game.startNewGame(source, playerName)) {
-        std::cout << "Failed to load words.txt. Please check the file." << std::endl;
+        std::cout << "Failed to load words. Please check the source." << std::endl;
         return 1;
     }
 
@@ -73,13 +74,13 @@ int main() {
 
         if (guess == '1') {
             if (game.useSkill(0))
-                std::cout << ">> Starlight Hint used! (Energy -2)" << std::endl;
+                std::cout << ">> Letter Hint used! (Energy -2)" << std::endl;
             else
                 std::cout << ">> Not enough energy for a hint." << std::endl;
         }
         else if (guess == '2') {
             if (game.useSkill(1))
-                std::cout << ">> Stardust Heal used! (Energy +2)" << std::endl;
+                std::cout << ">> Energy Heal used! (Energy +2)" << std::endl;
             else
                 std::cout << ">> Cannot heal right now." << std::endl;
         }
@@ -96,13 +97,13 @@ int main() {
     // Final Result
     renderer.setStage(6 - game.getPlayer()->getBridgeEnergy());
     if (game.getPlayer()->isAlive()) {
-        std::cout << "\nCONGRATULATIONS! You saved the Star Whale!" << std::endl;
+        std::cout << "\nCONGRATULATIONS! You guessed the word!" << std::endl;
         renderer.setStage(7); // Victory Pose
         renderer.render();
     }
     else {
         renderer.render();
-        std::cout << "\nGAME OVER. The whale faded away..." << std::endl;
+        std::cout << "\nGAME OVER. You ran out of energy..." << std::endl;
     }
 
     return 0;

@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="test_StarWhaleGame.cpp">
+    <ClCompile Include="test_HangmanGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
@@ -27,13 +27,13 @@
     <ClCompile Include="test_FileWordProvider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="test_StarlightHint.cpp">
+    <ClCompile Include="test_LetterHint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="test_StardustHeal.cpp">
+    <ClCompile Include="test_EnergyHeal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="test_WhaleRenderer.cpp">
+    <ClCompile Include="test_HangmanRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="test_Main.cpp">

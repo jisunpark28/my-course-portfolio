@@ -1,15 +1,16 @@
 /* Citation and Sources...
-Hangman C++ Version: Star Whale
+Hangman C++ Version: Word Hint Hangman
 Module: Data & State
 Purpose: Implements the PlayerProfile class logic and state encapsulation.
 Filename: PlayerProfile.cpp
-Version 0.2
+Version 0.3
 Author: Jisun Park, Email: jisunpark28@gmail.com
 Revision History
 -----------------------------------------------------------
 Date        Reason
 2026/04/07  Initial File
 2026/04/07  Add Function Implementations
+2026/11/13  Rename classes, files, and screen text to Word Hint Hangman
 -----------------------------------------------------------*/
 
 #define _CRT_SECURE_NO_WARNINGS
