@@ -1,59 +1,40 @@
-# C++ Hangman Game (Star Whale): Requirements Specification
+# Word Hint Hangman (C++)
 
-## Architecture (OOP Design)
-Below is the 5-tier architecture incorporating OOP principles and Test-Driven Development (TDD).
+A console word-learning game: the player sees a hint (meaning) and guesses the word.
+Words load from an **Oracle database** and fall back to a local file if the DB is unavailable.
 
-1. Interfaces ✅
-   - IWordProvider.h
-   - ISkill.h
-   
-2. Data & State ✅
-   - WordData.h
-   - PlayerProfile.h / .cpp
-     - [Unit/Integration Test] PlayerProfile Testing -> test_PlayerProfile.cpp
+## Highlights
+- **OOP design**: interface `IWordProvider`, polymorphic skills (`ISkill`), dependency injection into the game class
+- **Oracle SQL + OCCI**: reads words and hints from a `HANGMAN_WORDS` table
+- **Fallback**: if Oracle fails, the game uses `words.txt`
+- **Unit tests**: 11 MSVC CppUnitTest tests using a fake word provider (no DB needed)
 
-3. Implementations 🏗️
-   - FileWordProvider.h / .cpp 
-     - [Unit Test] FileWordProvider Testing -> test_FileWordProvider.cpp
-   - StarlightHint.h / .cpp
-     - [Unit Test] StarlightHint Testing -> test_StarlightHint.cpp
-   - StardustHeal.h / .cpp
-     - [Unit Test] StardustHeal Testing -> test_StardustHeal.cpp
+## Architecture
+```
+HangmanApp  (console UI, OracleWordProvider)
+   └── HangmanCore  (game logic, FileWordProvider, skills, player)
+HangmanTest (unit tests against HangmanCore with a FakeWordProvider)
+```
+The database code lives only in the app layer, so the core logic and tests stay DB-free.
 
-4. Engine & Display
-   - StarWhaleGame.h / .cpp
-     - [Integration Test] StarWhaleGame Testing -> test_StarWhaleGame.cpp
-   - WhaleRenderer.h / .cpp
-     - [Unit Test] WhaleRenderer Testing -> test_WhaleRenderer.cpp
+## Screenshots
+![Oracle run](docs/oracle-run.png)
+![Tests passed](docs/tests-passed.png)
 
-5. Entry Point
-   - main.cpp
-     - [Acceptance Test] Main Testing -> test_Main.cpp
+## Setup
+1. Visual Studio 2022, C++17, **Release x64**
+2. Oracle Instant Client 12.2 (OCCI) for the DB mode
+3. Copy `StarWhale_Apps/db_config.example.txt` to `db_config.txt` and fill in your own account
+   (`db_config.txt` is git-ignored)
+4. Create the table and insert words in Oracle:
+```sql
+CREATE TABLE hangman_words (
+  word_id NUMBER PRIMARY KEY,
+  word    VARCHAR2(30)  NOT NULL UNIQUE,
+  hint    VARCHAR2(200) NOT NULL
+);
+```
+5. Build and run with Ctrl+F5. Without Oracle, the game still runs from `words.txt`.
 
-* Design Notes:
-  - Use an `IWordProvider` interface (Pure Virtual Function) for easy Mock testing and dependency injection.
-  - Track game status using internal state management within `StarWhaleGame`.
-  - Hide internal variables in `PlayerProfile` to prevent direct outside access (Data Encapsulation).
-
-## Security & Robustness
-- Reject empty or extra-long inputs. Ignore case differences (case-insensitive).
-- Strictly use parameterized queries for user inputs to prevent SQL Injection (if DB is integrated later).
-- Use `try-catch` for all DB/File operations to handle exceptions (e.g., missing config files) and prevent game crashes.
-
-## Business Requirement 
-- Player gets exactly 6 bridge energies (lives).
-- Load random words via `FileWordProvider` (implementing `IWordProvider`).
-- If data saving/loading fails, log the error internally, load default fallback words, and keep playing (Fail-safe).
-- (Optional/Future) Play "Review Mode" using the Top 5 recently failed words.
-
-## Testing Strategy
-- Achieve 100% unit test coverage for core data and logic (`FileWordProvider`, `PlayerProfile`, `ISkill` implementations).
-- Perform Integration Testing (`test_StarWhaleGame.cpp`) to verify input rules, duplicate letters, HP deduction, and Win/Lose conditions.
-- Test game recovery and exception handling when the word configuration file is missing or corrupted.
-
----
-
-### Tech Stack
-- **Language**: C++ (ISO/IEC 14882:2017)
-- **Database**: Oracle Database (via OCCI) - *Reserved for future expansion*
-- **Testing Framework**: Custom console-based C++ Test Drivers (Unit / Integration / Acceptance)
+## Tech
+C++17 · Oracle SQL · OCCI · MSVC CppUnitTest · Visual Studio 2022
