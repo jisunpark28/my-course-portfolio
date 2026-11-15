@@ -12,7 +12,7 @@
 | **Bash Ver** | `Shell` `Linux CLI` | File I/O stream, Linux native command optimization | `Completed` ✅ | [**View Code**](./Bash-Ver) |
 | **C Ver** | `C` `libcurl` `API` | **Gemini API** integration, Network communication, JSON parsing | `Completed` ✅ | [**View Code**](./C-Ver) |
 | **JS Ver** | `JavaScript` `DOM` `CSS` | Interactive Flower Visuals, Closure-based logic, MVP.css UI | `Completed` ✅ | [**View Code**](./JavaScript-Ver) |
-| **C++ Ver** | `C++` | Encapsulation, Inheritance, polymorphism | `In Progress` 🏗️ | [**View Code**](./C++-Ver) |
+| **C++ Ver** | `C++` | Encapsulation, Inheritance, polymorphism | `Completed` ✅ | [**View Code**](./C++-Ver) |
 ---
 
 ## Implementation Highlights
