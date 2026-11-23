@@ -101,10 +101,3 @@ Hi! I'm a CPAC student at Seneca focused on systems-minded software development:
     </tr>
   </tbody>
 </table>
-
-
-
-## LeetCode (C#)
-
-![LeetCode Stats](https://leetcard.jacoblin.cool/jisunpark28?theme=dark&font=Recursive&ext=activity)
-
