@@ -45,6 +45,37 @@ Hi! I'm a CPAC student at Seneca focused on systems-minded software development:
       <td><b>Built entirely through AI prompting (Cursor).</b> Owned product direction, prompt design, iterative review, testing, and live deployment.</td>
       <td align="center"><a href="https://catholickidscrafts.com">Live ✅</a></td>
     </tr>
+    <tr>
+      <td align="center"><b>Medication Reminder</b><br></td>
+      <td><a href="https://github.com/jisunpark28/medication-reminder"><b>Mobile App</b></a></td>
+      <td><code>TBD</code></td>
+      <td>Medication & supplement reminders with shared tracking for family and caregivers</td>
+      <td align="center">In Progress 🏗️</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Hackathon</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Project</th>
+      <th>Type (repo)</th>
+      <th>Design & Scope</th>
+      <th>Role & Deliverables</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center"><b>Seneca Energy Hackathon</b></td>
+      <td>
+        <a href="https://github.com/serinorae/energy-hackathon-2026"><b>Climate Response Hub</b></a><br>
+      </td>
+      <td><code>System Architecture</code> <code>UML</code> <code>NoSQL Schema</code> <code>RBAC</code></td>
+      <td><b>System design & documentation.</b> Created 3-layer architecture, CRUD UML use-case diagrams, privacy-first MongoDB schema, and MVP feasibility roadmap for an emergency response dashboard.</td>
+      <td align="center"><a href="https://energy-hackathon-2026-beta.vercel.app/">Live ✅</a></td>
+    </tr>
   </tbody>
 </table>
 
@@ -60,13 +91,6 @@ Hi! I'm a CPAC student at Seneca focused on systems-minded software development:
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td align="center"><b>Medication Reminder</b><br></td>
-      <td><a href="https://github.com/jisunpark28/medication-reminder"><b>Mobile App</b></a></td>
-      <td><code>TBD</code></td>
-      <td>Medication & supplement reminders with shared tracking for family and caregivers</td>
-      <td align="center">In Progress 🏗️</td>
-    </tr>
     <tr>
       <td align="center"><b>Web Banking</b></td>
       <td><a href="./Project/WEB-BANKING"><b>Server-Side Web</b></a></td>
