@@ -30,11 +30,11 @@ Hi! I'm a CPAC student at Seneca focused on systems-minded software development:
 <table>
   <thead>
     <tr>
-      <th>Project</th>
-      <th>Type (repo)</th>
-      <th>Tools & Environment</th>
-      <th>Role & Workflow</th>
-      <th>Status</th>
+      <th width="16%">Project</th>
+      <th width="14%">Type (repo)</th>
+      <th width="20%">Tools & Environment</th>
+      <th width="38%">Role & Workflow</th>
+      <th width="12%">Status</th>
     </tr>
   </thead>
   <tbody>
@@ -59,11 +59,11 @@ Hi! I'm a CPAC student at Seneca focused on systems-minded software development:
 <table>
   <thead>
     <tr>
-      <th>Project</th>
-      <th>Type (repo)</th>
-      <th>Design & Scope</th>
-      <th>Role & Deliverables</th>
-      <th>Status</th>
+      <th width="16%">Project</th>
+      <th width="14%">Type (repo)</th>
+      <th width="20%">Design & Scope</th>
+      <th width="38%">Role & Deliverables</th>
+      <th width="12%">Status</th>
     </tr>
   </thead>
   <tbody>
@@ -83,11 +83,11 @@ Hi! I'm a CPAC student at Seneca focused on systems-minded software development:
 <table>
   <thead>
     <tr>
-      <th>Project</th>
-      <th>Version (repo)</th>
-      <th>Tech Stack</th>
-      <th>Core Logic & Features</th>
-      <th>Status</th>
+      <th width="16%">Project</th>
+      <th width="14%">Version (repo)</th>
+      <th width="20%">Tech Stack</th>
+      <th width="38%">Core Logic & Features</th>
+      <th width="12%">Status</th>
     </tr>
   </thead>
   <tbody>
