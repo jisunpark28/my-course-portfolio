@@ -22,19 +22,82 @@ Hi! I'm a CPAC student at Seneca focused on systems-minded software development:
 ![Visual Paradigm](https://img.shields.io/badge/Visual%20Paradigm-0072C6?style=flat-square&logoColor=white)
 ![VS Code](https://img.shields.io/badge/VS%20Code-007ACC?style=flat-square&logo=visualstudiocode&logoColor=white)
 
+
+
 ## Projects
 
+<h3>Agentic Development</h3>
 <table>
   <thead>
     <tr>
-      <th>Project</th>
-      <th>Version (repo)</th>
-      <th>Tech Stack</th>
-      <th>Core Logic & Features</th>
-      <th>Status</th>
+      <th width="16%">Project</th>
+      <th width="14%">Type (repo)</th>
+      <th width="20%">Tools & Environment</th>
+      <th width="38%">Role & Workflow</th>
+      <th width="12%">Status</th>
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <td align="center"><b>Catholic Kids Crafts</b></td>
+      <td><a href="https://github.com/jisunpark28/catholickidscrafts"><b>Web App</b></a></td>
+      <td><code>Cursor</code> <code>Vercel</code> <code>Neon</code> <code>Git/GitHub</code></td>
+      <td><b>Built entirely through AI prompting (Cursor).</b> Owned product direction, prompt design, iterative review, testing, and live deployment.</td>
+      <td align="center"><a href="https://catholickidscrafts.com">Live ✅</a></td>
+    </tr>
+    <tr>
+      <td align="center"><b>Medication Reminder</b><br></td>
+      <td><a href="https://github.com/jisunpark28/medication-reminder"><b>Mobile App</b></a></td>
+      <td><code>TBD</code></td>
+      <td>Medication & supplement reminders with shared tracking for family and caregivers</td>
+      <td align="center">In Progress 🏗️</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Hackathon</h3>
+<table>
+  <thead>
+    <tr>
+      <th width="16%">Project</th>
+      <th width="14%">Type (repo)</th>
+      <th width="20%">Design & Scope</th>
+      <th width="38%">Role & Deliverables</th>
+      <th width="12%">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center"><b>Seneca Energy Hackathon</b></td>
+      <td>
+        <a href="https://github.com/serinorae/energy-hackathon-2026"><b>Climate Response Hub</b></a><br>
+      </td>
+      <td><code>System Architecture</code> <code>UML</code> <code>NoSQL Schema</code> <code>RBAC</code></td>
+      <td><b>System design & documentation.</b> Created 3-layer architecture, CRUD UML use-case diagrams, privacy-first MongoDB schema, and MVP feasibility roadmap for an emergency response dashboard.</td>
+      <td align="center"><a href="https://energy-hackathon-2026-beta.vercel.app/">Live ✅</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3>Software Development</h3>
+<table>
+  <thead>
+    <tr>
+      <th width="16%">Project</th>
+      <th width="14%">Version (repo)</th>
+      <th width="20%">Tech Stack</th>
+      <th width="38%">Core Logic & Features</th>
+      <th width="12%">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center"><b>Web Banking</b></td>
+      <td><a href="./Project/WEB-BANKING"><b>Server-Side Web</b></a></td>
+      <td><code>Node.js</code> <code>Express</code> <code>Handlebars</code> <code>JSON</code></td>
+      <td>User authentication, account creation, deposit/withdrawal transactions, SSR views, and JSON-based data persistence</td>
+      <td align="center">Completed ✅</td>
+    </tr>
     <tr>
       <td rowspan="4" align="center"><b>Hangman Game</b><br>(Multi-Lang)</td>
       <td><a href="./Project/HANGMAN-GAME/Bash-Ver"><b>Bash Ver</b></a></td>
@@ -57,58 +120,8 @@ Hi! I'm a CPAC student at Seneca focused on systems-minded software development:
     <tr>
       <td><a href="./Project/HANGMAN-GAME/C++-Ver"><b>C++ Ver</b></a></td>
       <td><code>C++</code> <code>Oracle SQL</code> <code>OCCI</code></td>
-      <td>OOP design (interfaces, inheritance, polymorphism), unit testing, Oracle DB via OCCI with file fallback</td>
+      <td>OOP design (encapsulation, inheritance, polymorphism), unit testing, Oracle DB via OCCI with file fallback</td>
       <td align="center">Completed ✅</td>
-    </tr>
-    <tr>
-      <td align="center"><b>Web Banking</b></td>
-      <td><a href="./Project/WEB-BANKING"><b>Server-Side Web</b></a></td>
-      <td><code>Node.js</code> <code>Express</code> <code>Handlebars</code> <code>JSON</code></td>
-      <td>User authentication, account creation, deposit/withdrawal transactions, SSR views, and JSON-based data persistence</td>
-      <td align="center">Completed ✅</td>
-    </tr>
-    <tr>
-      <td align="center"><b>Medication Reminder</b><br></td>
-      <td><a href="https://github.com/jisunpark28/medication-reminder"><b>Mobile App</b></a></td>
-      <td><code>TBD</code></td>
-      <td>Medication & supplement reminders with shared tracking for family and caregivers</td>
-      <td align="center">In Progress 🏗️</td>
-    </tr>
-    <tr>
-      <td align="center"><b>Algorithm &<br>System Analysis</b></td>
-      <td><a href="./study-notes"><b>Study Notes</b></a></td>
-      <td><code>Algorithms</code> <code>Logic Design</code></td>
-      <td>Searching algorithm efficiency (Time/Memory Complexity, Big-O)</td>
-      <td align="center">In Progress 🏗️</td>
     </tr>
   </tbody>
 </table>
-
-
-<h3>Vibe Coding</h3>
-<table>
-  <thead>
-    <tr>
-      <th>Project</th>
-      <th>Type (repo)</th>
-      <th>Tools & Environment</th>
-      <th>Role & Workflow</th>
-      <th>Status</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td align="center"><b>Catholic Kids Crafts</b></td>
-      <td><a href="https://github.com/jisunpark28/catholickidscrafts"><b>Web App</b></a></td>
-      <td><code>Cursor</code> <code>Vercel</code> <code>Git/GitHub</code></td>
-      <td><b>Built entirely through AI prompting (Cursor).</b> Owned product direction, prompt design, iterative review, testing, and live deployment.</td>
-      <td align="center"><a href="https://catholickidscrafts.com">Live ✅</a></td>
-    </tr>
-  </tbody>
-</table>
-
-
-## LeetCode (C#)
-
-![LeetCode Stats](https://leetcard.jacoblin.cool/jisunpark28?theme=dark&font=Recursive&ext=activity)
-
