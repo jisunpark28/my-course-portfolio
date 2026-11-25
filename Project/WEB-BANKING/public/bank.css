@@ -35,8 +35,7 @@ input {
 }
 
 /* Submit Button */
-button[type="submit"],
-button[type="cancel"] {
+button[type="submit"] {
     width: 100%;
     background-color: #27ae60;
     color: white;
