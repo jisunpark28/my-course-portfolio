@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEB322 Assignment Bank - openAccount</title>
+    <link rel="stylesheet" href="/bank.css" />
+</head>
+
+<body>
+    {{> header}}	
+    <form method="post" action="/openAccount">
+        <div class="radioButton">
+            <label><input type="radio" name="accountType" value="Chequing" onchange="document.getElementById('submitBtn').disabled = false;">Chequing</label>
+            <label><input type="radio" name="accountType" value="Savings" onchange="document.getElementById('submitBtn').disabled = false;">Savings</label>
+        </div>
+        <br><br>
+        <button id="submitBtn" type="submit" name="action" value="submit" disabled>Submit</button>
+        <br><br>
+        <button type="submit" name="action" value="cancel">Cancel</button>      
+    </form>
+</body>
+    
+</html>
