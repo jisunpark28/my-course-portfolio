@@ -23,7 +23,16 @@ form {
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
-/* input - username, password, account number */
+/* dropdown - account number */
+select[name="accountNumber"] {
+    display: block;
+    margin-left: auto;
+    width: 60%;
+    padding: 8px;
+    font-size: 16px;
+}
+
+/* input - username, password */
 input {
     width: 100%;
     padding: 12px 14px;
