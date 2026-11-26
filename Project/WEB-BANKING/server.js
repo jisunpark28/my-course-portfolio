@@ -38,7 +38,7 @@ app.use(
     secret: process.env.SESSION_SECRET || strRandom,
     saveUninitialized: false,
     resave: false,
-    store: MongoStore.create({ mongoUrl: uri, dbName: "webbank" }),
+    store: MongoStore.create({ mongoUrl: uri, dbName: "webbank_demo" }),
     cookie: {
       expires: 5 * 60 * 1000,
     },
@@ -266,7 +266,7 @@ app.use((req, res) => {
 (async () => {
   try {
     const client = await MongoClient.connect(uri);
-    db = client.db("webbank");
+    db = client.db("webbank_demo");
     app.listen(HTTP_PORT, () => {
       console.log(`Listening on port ${HTTP_PORT}`);
     });
