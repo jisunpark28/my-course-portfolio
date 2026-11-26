@@ -1,5 +1,4 @@
 {
-    "demo@webbank.ca": "demo1234",
-    "jisun.demo@webbank.ca": "webbank!",
-    "tester@webbank.ca": "test5678"
+  "demo1@example.com": "Demo1234",
+  "demo2@example.com": "Demo5678"
 }

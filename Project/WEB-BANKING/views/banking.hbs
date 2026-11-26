@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WEB322 Assignment Bank - banking</title>
+    <title>WEB Bank - anking</title>
     <link rel="stylesheet" href="/bank.css" />
 </head>
 
@@ -18,7 +18,11 @@
 
     <form method="post" action="/banking">
 
-        <input type="text" name="accountNumber" placeholder="Account Number" />
+        <select name = "accountNumber" size="1">
+            {{#each accountList}}
+                <option value="{{this}}">{{this}}</option>
+            {{/each}}
+        </select>
         <br><br>
 
         <div class="radioButton">

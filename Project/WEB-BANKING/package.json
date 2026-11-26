@@ -10,9 +10,12 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "connect-mongo": "^6.0.0",
+    "dotenv": "^18.0.10",
     "express": "^5.2.1",
     "express-handlebars": "^9.0.2",
     "express-session": "^1.19.0",
+    "mongodb": "^7.9.1",
     "randomstring": "^1.3.2"
   }
 }

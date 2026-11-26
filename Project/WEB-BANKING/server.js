@@ -2,10 +2,11 @@ const HTTP_PORT = process.env.PORT || 3000;
 
 const express = require("express");
 const exphbs = require("express-handlebars");
-const session = require("express-session"); //	require express-session to establish session
+const session = require("express-session");
 const randomStr = require("randomstring");
+const { MongoStore } = require("connect-mongo");
 const path = require("path");
-const fs = require("fs");
+const Login = require("./routes/login.js");
 const app = express();
 
 app.engine(
@@ -14,9 +15,13 @@ app.engine(
     extname: ".hbs",
     defaultLayout: false,
     layoutsDir: path.join(__dirname, "/views"),
-    partialDir: path.join(__dirname, "/views/partials"),
   }),
 );
+
+const MongoClient = require("mongodb").MongoClient;
+require("dotenv").config();
+const uri = process.env.MONGODB_URI;
+let db;
 
 app.set("view engine", ".hbs");
 app.set("views", path.join(__dirname, "/views"));
@@ -30,140 +35,84 @@ var strRandom = randomStr.generate();
 app.set("trust proxy", 1);
 app.use(
   session({
-    secret: strRandom,
+    secret: process.env.SESSION_SECRET || strRandom,
     saveUninitialized: false,
     resave: false,
+    store: MongoStore.create({ mongoUrl: uri, dbName: "webbank" }),
     cookie: {
       expires: 5 * 60 * 1000,
     },
   }),
 );
+app.use("/", Login);
 
-app.get("/", (req, res) => {
-  res.render("login");
-});
+async function getAccountList(username) {
+  const client = await db.collection("clients").findOne({ username: username });
+  const accountList = [];
+  if (client.chequing) accountList.push(client.chequing);
+  if (client.savings) accountList.push(client.savings);
+  return accountList;
+}
 
-app.get("/login", (req, res) => {
-  res.render("login");
-});
-
-app.get("/banking", (req, res) => {
+app.get("/banking", async (req, res) => {
   if (!req.session.user) {
     return res.redirect("/");
   }
 
+  const accountList = await getAccountList(req.session.user);
+
   res.render("banking", {
     inputUsername: req.session.user,
+    accountList: accountList,
   });
 });
 
-app.post("/login", (req, res) => {
-  const inputUsername = req.body.Username;
-  const inputPassword = req.body.Password;
-
-  fs.readFile(path.join(__dirname, "user.json"), "utf8", (err, data) => {
-    if (err) {
-      console.error(err);
-      return res.send("File Open Error");
-    }
-
-    const dataUsers = JSON.parse(data);
-
-    if (dataUsers[inputUsername] == undefined) {
-      return res.render("login", {
-        errorMsg: "Not a registered username",
-        username: inputUsername,
-        password: inputPassword,
-      });
-    }
-
-    if (dataUsers[inputUsername] !== inputPassword) {
-      return res.render("login", {
-        errorMsg: "Invalid password",
-        username: inputUsername,
-        password: inputPassword,
-      });
-    }
-    req.session.user = inputUsername;
-
-    res.render("banking", { inputUsername: inputUsername });
-  });
-});
-
-app.post("/banking", (req, res) => {
+app.post("/banking", async (req, res) => {
   if (!req.session.user) {
     return res.redirect("/");
   }
 
   const accountNumber = req.body.accountNumber;
   const transactionType = req.body.transactionType;
+  const accountList = await getAccountList(req.session.user);
+  const account = await db
+    .collection("accounts")
+    .findOne({ _id: accountNumber });
 
-  fs.readFile(
-    path.join(__dirname, "accounts.json"),
-    "utf8",
-    function (err, data) {
-      if (err) {
-        console.error(err);
-        return res.send("File Open Error");
-      }
+  if (transactionType == "Open an Account") {
+    return res.render("openAccount");
+  }
 
-      const dataAccounts = JSON.parse(data);
+  if (!account) {
+    return res.render("banking", {
+      inputUsername: req.session.user,
+      accountList: accountList,
+      errorMsg: "Invalid Account Number",
+    });
+  }
 
-      if (transactionType == "Balance") {
-        const account = dataAccounts[accountNumber];
+  if (transactionType == "Balance") {
+    return res.render("balance", {
+      accountNumber: accountNumber,
+      accountType: account.accountType,
+      accountBalance: Number(account.accountBalance).toFixed(2),
+    });
+  }
 
-        if (!account) {
-          return res.render("banking", {
-            inputUsername: req.session.user,
-            errorMsg: "Invalid Account Number",
-          });
-        }
+  if (transactionType == "Deposit") {
+    return res.render("deposit", {
+      accountNumber: accountNumber,
+    });
+  }
 
-        return res.render("balance", {
-          accountNumber: accountNumber,
-          accountType: account.accountType,
-          accountBalance: Number(account.accountBalance).toFixed(2),
-        });
-      }
-
-      if (transactionType == "Deposit") {
-        const account = dataAccounts[accountNumber];
-
-        if (!account) {
-          return res.render("banking", {
-            inputUsername: req.session.user,
-            errorMsg: "Invalid Account Number",
-          });
-        }
-
-        return res.render("deposit", {
-          accountNumber: accountNumber,
-        });
-      }
-
-      if (transactionType == "Open an Account") {
-        return res.render("openAccount");
-      }
-
-      if (transactionType == "Withdrawal") {
-        const account = dataAccounts[accountNumber];
-
-        if (!account) {
-          return res.render("banking", {
-            inputUsername: req.session.user,
-            errorMsg: "Invalid Account Number",
-          });
-        }
-
-        return res.render("withdrawal", {
-          accountNumber: accountNumber,
-        });
-      }
-    },
-  );
+  if (transactionType == "Withdrawal") {
+    return res.render("withdrawal", {
+      accountNumber: accountNumber,
+    });
+  }
 });
 
-app.post("/deposit", (req, res) => {
+app.post("/deposit", async (req, res) => {
   if (!req.session.user) {
     return res.redirect("/");
   }
@@ -176,38 +125,33 @@ app.post("/deposit", (req, res) => {
     return res.redirect("/banking");
   }
 
-  fs.readFile(
-    path.join(__dirname, "accounts.json"),
-    "utf8",
-    function (err, data) {
-      if (err) {
-        console.error(err);
-        return res.send("File Open Error");
-      }
+  if (!(Number(depositAmount) > 0)) {
+    return res.render("banking", {
+      inputUsername: req.session.user,
+      accountList: await getAccountList(req.session.user),
+      errorMsg: "Invalid Amount",
+    });
+  }
 
-      const dataAccounts = JSON.parse(data);
-      const account = dataAccounts[accountNumber];
+  const account = await db
+    .collection("accounts")
+    .findOne({ _id: accountNumber });
 
-      account.accountBalance = (
-        Number(account.accountBalance) + Number(depositAmount)
-      ).toFixed(2);
-
-      fs.writeFile(
-        path.join(__dirname, "accounts.json"),
-        JSON.stringify(dataAccounts, null, 4),
-        function (err) {
-          if (err) {
-            console.error(err);
-            return res.send("File Write Error");
-          }
-          return res.redirect("/banking");
-        },
-      );
-    },
+  const newBalance = Number(
+    (Number(account.accountBalance) + Number(depositAmount)).toFixed(2),
   );
+
+  await db
+    .collection("accounts")
+    .updateOne(
+      { _id: accountNumber },
+      { $set: { accountBalance: newBalance } },
+    );
+
+  return res.redirect("/banking");
 });
 
-app.post("/openAccount", (req, res) => {
+app.post("/openAccount", async (req, res) => {
   if (!req.session.user) {
     return res.redirect("/");
   }
@@ -220,48 +164,55 @@ app.post("/openAccount", (req, res) => {
   }
 
   if (action == "submit") {
-    fs.readFile(
-      path.join(__dirname, "accounts.json"),
-      "utf8",
-      function (err, data) {
-        if (err) {
-          console.error(err);
-          return res.send("File Open Error");
-        }
+    const client = await db
+      .collection("clients")
+      .findOne({ username: req.session.user });
 
-        const dataAccounts = JSON.parse(data);
+    if (
+      (accountType == "Chequing" && client.chequing) ||
+      (accountType == "Savings" && client.savings)
+    ) {
+      return res.render("banking", {
+        inputUsername: req.session.user,
+        accountList: await getAccountList(req.session.user),
+        errorMsg: `You already have a ${accountType} account`,
+      });
+    }
 
-        var nextLastID = Number(dataAccounts.lastID) + 1;
-        var newAccountNum = String(nextLastID).padStart(7, "0");
-        dataAccounts.lastID = newAccountNum;
+    let newAccountNum = randomStr.generate({ length: 7, charset: "numeric" });
 
-        dataAccounts[newAccountNum] = {
-          accountType: accountType,
-          accountBalance: 0,
-        };
+    await db.collection("accounts").insertOne({
+      _id: newAccountNum,
+      accountType: accountType,
+      accountBalance: 0,
+    });
 
-        fs.writeFile(
-          path.join(__dirname, "accounts.json"),
-          JSON.stringify(dataAccounts, null, 4),
-          function (err) {
-            if (err) {
-              console.error(err);
-              return res.send("File Write Error");
-            }
-
-            const successMsg = `${accountType} Account #${newAccountNum} Created`;
-            return res.render("banking", {
-              inputUsername: req.session.user,
-              successMsg: successMsg,
-            });
-          },
+    if (accountType == "Chequing") {
+      await db
+        .collection("clients")
+        .updateOne(
+          { username: req.session.user },
+          { $set: { chequing: newAccountNum } },
         );
-      },
-    );
+    } else {
+      await db
+        .collection("clients")
+        .updateOne(
+          { username: req.session.user },
+          { $set: { savings: newAccountNum } },
+        );
+    }
+
+    const successMsg = `${accountType} Account #${newAccountNum} Created`;
+    return res.render("banking", {
+      inputUsername: req.session.user,
+      accountList: await getAccountList(req.session.user),
+      successMsg: successMsg,
+    });
   }
 });
 
-app.post("/withdrawal", (req, res) => {
+app.post("/withdrawal", async (req, res) => {
   if (!req.session.user) {
     return res.redirect("/");
   }
@@ -274,48 +225,52 @@ app.post("/withdrawal", (req, res) => {
     return res.redirect("/banking");
   }
 
-  fs.readFile(
-    path.join(__dirname, "accounts.json"),
-    "utf8",
-    function (err, data) {
-      if (err) {
-        console.error(err);
-        return res.send("File Open Error");
-      }
+  if (!(Number(withdrawalAmount) > 0)) {
+    return res.render("banking", {
+      inputUsername: req.session.user,
+      accountList: await getAccountList(req.session.user),
+      errorMsg: "Invalid Amount",
+    });
+  }
 
-      const dataAccounts = JSON.parse(data);
-      const account = dataAccounts[accountNumber];
+  const account = await db
+    .collection("accounts")
+    .findOne({ _id: accountNumber });
 
-      if (Number(withdrawalAmount) > Number(account.accountBalance)) {
-        return res.render("banking", {
-          inputUsername: req.session.user,
-          errorMsg: "Insufficient Funds",
-        });
-      }
+  if (Number(withdrawalAmount) > Number(account.accountBalance)) {
+    return res.render("banking", {
+      inputUsername: req.session.user,
+      accountList: await getAccountList(req.session.user),
+      errorMsg: "Insufficient Funds",
+    });
+  }
 
-      account.accountBalance = (
-        Number(account.accountBalance) - Number(withdrawalAmount)
-      ).toFixed(2);
-
-      fs.writeFile(
-        path.join(__dirname, "accounts.json"),
-        JSON.stringify(dataAccounts, null, 4),
-        function (err) {
-          if (err) {
-            console.error(err);
-            return res.send("File Write Error");
-          }
-          return res.redirect("/banking");
-        },
-      );
-    },
+  const newBalance = Number(
+    (Number(account.accountBalance) - Number(withdrawalAmount)).toFixed(2),
   );
+
+  await db
+    .collection("accounts")
+    .updateOne(
+      { _id: accountNumber },
+      { $set: { accountBalance: newBalance } },
+    );
+
+  return res.redirect("/banking");
 });
 
-app.all(/.*/, (req, res) => {
+app.use((req, res) => {
   res.status(404).send(`Catch-all route`);
 });
 
-const server = app.listen(HTTP_PORT, () => {
-  console.log(`Listening on port ${HTTP_PORT}`);
-});
+(async () => {
+  try {
+    const client = await MongoClient.connect(uri);
+    db = client.db("webbank");
+    app.listen(HTTP_PORT, () => {
+      console.log(`Listening on port ${HTTP_PORT}`);
+    });
+  } catch (err) {
+    console.log(`err = ${err}`);
+  }
+})();
