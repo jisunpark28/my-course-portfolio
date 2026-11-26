@@ -96,7 +96,7 @@ Hi! I'm a CPAC student at Seneca focused on systems-minded software development:
       <td><a href="./Project/WEB-BANKING"><b>Server-Side Web</b></a></td>
       <td><code>Node.js</code> <code>Express</code> <code>Handlebars</code> <code>JSON</code></td>
       <td>User authentication, account creation, deposit/withdrawal transactions, SSR views, and JSON-based data persistence</td>
-      <td align="center">Completed ✅</td>
+      <td align="center"><a href="https://my-course-portfolio-z7cp.vercel.app/">Live ✅</a></td>
     </tr>
     <tr>
       <td rowspan="4" align="center"><b>Hangman Game</b><br>(Multi-Lang)</td>
